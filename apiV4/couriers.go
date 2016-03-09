@@ -1,23 +1,6 @@
-// api exposes all API level functions and objects of AfterShip API V4 for
-// go code
 package apiV4
 
 // Courier is the model describing an AfterShip courier
-// Eg: {
-//			"slug": "usps",
-//			"name": "USPS",
-//			"phone": "+1 800-275-8777",
-//			"other_name": "United States Postal Service",
-//			"web_url": "https://www.usps.com",
-//			"required_fields": [],
-//			"default_language": "en",
-//			"support_languages": [
-//				"en"
-//			],
-//			"service_from_country_iso3": [
-//				"USA"
-//			]
-//		}
 type Courier struct {
 	Slug string `json:"slug"`
 	Name string `json:"name"`

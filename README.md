@@ -114,3 +114,5 @@ func main() {
 }
 
 ````
+
+Check `./impl/impl_test.go` for examples on using all endpoints.
