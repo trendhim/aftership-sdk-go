@@ -30,8 +30,8 @@ func main() {
                 "<your-api-key>",
                 nil,
         }
-        res, err := api.GetCouriers()
-        if (err.Code == 200) {
+        res, meta := api.GetCouriers()
+        if (meta.Code == 200) {
             fmt.Print(res)
         }
         
@@ -55,7 +55,7 @@ func main() {
                 "<your-api-key>",
                 nil,
         }
-        res, err := api.CreateTracking(apiV4.NewTracking{
+        res, meta := api.CreateTracking(apiV4.NewTracking{
                 "1Z9999999999999998",
                 nil,
                 "",
@@ -75,7 +75,7 @@ func main() {
                 nil,
         })
         
-        if (err.Code == 200) {
+        if (meta.Code == 200) {
             fmt.Print(res)
         }
 }
@@ -98,7 +98,7 @@ func main() {
                 "<your-api-key>",
                 nil,
         }
-        res, err := api.GetTracking(
+        res, meta := api.GetTracking(
             apiV4.TrackingId{
                 "",
                 "xq-express",
@@ -108,7 +108,7 @@ func main() {
             "",
         )
         
-        if (err.Code == 200) {
+        if (meta.Code == 200) {
             fmt.Print(res)
         }
 }
