@@ -16,6 +16,13 @@ type Response interface {
 	ResponseCode() ResponseMeta
 }
 
+// RetryPolicy configures retry policy
+type RetryPolicy struct {
+	RetryOnError bool
+	ErrorRetryCount int
+	RetryOnHittingRateLimit bool
+}
+
 type ResponseMeta struct {
 	Code int `json:"code"`
 	Message string `json:"message"`

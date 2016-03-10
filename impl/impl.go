@@ -13,6 +13,7 @@ import (
 
 type AfterShipApiV4Impl struct {
 	ApiKey string
+	RetryPolicy *apiV4.RetryPolicy
 	Client *http.Client
 }
 
@@ -242,6 +243,9 @@ func (api *AfterShipApiV4Impl) request(method string, endpoint string,
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Print("X-RateLimit-Reset", resp.Header.Get("X-RateLimit-Reset"))
+	log.Print("X-RateLimit-Limit", resp.Header.Get("X-RateLimit-Limit"))
+	log.Print("X-RateLimit-Remaining", resp.Header.Get("X-RateLimit-Remaining"))
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

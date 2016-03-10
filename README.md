@@ -29,6 +29,7 @@ func main() {
         var api apiV4.CourierHandler = &impl.AfterShipApiV4Impl{
                 "<your-api-key>",
                 nil,
+                nil,
         }
         res, meta := api.GetCouriers()
         if (meta.Code == 200) {
@@ -53,6 +54,7 @@ import (
 func main() {
         var api apiV4.TrackingsHandler = &impl.AfterShipApiV4Impl{
                 "<your-api-key>",
+                nil,
                 nil,
         }
         res, meta := api.CreateTracking(apiV4.NewTracking{
@@ -96,6 +98,7 @@ import (
 func main() {
         var api apiV4.TrackingsHandler = &impl.AfterShipApiV4Impl{
                 "<your-api-key>",
+                nil,
                 nil,
         }
         res, meta := api.GetTracking(

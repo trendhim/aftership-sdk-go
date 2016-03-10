@@ -10,9 +10,9 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	httpmock.Activate()
+	//httpmock.Activate()
 	m.Run()
-	httpmock.DeactivateAndReset()
+	//httpmock.DeactivateAndReset()
 }
 
 func TestGetCouriers(t *testing.T) {
@@ -35,6 +35,7 @@ func TestGetCouriers(t *testing.T) {
 	})
 	var api apiV4.CourierHandler = &AfterShipApiV4Impl {
 		"XXXX",
+		nil,
 		nil,
 	}
 
@@ -64,6 +65,7 @@ func TestGetAllCouriers(t *testing.T) {
 	var api apiV4.CourierHandler = &AfterShipApiV4Impl {
 		"XXXX",
 		nil,
+		nil,
 	}
 
 	res, _ := api.GetAllCouriers();
@@ -90,6 +92,7 @@ func TestDetectCouriers(t *testing.T) {
 	})
 	var api apiV4.CourierHandler = &AfterShipApiV4Impl {
 		"xxxx",
+		nil,
 		nil,
 	}
 
@@ -119,6 +122,7 @@ func TestCreateTracking(t *testing.T) {
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
 		nil,
+		nil,
 	}
 
 	fmt.Println(api.CreateTracking(apiV4.NewTracking{
@@ -146,6 +150,7 @@ func TestCreateTracking(t *testing.T) {
 func TestDeleteTracking(t *testing.T) {
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
+		nil,
 		nil,
 	}
 
@@ -181,6 +186,7 @@ func TestGetTrackings(t *testing.T) {
 	}
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
+		nil,
 		nil,
 	}
 	fmt.Println(api.GetTrackings(p))
@@ -223,6 +229,7 @@ func TestGetTrackingsExport(t *testing.T) {
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
 		nil,
+		nil,
 	}
 	fmt.Println(api.GetTrackingsExport(p))
 	assert.Equal(t, "", "")
@@ -236,6 +243,7 @@ func TestGetTracking(t *testing.T) {
 	}
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
+		nil,
 		nil,
 	}
 	fmt.Println(api.GetTracking(p, "", ""))
@@ -257,6 +265,7 @@ func TestUpdateTracking(t *testing.T) {
 	}
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
+		nil,
 		nil,
 	}
 	u := apiV4.TrackingUpdate{
@@ -282,6 +291,7 @@ func TestReTrack(t *testing.T) {
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
 		nil,
+		nil,
 	}
 	fmt.Println(api.ReTrack(p))
 	assert.Equal(t, "", "")
@@ -295,6 +305,7 @@ func TestGetLastCheckpoint(t *testing.T) {
 	}
 	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
 		"xxxx",
+		nil,
 		nil,
 	}
 	fmt.Println(api.GetLastCheckPoint(p, "", ""))
@@ -324,6 +335,7 @@ func TestAddNotification(t *testing.T) {
 	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl {
 		"xxxx",
 		nil,
+		nil,
 	}
 	fmt.Println(api.AddNotification(p, n))
 	assert.Equal(t, "", "")
@@ -345,6 +357,7 @@ func TestRemoveNotification(t *testing.T) {
 	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl {
 		"xxxx",
 		nil,
+		nil,
 	}
 	// fmt.Println(api.RemoveNotification(p, n))
 	res, _ := api.RemoveNotification(p, n)
@@ -361,6 +374,7 @@ func TestGetNotificationSetting(t *testing.T) {
 
 	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl {
 		"XXXXXXX",
+		nil,
 		nil,
 	}
 	//fmt.Println(api.GetNotificationSetting(p, ""))
