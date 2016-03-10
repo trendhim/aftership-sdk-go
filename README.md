@@ -10,7 +10,8 @@ You will need to create an account at [Aftership](https://aftership.com) and obt
 ### Installation
 If you already have go installed locally then do,
 ````
-go get github.com/vimukthi-git/aftership-go
+go get github.com/vimukthi-git/aftership-go/apiV4
+go get github.com/vimukthi-git/aftership-go/impl
 ````
 ### Example:
 
