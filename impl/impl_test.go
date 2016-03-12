@@ -1,12 +1,12 @@
 package impl
 
 import (
+	"fmt"
+	"github.com/jarcoal/httpmock"
+	"github.com/stretchr/testify/assert"
+	"github.com/vimukthi-git/aftership-go/apiV4"
 	"net/http"
 	"testing"
-	"github.com/vimukthi-git/aftership-go/apiV4"
-	"github.com/stretchr/testify/assert"
-	"github.com/jarcoal/httpmock"
-	"fmt"
 )
 
 func TestMain(m *testing.M) {
@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 
 func TestGetCouriers(t *testing.T) {
 	exp := []apiV4.Courier{
-		apiV4.Courier {
+		apiV4.Courier{
 			"ups",
 			"ups",
 			"ups",
@@ -33,19 +33,19 @@ func TestGetCouriers(t *testing.T) {
 		apiV4.ResponseMeta{200, "", ""},
 		apiV4.CourierResponseData{exp},
 	})
-	var api apiV4.CourierHandler = &AfterShipApiV4Impl {
+	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
 		"XXXX",
 		nil,
 		nil,
 	}
 
-	res, _ := api.GetCouriers();
+	res, _ := api.GetCouriers()
 	assert.Equal(t, exp, res)
 }
 
 func TestGetAllCouriers(t *testing.T) {
 	exp := []apiV4.Courier{
-		apiV4.Courier {
+		apiV4.Courier{
 			"ups",
 			"ups",
 			"ups",
@@ -62,19 +62,19 @@ func TestGetAllCouriers(t *testing.T) {
 		apiV4.CourierResponseData{exp},
 	})
 
-	var api apiV4.CourierHandler = &AfterShipApiV4Impl {
+	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
 		"XXXX",
 		nil,
 		nil,
 	}
 
-	res, _ := api.GetAllCouriers();
+	res, _ := api.GetAllCouriers()
 	assert.Equal(t, exp, res)
 }
 
 func TestDetectCouriers(t *testing.T) {
 	exp := []apiV4.Courier{
-		apiV4.Courier {
+		apiV4.Courier{
 			"ups",
 			"ups",
 			"ups",
@@ -90,7 +90,7 @@ func TestDetectCouriers(t *testing.T) {
 		apiV4.ResponseMeta{200, "", ""},
 		apiV4.CourierResponseData{exp},
 	})
-	var api apiV4.CourierHandler = &AfterShipApiV4Impl {
+	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -104,7 +104,7 @@ func TestDetectCouriers(t *testing.T) {
 		"",
 		"",
 		nil,
-	}));
+	}))
 
 	fmt.Println(api.DetectCouriers(apiV4.CourierDetectParam{
 		"906587618687",
@@ -113,13 +113,13 @@ func TestDetectCouriers(t *testing.T) {
 		"1234567890",
 		"",
 		"",
-		[]string{"dhl","ups","fedex"},
-	}));
+		[]string{"dhl", "ups", "fedex"},
+	}))
 	assert.Equal(t, "", "")
 }
 
 func TestCreateTracking(t *testing.T) {
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -143,12 +143,12 @@ func TestCreateTracking(t *testing.T) {
 		"",
 		"",
 		nil,
-	}));
+	}))
 	assert.Equal(t, "", "")
 }
 
 func TestDeleteTracking(t *testing.T) {
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -158,13 +158,13 @@ func TestDeleteTracking(t *testing.T) {
 		"",
 		"ups",
 		"1Z9999999999999998",
-	});
+	})
 
 	api.DeleteTracking(apiV4.TrackingId{
 		"56ddabb0ccacfe6c0d76e40e",
 		"",
 		"",
-	});
+	})
 	assert.Equal(t, "", "")
 }
 
@@ -184,7 +184,7 @@ func TestGetTrackings(t *testing.T) {
 		"",
 		"",
 	}
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -226,7 +226,7 @@ func TestGetTrackingsExport(t *testing.T) {
 		"",
 		"",
 	}
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -241,7 +241,7 @@ func TestGetTracking(t *testing.T) {
 		"xq-express",
 		"LS404494276CN",
 	}
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -263,7 +263,7 @@ func TestUpdateTracking(t *testing.T) {
 		"ups",
 		"1Z9999999999999998",
 	}
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -288,7 +288,7 @@ func TestReTrack(t *testing.T) {
 		"ups",
 		"1Z9999999999999998",
 	}
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -303,7 +303,7 @@ func TestGetLastCheckpoint(t *testing.T) {
 		"xq-express",
 		"LS404494276CN",
 	}
-	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl {
+	var api apiV4.TrackingsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -332,7 +332,7 @@ func TestAddNotification(t *testing.T) {
 		nil,
 		[]string{"+85254469627"},
 	}
-	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl {
+	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -354,7 +354,7 @@ func TestRemoveNotification(t *testing.T) {
 		nil,
 		[]string{"+85254469627"},
 	}
-	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl {
+	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
 		nil,
@@ -365,14 +365,14 @@ func TestRemoveNotification(t *testing.T) {
 }
 
 func TestGetNotificationSetting(t *testing.T) {
-	expect := apiV4.NotificationSetting{Android:[]string{}, Emails:[]string{"vb"}, Ios:[]string{"dewdewfe"}, Smses:[]string{}}
+	expect := apiV4.NotificationSetting{Android: []string{}, Emails: []string{"vb"}, Ios: []string{"dewdewfe"}, Smses: []string{}}
 	resp := apiV4.NotificationSettingEnvelope{
 		apiV4.ResponseMeta{200, "", ""},
 		apiV4.NotificationSettingWrapper{expect},
 	}
 	mockhttp("GET", "https://api.aftership.com/v4/notifications/xq-express/LS404494276CN", resp)
 
-	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl {
+	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl{
 		"XXXXXXX",
 		nil,
 		nil,

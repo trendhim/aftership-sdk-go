@@ -18,18 +18,17 @@ type Response interface {
 
 // RetryPolicy configures retry policy
 type RetryPolicy struct {
-	RetryOnError bool
-	ErrorRetryCount int
+	RetryOnError            bool
+	ErrorRetryCount         int
 	RetryOnHittingRateLimit bool
 }
 
 type ResponseMeta struct {
-	Code int `json:"code"`
+	Code    int    `json:"code"`
 	Message string `json:"message"`
-	Type string `json:"type"`
+	Type    string `json:"type"`
 }
 
 type AfterShipApiError struct {
 	ResponseMeta
 }
-

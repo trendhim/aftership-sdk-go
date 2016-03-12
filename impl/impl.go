@@ -4,30 +4,30 @@ import (
 	"github.com/vimukthi-git/aftership-go/apiV4"
 	"net/http"
 	//"fmt"
-	"log"
-	"io/ioutil"
-	"encoding/json"
 	"bytes"
+	"encoding/json"
 	"github.com/google/go-querystring/query"
+	"io/ioutil"
+	"log"
 )
 
 type AfterShipApiV4Impl struct {
-	ApiKey string
+	ApiKey      string
 	RetryPolicy *apiV4.RetryPolicy
-	Client *http.Client
+	Client      *http.Client
 }
 
 // GetCouriers returns a list of couriers activated at your AfterShip account.
 func (api *AfterShipApiV4Impl) GetCouriers() ([]apiV4.Courier, apiV4.AfterShipApiError) {
 	var courierEnvelope apiV4.CourierEnvelope
-	err := api.request("GET", apiV4.COURIERS_ENDPOINT, &courierEnvelope, nil);
+	err := api.request("GET", apiV4.COURIERS_ENDPOINT, &courierEnvelope, nil)
 	return courierEnvelope.Data.Couriers, err
 }
 
 // GetAll returns a list of all couriers.
 func (api *AfterShipApiV4Impl) GetAllCouriers() ([]apiV4.Courier, apiV4.AfterShipApiError) {
 	var courierEnvelope apiV4.CourierEnvelope
-	err := api.request("GET", apiV4.COURIERS_ALL_ENDPOINT, &courierEnvelope, nil);
+	err := api.request("GET", apiV4.COURIERS_ALL_ENDPOINT, &courierEnvelope, nil)
 	return courierEnvelope.Data.Couriers, err
 }
 
@@ -35,14 +35,14 @@ func (api *AfterShipApiV4Impl) GetAllCouriers() ([]apiV4.Courier, apiV4.AfterShi
 // and selected couriers or a list of couriers.
 func (api *AfterShipApiV4Impl) DetectCouriers(params apiV4.CourierDetectParam) ([]apiV4.Courier, apiV4.AfterShipApiError) {
 	var courierEnvelope apiV4.CourierEnvelope
-	err := api.request("POST", apiV4.COURIERS_DETECT_ENDPOINT, &courierEnvelope, &apiV4.CourierDetectParamReqBody{params});
+	err := api.request("POST", apiV4.COURIERS_DETECT_ENDPOINT, &courierEnvelope, &apiV4.CourierDetectParamReqBody{params})
 	return courierEnvelope.Data.Couriers, err
 }
 
 // CreateTracking creates a new tracking
 func (api *AfterShipApiV4Impl) CreateTracking(newTracking apiV4.NewTracking) (apiV4.Tracking, apiV4.AfterShipApiError) {
 	var trackingEnvelope apiV4.TrackingEnvelope
-	err := api.request("POST", apiV4.TRACKINGS_ENDPOINT, &trackingEnvelope, &apiV4.NewTrackingReqBody{newTracking});
+	err := api.request("POST", apiV4.TRACKINGS_ENDPOINT, &trackingEnvelope, &apiV4.NewTrackingReqBody{newTracking})
 	return trackingEnvelope.Data.Tracking, err
 }
 
@@ -55,7 +55,7 @@ func (api *AfterShipApiV4Impl) DeleteTracking(id apiV4.TrackingId) (apiV4.Delete
 	} else if id.Slug != "" && id.TrackingNumber != "" {
 		url = apiV4.TRACKINGS_ENDPOINT + "/" + id.Slug + "/" + id.TrackingNumber
 	}
-	err := api.request("DELETE", url, &deletedtrackingEnvelope, nil);
+	err := api.request("DELETE", url, &deletedtrackingEnvelope, nil)
 	return deletedtrackingEnvelope.Data.Tracking, err
 }
 
@@ -71,7 +71,7 @@ func (api *AfterShipApiV4Impl) GetTrackings(params apiV4.GetTrackingsParams) (ap
 	if queryString != "" {
 		url += "?" + queryString
 	}
-	error := api.request("GET", url, &trackingsEnvelope, nil);
+	error := api.request("GET", url, &trackingsEnvelope, nil)
 	return trackingsEnvelope.Data, error
 }
 
@@ -87,7 +87,7 @@ func (api *AfterShipApiV4Impl) GetTrackingsExport(params apiV4.GetTrackingsParam
 	if queryString != "" {
 		url += "?" + queryString
 	}
-	error := api.request("GET", url, &trackingsEnvelope, nil);
+	error := api.request("GET", url, &trackingsEnvelope, nil)
 	return trackingsEnvelope.Data, error
 }
 
@@ -113,7 +113,7 @@ func (api *AfterShipApiV4Impl) GetTracking(id apiV4.TrackingId, fields string, l
 		}
 		url += "lang=" + lang
 	}
-	err := api.request("GET", url, &trackingEnvelope, nil);
+	err := api.request("GET", url, &trackingEnvelope, nil)
 	return trackingEnvelope.Data.Tracking, err
 }
 
@@ -126,7 +126,7 @@ func (api *AfterShipApiV4Impl) UpdateTracking(id apiV4.TrackingId, update apiV4.
 	} else if id.Slug != "" && id.TrackingNumber != "" {
 		url = apiV4.TRACKINGS_ENDPOINT + "/" + id.Slug + "/" + id.TrackingNumber
 	}
-	err := api.request("PUT", url, &trackingEnvelope, &apiV4.TrackingUpdateReqBody{update});
+	err := api.request("PUT", url, &trackingEnvelope, &apiV4.TrackingUpdateReqBody{update})
 	return trackingEnvelope.Data.Tracking, err
 }
 
@@ -141,13 +141,13 @@ func (api *AfterShipApiV4Impl) ReTrack(id apiV4.TrackingId) (apiV4.Tracking, api
 	}
 	url += "/retrack"
 	var body struct{}
-	err := api.request("POST", url, &trackingEnvelope, body);
+	err := api.request("POST", url, &trackingEnvelope, body)
 	return trackingEnvelope.Data.Tracking, err
 }
 
 // LastCheckPoint Return the tracking information of the last checkpoint of a single tracking.
-func  (api *AfterShipApiV4Impl) GetLastCheckPoint(id apiV4.TrackingId, fields string,
-		lang string) (apiV4.LastCheckPoint, apiV4.AfterShipApiError) {
+func (api *AfterShipApiV4Impl) GetLastCheckPoint(id apiV4.TrackingId, fields string,
+	lang string) (apiV4.LastCheckPoint, apiV4.AfterShipApiError) {
 	var lastCheckPointEnvelope apiV4.LastCheckPointEnvelope
 	var url string
 	if id.Id != "" {
@@ -168,13 +168,13 @@ func  (api *AfterShipApiV4Impl) GetLastCheckPoint(id apiV4.TrackingId, fields st
 		}
 		url += "lang=" + lang
 	}
-	err := api.request("GET", url, &lastCheckPointEnvelope, nil);
+	err := api.request("GET", url, &lastCheckPointEnvelope, nil)
 	return lastCheckPointEnvelope.Data, err
 }
 
 // AddNotification Adds notifications to a tracking number.
-func  (api *AfterShipApiV4Impl) AddNotification(id apiV4.TrackingId,
-		notification apiV4.NotificationSetting) (apiV4.NotificationSetting, apiV4.AfterShipApiError) {
+func (api *AfterShipApiV4Impl) AddNotification(id apiV4.TrackingId,
+	notification apiV4.NotificationSetting) (apiV4.NotificationSetting, apiV4.AfterShipApiError) {
 	var notificationSettingEnvelope apiV4.NotificationSettingEnvelope
 	var url string
 	if id.Id != "" {
@@ -183,13 +183,13 @@ func  (api *AfterShipApiV4Impl) AddNotification(id apiV4.TrackingId,
 		url = apiV4.NOTIFICATIONS + "/" + id.Slug + "/" + id.TrackingNumber
 	}
 	url += "/add"
-	err := api.request("POST", url, &notificationSettingEnvelope, &apiV4.NotificationSettingWrapper{notification});
+	err := api.request("POST", url, &notificationSettingEnvelope, &apiV4.NotificationSettingWrapper{notification})
 	return notificationSettingEnvelope.Data.Notification, err
 }
 
 // RemoveNotification Removes notifications from a tracking number.
-func  (api *AfterShipApiV4Impl) RemoveNotification(id apiV4.TrackingId,
-		notification apiV4.NotificationSetting) (apiV4.NotificationSetting, apiV4.AfterShipApiError) {
+func (api *AfterShipApiV4Impl) RemoveNotification(id apiV4.TrackingId,
+	notification apiV4.NotificationSetting) (apiV4.NotificationSetting, apiV4.AfterShipApiError) {
 	var notificationSettingEnvelope apiV4.NotificationSettingEnvelope
 	var url string
 	if id.Id != "" {
@@ -198,12 +198,12 @@ func  (api *AfterShipApiV4Impl) RemoveNotification(id apiV4.TrackingId,
 		url = apiV4.NOTIFICATIONS + "/" + id.Slug + "/" + id.TrackingNumber
 	}
 	url += "/remove"
-	err := api.request("POST", url, &notificationSettingEnvelope, &apiV4.NotificationSettingWrapper{notification});
+	err := api.request("POST", url, &notificationSettingEnvelope, &apiV4.NotificationSettingWrapper{notification})
 	return notificationSettingEnvelope.Data.Notification, err
 }
 
 // GetNotificationSetting Gets notifications value from a tracking number.
-func  (api *AfterShipApiV4Impl) GetNotificationSetting(id apiV4.TrackingId, fields string) (apiV4.NotificationSetting,
+func (api *AfterShipApiV4Impl) GetNotificationSetting(id apiV4.TrackingId, fields string) (apiV4.NotificationSetting,
 	apiV4.AfterShipApiError) {
 	var notificationSettingEnvelope apiV4.NotificationSettingEnvelope
 	var url string
@@ -215,13 +215,13 @@ func  (api *AfterShipApiV4Impl) GetNotificationSetting(id apiV4.TrackingId, fiel
 	if fields != "" {
 		url += "?fields=" + fields
 	}
-	err := api.request("GET", url, &notificationSettingEnvelope, nil);
+	err := api.request("GET", url, &notificationSettingEnvelope, nil)
 	return notificationSettingEnvelope.Data.Notification, err
 }
 
 // request is generic method to communicate all REST requests
 func (api *AfterShipApiV4Impl) request(method string, endpoint string,
-		result apiV4.Response, body interface{}) apiV4.AfterShipApiError {
+	result apiV4.Response, body interface{}) apiV4.AfterShipApiError {
 
 	if api.Client == nil {
 		api.Client = &http.Client{}
@@ -232,7 +232,7 @@ func (api *AfterShipApiV4Impl) request(method string, endpoint string,
 		log.Fatal(err)
 	}
 
-	req, _ := http.NewRequest(method, apiV4.URL + endpoint, bytes.NewBuffer(bodyStr))
+	req, _ := http.NewRequest(method, apiV4.URL+endpoint, bytes.NewBuffer(bodyStr))
 	// req, _ := http.NewRequest(method, "http://localhost:8080/post", bytes.NewBuffer(bodyStr))
 	req.Header.Add(apiV4.API_KEY_HEADER_FIELD, api.ApiKey)
 	if body != nil {
@@ -264,4 +264,3 @@ func (api *AfterShipApiV4Impl) request(method string, endpoint string,
 		result.ResponseCode(),
 	}
 }
-

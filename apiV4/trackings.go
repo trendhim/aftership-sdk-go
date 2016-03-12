@@ -5,91 +5,91 @@ package apiV4
 
 // NewTracking provides parameters for new Tracking API request
 type NewTracking struct {
-	TrackingNumber string `json:"tracking_number"`
-	Slug []string `json:"slug,omitempty"`
-	TrackingPostalCode string `json:"tracking_postal_code,omitempty"`
-	TrackingShipDate string `json:"tracking_ship_date,omitempty"`
-	TrackingAccountNumber string `json:"tracking_account_number,omitempty"`
-	TrackingKey string `json:"tracking_key,omitempty"`
-	TrackingDestinationCountry string `json:"tracking_destination_country,omitempty"`
-	Android []string `json:"android,omitempty"`
-	Ios []string `json:"ios,omitempty"`
-	Emails []string `json:"emails,omitempty"`
-	Smses []string `json:"smses,omitempty"`
-	Title string `json:"title,omitempty"`
-	CustomerName string `json:"customer_name,omitempty"`
-	DestinationCountryIso3 string `json:"destination_country_iso3,omitempty"`
-	OrderId string `json:"order_id,omitempty"`
-	OrderIdPath string `json:"order_id_path,omitempty"`
-	CustomFields map[string]string `json:"custom_fields,omitempty"`
+	TrackingNumber             string            `json:"tracking_number"`
+	Slug                       []string          `json:"slug,omitempty"`
+	TrackingPostalCode         string            `json:"tracking_postal_code,omitempty"`
+	TrackingShipDate           string            `json:"tracking_ship_date,omitempty"`
+	TrackingAccountNumber      string            `json:"tracking_account_number,omitempty"`
+	TrackingKey                string            `json:"tracking_key,omitempty"`
+	TrackingDestinationCountry string            `json:"tracking_destination_country,omitempty"`
+	Android                    []string          `json:"android,omitempty"`
+	Ios                        []string          `json:"ios,omitempty"`
+	Emails                     []string          `json:"emails,omitempty"`
+	Smses                      []string          `json:"smses,omitempty"`
+	Title                      string            `json:"title,omitempty"`
+	CustomerName               string            `json:"customer_name,omitempty"`
+	DestinationCountryIso3     string            `json:"destination_country_iso3,omitempty"`
+	OrderId                    string            `json:"order_id,omitempty"`
+	OrderIdPath                string            `json:"order_id_path,omitempty"`
+	CustomFields               map[string]string `json:"custom_fields,omitempty"`
 }
 
 // CheckPoint represents a CheckPoint returned by the Aftership API
 type CheckPoint struct {
-	Slug string `json:"slug,omitempty"`
-	CreatedAt string `json:"created_at,omitempty"`
-	CheckPointTime string `json:"checkpoint_time,omitempty"`
-	City string `json:"city,omitempty"`
-	Coordinates []string `json:"coordinates,omitempty"`
-	CountryIso3 string `json:"country_iso3,omitempty"`
-	CountryName string `json:"country_name,omitempty"`
-	Message string `json:"message,omitempty"`
-	State string `json:"state,omitempty"`
-	Tag string `json:"tag,omitempty"`
-	Zip string `json:"zip,omitempty"`
+	Slug           string   `json:"slug,omitempty"`
+	CreatedAt      string   `json:"created_at,omitempty"`
+	CheckPointTime string   `json:"checkpoint_time,omitempty"`
+	City           string   `json:"city,omitempty"`
+	Coordinates    []string `json:"coordinates,omitempty"`
+	CountryIso3    string   `json:"country_iso3,omitempty"`
+	CountryName    string   `json:"country_name,omitempty"`
+	Message        string   `json:"message,omitempty"`
+	State          string   `json:"state,omitempty"`
+	Tag            string   `json:"tag,omitempty"`
+	Zip            string   `json:"zip,omitempty"`
 }
 
 // Tracking represents a Tracking returned by the Aftership API
 type Tracking struct {
 	NewTracking
 	// TODO write a function on this type to convert slug field with a switch
-	Slug interface{} `json:"slug"`
-	Id string `json:"id"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
-	Active bool `json:"active"`
-	ExpectedDelivery string `json:"expected_delivery"`
-	Note string `json:"note"`
-	OriginCountryIso3 string `json:"origin_country_iso3"`
-	ShipmentPackageCount int `json:"shipment_package_count"`
-	ShipmentType string `json:"shipment_type"`
-	SignedBy string `json:"signed_by"`
-	Source string `json:"source"`
-	Tag string `json:"tag"`
-	TrackCount int `json:"tracked_count"`
-	UniqueToken string `json:"unique_token"`
-	CheckPoints []CheckPoint `json:"checkpoints"`
+	Slug                 interface{}  `json:"slug"`
+	Id                   string       `json:"id"`
+	CreatedAt            string       `json:"created_at"`
+	UpdatedAt            string       `json:"updated_at"`
+	Active               bool         `json:"active"`
+	ExpectedDelivery     string       `json:"expected_delivery"`
+	Note                 string       `json:"note"`
+	OriginCountryIso3    string       `json:"origin_country_iso3"`
+	ShipmentPackageCount int          `json:"shipment_package_count"`
+	ShipmentType         string       `json:"shipment_type"`
+	SignedBy             string       `json:"signed_by"`
+	Source               string       `json:"source"`
+	Tag                  string       `json:"tag"`
+	TrackCount           int          `json:"tracked_count"`
+	UniqueToken          string       `json:"unique_token"`
+	CheckPoints          []CheckPoint `json:"checkpoints"`
 }
 
 // TrackingId identifies a Tracking to be deleted
 // its mandatory to provide either Id or Slug and TrackingNumber both
 type TrackingId struct {
-	Id string
-	Slug string
+	Id             string
+	Slug           string
 	TrackingNumber string
 }
 
 // TrackingUpdate represents an update to Tracking details
 type TrackingUpdate struct {
-	Emails []string `json:"emails,omitempty"`
-	Smses []string `json:"smses,omitempty"`
-	Title string `json:"title,omitempty"`
-	CustomerName string `json:"customer_name,omitempty"`
-	DestinationCountryIso3 string `json:"destination_country_iso3,omitempty"`
-	OrderId string `json:"order_id,omitempty"`
-	OrderIdPath string `json:"order_id_path,omitempty"`
-	CustomFields map[string]string `json:"custom_fields,omitempty"`
+	Emails                 []string          `json:"emails,omitempty"`
+	Smses                  []string          `json:"smses,omitempty"`
+	Title                  string            `json:"title,omitempty"`
+	CustomerName           string            `json:"customer_name,omitempty"`
+	DestinationCountryIso3 string            `json:"destination_country_iso3,omitempty"`
+	OrderId                string            `json:"order_id,omitempty"`
+	OrderIdPath            string            `json:"order_id_path,omitempty"`
+	CustomFields           map[string]string `json:"custom_fields,omitempty"`
 }
 
 // DeletedTracking is a deleted tracking object returned by API
 type DeletedTracking struct {
-	Id string `json:"id,omitempty"`
-	Slug string `json:"slug,omitempty"`
-	TrackingNumber string `json:"tracking_number"`
-	TrackingPostalCode string `json:"tracking_postal_code,omitempty"`
-	TrackingShipDate string `json:"tracking_ship_date,omitempty"`
+	Id                    string `json:"id,omitempty"`
+	Slug                  string `json:"slug,omitempty"`
+	TrackingNumber        string `json:"tracking_number"`
+	TrackingPostalCode    string `json:"tracking_postal_code,omitempty"`
+	TrackingShipDate      string `json:"tracking_ship_date,omitempty"`
 	TrackingAccountNumber string `json:"tracking_account_number,omitempty"`
-	TrackingKey string `json:"tracking_key,omitempty"`
+	TrackingKey           string `json:"tracking_key,omitempty"`
 }
 
 // GetTrackingsParams represents the set of params for get Trackings API
@@ -147,10 +147,10 @@ type GetTrackingsParams struct {
 
 type TrackingsData struct {
 	GetTrackingsParams
-	Origin []string `json:"origin"`
-	Destination []string `json:"destination"`
-	Cursor string `json:"cursor"`
-	Trackings []Tracking `json:"trackings"`
+	Origin      []string   `json:"origin"`
+	Destination []string   `json:"destination"`
+	Cursor      string     `json:"cursor"`
+	Trackings   []Tracking `json:"trackings"`
 }
 
 // TrackingResponseData is a model for data part of the tracking API responses
@@ -160,7 +160,7 @@ type TrackingResponseData struct {
 
 // TrackingEnvelope is the message envelope for the tracking API responses
 type TrackingEnvelope struct {
-	Meta ResponseMeta `json:"meta"`
+	Meta ResponseMeta         `json:"meta"`
 	Data TrackingResponseData `json:"data"`
 }
 
@@ -177,13 +177,13 @@ type DeleteTrackingResponseData struct {
 
 // DeleteTrackingEnvelope is the message envelope for the tracking API responses
 type DeleteTrackingEnvelope struct {
-	Meta ResponseMeta `json:"meta"`
+	Meta ResponseMeta               `json:"meta"`
 	Data DeleteTrackingResponseData `json:"data"`
 }
 
 // TrackingsEnvelope is the message envelope for the trackings API responses
 type TrackingsEnvelope struct {
-	Meta ResponseMeta `json:"meta"`
+	Meta ResponseMeta  `json:"meta"`
 	Data TrackingsData `json:"data"`
 }
 
@@ -209,16 +209,16 @@ type TrackingUpdateReqBody struct {
 
 // LastCheckPoint is the last checkpoint API response
 type LastCheckPoint struct {
-	Id string `json:"id,omitempty"`
-	Slug string `json:"slug,omitempty"`
-	TrackingNumber string `json:"tracking_number"`
-	Tag string `json:"tag"`
-	CheckPoint CheckPoint `json:"checkpoint"`
+	Id             string     `json:"id,omitempty"`
+	Slug           string     `json:"slug,omitempty"`
+	TrackingNumber string     `json:"tracking_number"`
+	Tag            string     `json:"tag"`
+	CheckPoint     CheckPoint `json:"checkpoint"`
 }
 
 // LastCheckPointEnvelope is the message envelope for the last checkpoint API responses
 type LastCheckPointEnvelope struct {
-	Meta ResponseMeta `json:"meta"`
+	Meta ResponseMeta   `json:"meta"`
 	Data LastCheckPoint `json:"data"`
 }
 

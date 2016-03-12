@@ -1,13 +1,11 @@
-
 package apiV4
-
 
 // NotificationSetting a notification setting
 type NotificationSetting struct {
 	Android []string `json:"android"`
-	Emails []string `json:"emails"`
-	Ios []string `json:"ios"`
-	Smses []string `json:"smses"`
+	Emails  []string `json:"emails"`
+	Ios     []string `json:"ios"`
+	Smses   []string `json:"smses"`
 }
 
 type NotificationSettingWrapper struct {
@@ -16,7 +14,7 @@ type NotificationSettingWrapper struct {
 
 // NotificationSettingEnvelope is the message envelope for the notification API responses
 type NotificationSettingEnvelope struct {
-	Meta ResponseMeta `json:"meta"`
+	Meta ResponseMeta               `json:"meta"`
 	Data NotificationSettingWrapper `json:"data"`
 }
 

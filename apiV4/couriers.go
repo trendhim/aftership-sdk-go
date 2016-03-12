@@ -2,14 +2,14 @@ package apiV4
 
 // Courier is the model describing an AfterShip courier
 type Courier struct {
-	Slug string `json:"slug"`
-	Name string `json:"name"`
-	Phone string `json:"phone"`
-	OtherName string `json:"other_name"`
-	WebUrl string `json:"web_url"`
-	RequiredFields []string `json:"required_fields"`
-	DefaultLanguage string `json:"default_language"`
-	SupportedLanguages []string `json:"supported_languages"`
+	Slug                   string   `json:"slug"`
+	Name                   string   `json:"name"`
+	Phone                  string   `json:"phone"`
+	OtherName              string   `json:"other_name"`
+	WebUrl                 string   `json:"web_url"`
+	RequiredFields         []string `json:"required_fields"`
+	DefaultLanguage        string   `json:"default_language"`
+	SupportedLanguages     []string `json:"supported_languages"`
 	ServiceFromCountryISO3 []string `json:"service_from_country_iso3"`
 }
 
@@ -20,7 +20,7 @@ type CourierResponseData struct {
 
 // CourierEnvelope is the message envelope for the courier API responses
 type CourierEnvelope struct {
-	Meta ResponseMeta `json:"meta"`
+	Meta ResponseMeta        `json:"meta"`
 	Data CourierResponseData `json:"data"`
 }
 
