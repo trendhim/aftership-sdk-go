@@ -1,9 +1,13 @@
-aftership-go 
+![Picture](https://www.aftership.com/assets/common/img/logo-aftership-premium-bright.png)
+
+Aftership-SDK-GoLang 
 ============
 
 ### Introduction:
 
-[Aftership](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. aftership-go is a SDK to develop Apps using Aftership API in go-lang. All endpoints including couriers, tracking and notification are supported.
+[Aftership](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. Aftership-SDK-GoLang is a SDK to develop Apps using Aftership API in go-lang. All endpoints including couriers, tracking and notification are supported.
+
+Contact: <support@aftership.com>
 
 You will need to create an account at [Aftership](https://aftership.com) and obtain an API key first to access Aftership APIs using aftership-go SDK.
 
