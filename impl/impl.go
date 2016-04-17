@@ -9,6 +9,9 @@ import (
 	"github.com/google/go-querystring/query"
 	"io/ioutil"
 	"log"
+	"fmt"
+	"time"
+	"strconv"
 )
 
 type AfterShipApiV4Impl struct {
@@ -229,36 +232,76 @@ func (api *AfterShipApiV4Impl) request(method string, endpoint string,
 
 	bodyStr, err := json.Marshal(body)
 	if err != nil {
-		log.Fatal(err)
+		return apiV4.AfterShipApiError{
+			apiV4.ResponseMeta{
+				apiV4.SDK_ERROR_CODE,
+				fmt.Sprint(err),
+				"JSON Error",
+			},
+		}
 	}
 
 	req, _ := http.NewRequest(method, apiV4.URL+endpoint, bytes.NewBuffer(bodyStr))
 	// req, _ := http.NewRequest(method, "http://localhost:8080/post", bytes.NewBuffer(bodyStr))
 	req.Header.Add(apiV4.API_KEY_HEADER_FIELD, api.ApiKey)
+	req.Header.Add("Connection", "keep-alive")
+	req.Header.Add("aftership-sdk-go", "v0.1")
 	if body != nil {
 		req.Header.Add("content-type", "application/json")
 	}
 
 	resp, err := api.Client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return apiV4.AfterShipApiError{
+			apiV4.ResponseMeta{
+				apiV4.SDK_ERROR_CODE,
+				fmt.Sprint(err),
+				"IO Error",
+			},
+		}
 	}
-	log.Print("X-RateLimit-Reset", resp.Header.Get("X-RateLimit-Reset"))
-	log.Print("X-RateLimit-Limit", resp.Header.Get("X-RateLimit-Limit"))
-	log.Print("X-RateLimit-Remaining", resp.Header.Get("X-RateLimit-Remaining"))
+	//log.Print("X-RateLimit-Reset", resp.Header.Get("X-RateLimit-Reset"))
+	//log.Print("X-RateLimit-Limit", resp.Header.Get("X-RateLimit-Limit"))
+	//log.Print("X-RateLimit-Remaining", resp.Header.Get("X-RateLimit-Remaining"))
+	rateLimitReset, _ := strconv.Atoi(resp.Header.Get("X-RateLimit-Reset"))
+
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		return apiV4.AfterShipApiError{
+			apiV4.ResponseMeta{
+				apiV4.SDK_ERROR_CODE,
+				fmt.Sprint(err),
+				"IO Error",
+			},
+		}
 	}
 	err = json.Unmarshal(contents, result)
 	if err != nil {
-		log.Fatal(err)
+		return apiV4.AfterShipApiError{
+			apiV4.ResponseMeta{
+				apiV4.SDK_ERROR_CODE,
+				fmt.Sprint(err),
+				"JSON Error",
+			},
+		}
 	}
 	code := result.ResponseCode().Code
 
+	// handling rate limit error by sleeping and retrying after reset
+	if code == 429 && api.RetryPolicy.RetryOnHittingRateLimit {
+		timeNow := time.Now().Unix()
+		dur := time.Duration(int64(rateLimitReset) - timeNow) * time.Second
+		log.Println("Hit rate limit, Auto retry after Dur : ", dur)
+		c := time.After(dur)
+		for {
+			log.Println("Retrying start ", <-c)
+			return api.request(method, endpoint, result, body)
+		}
+	}
+
 	if code != 200 && code != 201 {
-		log.Print(result.ResponseCode())
+		// log.Print(result.ResponseCode())
 	}
 	return apiV4.AfterShipApiError{
 		result.ResponseCode(),

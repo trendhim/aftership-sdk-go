@@ -119,4 +119,18 @@ func main() {
 
 ````
 
+- Setting a proxy through which the SDK will make requests is easy since we expose `http.Client` to the user. Eg: 
+
+````
+proxyUrl, err := url.Parse("http://proxyIp:proxyPort")
+myClient := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
+
+// Instantiate sdk with your own client.
+var api apiV4.TrackingsHandler = &impl.AfterShipApiV4Impl{
+                "<your-api-key>",
+                nil,
+                myClient,
+        }
+````
+
 Check `./impl/impl_test.go` for examples on using all endpoints.

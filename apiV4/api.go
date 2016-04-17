@@ -11,6 +11,7 @@ const TRACKINGS_ENDPOINT = "/trackings"
 const TRACKINGS_EXPORTS_ENDPOINT = "/trackings/exports"
 const LAST_CHECKPOINT_ENDPOINT = "/last_checkpoint"
 const NOTIFICATIONS = "/notifications"
+const SDK_ERROR_CODE = 10000
 
 type Response interface {
 	ResponseCode() ResponseMeta

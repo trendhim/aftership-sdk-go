@@ -7,12 +7,13 @@ import (
 	"github.com/vimukthi-git/aftership-go/apiV4"
 	"net/http"
 	"testing"
+	//"time"
 )
 
 func TestMain(m *testing.M) {
-	//httpmock.Activate()
+	httpmock.Activate()
 	m.Run()
-	//httpmock.DeactivateAndReset()
+	httpmock.DeactivateAndReset()
 }
 
 func TestGetCouriers(t *testing.T) {
@@ -32,9 +33,9 @@ func TestGetCouriers(t *testing.T) {
 	mockhttp("GET", "https://api.aftership.com/v4/couriers", apiV4.CourierEnvelope{
 		apiV4.ResponseMeta{200, "", ""},
 		apiV4.CourierResponseData{exp},
-	})
+	}, nil)
 	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
-		"XXXX",
+		"1eb4d44d-228c-4d2e-aa8d-53eeebe86c61",
 		nil,
 		nil,
 	}
@@ -58,8 +59,12 @@ func TestGetAllCouriers(t *testing.T) {
 		},
 	}
 	mockhttp("GET", "https://api.aftership.com/v4/couriers/all", apiV4.CourierEnvelope{
-		apiV4.ResponseMeta{200, "", ""},
+		apiV4.ResponseMeta{429, "", ""},
 		apiV4.CourierResponseData{exp},
+	}, map[string]string{
+		"X-RateLimit-Reset":"1458463600",
+		"X-RateLimit-Limit": "",
+		"X-RateLimit-Remaining": "",
 	})
 
 	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
@@ -89,7 +94,7 @@ func TestDetectCouriers(t *testing.T) {
 	mockhttp("GET", "https://api.aftership.com/v4/couriers/all", apiV4.CourierEnvelope{
 		apiV4.ResponseMeta{200, "", ""},
 		apiV4.CourierResponseData{exp},
-	})
+	}, nil)
 	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
 		"xxxx",
 		nil,
@@ -370,7 +375,7 @@ func TestGetNotificationSetting(t *testing.T) {
 		apiV4.ResponseMeta{200, "", ""},
 		apiV4.NotificationSettingWrapper{expect},
 	}
-	mockhttp("GET", "https://api.aftership.com/v4/notifications/xq-express/LS404494276CN", resp)
+	mockhttp("GET", "https://api.aftership.com/v4/notifications/xq-express/LS404494276CN", resp, nil)
 
 	var api apiV4.NotificationsHandler = &AfterShipApiV4Impl{
 		"XXXXXXX",
@@ -387,14 +392,87 @@ func TestGetNotificationSetting(t *testing.T) {
 	assert.Equal(t, expect, res)
 }
 
-func mockhttp(method string, url string, resp interface{}) {
+func mockhttp(method string, url string, resp interface{}, headers map[string]string) {
 	httpmock.RegisterResponder(method, url,
 		func(req *http.Request) (*http.Response, error) {
 			resp, err := httpmock.NewJsonResponse(200, resp)
 			if err != nil {
 				return httpmock.NewStringResponse(500, ""), nil
 			}
+			for key, value := range headers {
+				resp.Header.Set(key, value)
+			}
 			return resp, nil
 		},
 	)
+}
+
+func rateLimitCheck() {
+	//	p := apiV4.GetTrackingsParams{
+	//		1,
+	//		5,
+	//		"",
+	//		"ups",
+	//		0,
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//	}
+	var api apiV4.CourierHandler = &AfterShipApiV4Impl{
+		"1eb4d44d-228c-4d2e-aa8d-53eeebe86c61",
+		&apiV4.RetryPolicy{
+			false,
+			0,
+			false,
+		},
+		nil,
+	}
+
+
+	c := make(chan apiV4.AfterShipApiError)
+	for i := 0; i < 100; i++ {
+
+		go func() {
+			//var meta apiV4.AfterShipApiError
+			for i := 0; i < 10000; i++ {
+				_, meta := api.GetCouriers();
+				c <- meta
+				// fmt.Println(res)
+			}
+
+
+		}()
+
+
+	}
+	for {
+
+		<-c
+
+	}
+
+
+	//
+	//	p = apiV4.GetTrackingsParams{
+	//		0,
+	//		0,
+	//		"",
+	//		"",
+	//		0,
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//		"",
+	//	}
+	//	fmt.Println(api.GetTrackings(p))
+	//	assert.Equal(t, "", "")
 }
