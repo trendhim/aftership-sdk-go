@@ -134,3 +134,8 @@ var api apiV4.TrackingsHandler = &impl.AfterShipApiV4Impl{
 ````
 
 Check `./impl/impl_test.go` for examples on using all endpoints.
+
+### Documentation
+
+- [API Version 4](https://godoc.org/github.com/vimukthi-git/Aftership-SDK-GoLang/apiV4)
+- [API Version 4 Implementation](https://godoc.org/github.com/vimukthi-git/Aftership-SDK-GoLang/impl)
