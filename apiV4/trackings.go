@@ -35,6 +35,7 @@ type CheckPoint struct {
 	CountryName    string   `json:"country_name,omitempty"`
 	Message        string   `json:"message,omitempty"`
 	State          string   `json:"state,omitempty"`
+	Location       string   `json:"location,omitempty"`
 	Tag            string   `json:"tag,omitempty"`
 	Zip            string   `json:"zip,omitempty"`
 }
