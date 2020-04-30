@@ -9,9 +9,14 @@ import (
 )
 
 func main() {
-	aftership := aftership.NewAfterShip(conf.AfterShipConf{
-		AppKey: "YOUR_API_KEY",
+	aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
 	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Get last checkpopint
 	param := checkpoint.SingleTrackingParam{

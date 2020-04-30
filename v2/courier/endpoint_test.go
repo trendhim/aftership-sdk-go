@@ -1,7 +1,6 @@
 package courier
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -12,86 +11,126 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMain(m *testing.M) {
-	httpmock.Activate()
-	m.Run()
-	httpmock.DeactivateAndReset()
-}
-
 func TestGetCouriers(t *testing.T) {
-	exp := []Courier{
-		Courier{
-			Slug: "ups",
-			Name: "UPS",
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	exp := List{
+		Total: 1,
+		Couriers: []Courier{
+			Courier{
+				Slug: "ups",
+				Name: "UPS",
+			},
 		},
 	}
-	mockhttp("GET", "https://api.aftership.com/v4/couriers", Envelope{
+	mockhttp("GET", "/couriers", 200, Envelope{
 		response.Meta{200, "", ""},
-		List{
-			Total:    1,
-			Couriers: exp,
-		},
+		exp,
 	}, nil)
 
-	req := request.NewRequest(conf.AfterShipConf{
-		AppKey: "YOUR_API_KEY",
-	})
+	req := request.NewRequest(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
+	}, nil)
 	endpoint := NewEnpoint(req)
-	res, _ := endpoint.GetCouriers()
+	res, err := endpoint.GetCouriers()
 	assert.Equal(t, exp, res)
+	assert.Nil(t, err)
+}
+
+func TestGetCouriersError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	mockhttp("GET", "/couriers", 429, Envelope{
+		response.Meta{429, "You have exceeded the API call rate limit. Default limit is 10 requests per second.", "TooManyRequests"},
+		List{},
+	}, nil)
+
+	req := request.NewRequest(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
+	}, nil)
+	endpoint := NewEnpoint(req)
+	_, err := endpoint.GetCouriers()
+	assert.NotNil(t, err)
+	assert.Equal(t, "TooManyRequests", err.Type)
 }
 
 func TestGetAllCouriers(t *testing.T) {
-	exp := []Courier{
-		Courier{
-			Slug: "ups",
-			Name: "ups",
-		},
-		Courier{
-			Slug: "fedex",
-			Name: "FeDex",
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	exp := List{
+		Total: 1,
+		Couriers: []Courier{
+			Courier{
+				Slug: "ups",
+				Name: "ups",
+			},
+			Courier{
+				Slug: "fedex",
+				Name: "FeDex",
+			},
 		},
 	}
-	mockhttp("GET", "https://api.aftership.com/v4/couriers/all", Envelope{
+	mockhttp("GET", "/couriers/all", 200, Envelope{
 		response.Meta{200, "", ""},
-		List{
-			Total:    1,
-			Couriers: exp,
-		},
+		exp,
 	}, map[string]string{
 		"X-RateLimit-Reset":     "1458463600",
 		"X-RateLimit-Limit":     "",
 		"X-RateLimit-Remaining": "",
 	})
 
-	req := request.NewRequest(conf.AfterShipConf{
-		AppKey: "YOUR_API_KEY",
-	})
+	req := request.NewRequest(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
+	}, nil)
 	endpoint := NewEnpoint(req)
 	res, _ := endpoint.GetAllCouriers()
 	assert.Equal(t, exp, res)
 }
 
-func TestDetectCouriers(t *testing.T) {
-	exp := []Courier{
-		Courier{
-			Slug: "ups",
-			Name: "ups",
-		},
-	}
-	mockhttp("GET", "https://api.aftership.com/v4/couriers/all", Envelope{
-		response.Meta{200, "", ""},
-		List{
-			Total:    1,
-			Couriers: exp,
-		},
+func TestGetAllCouriersError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	mockhttp("GET", "/couriers/all", 429, Envelope{
+		response.Meta{429, "You have exceeded the API call rate limit. Default limit is 10 requests per second.", "TooManyRequests"},
+		List{},
 	}, nil)
 
-	req := request.NewRequest(conf.AfterShipConf{
-		AppKey: "YOUR_API_KEY",
-	})
+	req := request.NewRequest(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
+	}, nil)
 	endpoint := NewEnpoint(req)
-	fmt.Println(endpoint.DetectCouriers(DetectCourierRequest{
+	_, err := endpoint.GetAllCouriers()
+	assert.NotNil(t, err)
+	assert.Equal(t, "TooManyRequests", err.Type)
+}
+
+func TestDetectCouriers(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	exp := DetectList{
+		Total: 2,
+		Couriers: []Courier{
+			Courier{
+				Slug: "ups",
+				Name: "ups",
+			},
+		},
+	}
+	mockhttp("POST", "/couriers/detect", 200, DetectEnvelope{
+		response.Meta{200, "", ""},
+		exp,
+	}, nil)
+
+	req := request.NewRequest(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
+	}, nil)
+	endpoint := NewEnpoint(req)
+	result, _ := endpoint.DetectCouriers(DetectCourierRequest{
 		Tracking: DetectParam{
 			"906587618687",
 			"DA15BU",
@@ -101,14 +140,45 @@ func TestDetectCouriers(t *testing.T) {
 			"",
 			[]string{"dhl", "ups", "fedex"},
 		},
-	}))
-	assert.Equal(t, "", "")
+	})
+	assert.Equal(t, exp, result)
 }
 
-func mockhttp(method string, url string, resp interface{}, headers map[string]string) {
+func TestInvalidDetectCouriers(t *testing.T) {
+	req := request.NewRequest(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
+	}, nil)
+	endpoint := NewEnpoint(req)
+	_, err := endpoint.DetectCouriers(DetectCourierRequest{})
+
+	assert.NotNil(t, err)
+	assert.Equal(t, "HandlerError: Invalid TrackingNumber", err.Message)
+}
+
+func TestDetectCouriersError(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	mockhttp("POST", "/couriers/detect", 429, Envelope{
+		response.Meta{401, "Invalid API key.", "Unauthorized"},
+		List{},
+	}, nil)
+
+	req := request.NewRequest(&conf.AfterShipConf{}, nil)
+	endpoint := NewEnpoint(req)
+	_, err := endpoint.DetectCouriers(DetectCourierRequest{
+		Tracking: DetectParam{
+			TrackingNumber: "906587618687",
+		},
+	})
+	assert.NotNil(t, err)
+	assert.Equal(t, "Unauthorized", err.Type)
+}
+
+func mockhttp(method string, url string, status int, resp interface{}, headers map[string]string) {
 	httpmock.RegisterResponder(method, url,
 		func(req *http.Request) (*http.Response, error) {
-			resp, err := httpmock.NewJsonResponse(200, resp)
+			resp, err := httpmock.NewJsonResponse(status, resp)
 			if err != nil {
 				return httpmock.NewStringResponse(500, ""), nil
 			}

@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/aftership/aftership-sdk-go/v2/conf"
 	"github.com/aftership/aftership-sdk-go/v2/error"
@@ -23,17 +24,19 @@ type APIRequest interface {
 // APIRequestImpl is the implementation of
 type APIRequestImpl struct {
 	Client           *http.Client
+	RateLimit        *response.RateLimit
 	APIKey           string
 	Endpoint         string
 	UserAagentPrefix string
 }
 
 // NewRequest returns the instance of API Request
-func NewRequest(conf conf.AfterShipConf) APIRequest {
+func NewRequest(cfg *conf.AfterShipConf, limit *response.RateLimit) APIRequest {
 	return &APIRequestImpl{
-		APIKey:           conf.AppKey,
-		Endpoint:         conf.Endpoint,
-		UserAagentPrefix: conf.UserAagentPrefix,
+		APIKey:           cfg.APIKey,
+		Endpoint:         cfg.Endpoint,
+		UserAagentPrefix: cfg.UserAagentPrefix,
+		RateLimit:        limit,
 	}
 }
 
@@ -72,7 +75,14 @@ func (impl *APIRequestImpl) MakeRequest(method string, uri string, data interfac
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 
+	// Rate Limit
+	setRateLimit(impl.RateLimit, resp)
+
+	// Unmarshal response object
 	err = json.Unmarshal(contents, &result)
+	if err != nil {
+		return error.MakeRequestError("RequestError", err, string(contents))
+	}
 
 	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
 		// The 2xx range indicate success
@@ -80,4 +90,28 @@ func (impl *APIRequestImpl) MakeRequest(method string, uri string, data interfac
 	}
 
 	return error.MakeAPIError(result)
+}
+
+func setRateLimit(rateLimit *response.RateLimit, resp *http.Response) {
+	if rateLimit != nil && resp != nil && resp.Header != nil {
+		reset := resp.Header.Get("x-ratelimit-reset")
+		n, err := strconv.ParseInt(reset, 10, 64)
+		if err == nil {
+			rateLimit.Reset = n
+		}
+
+		// limit
+		limit := resp.Header.Get("x-ratelimit-limit")
+		i, err := strconv.Atoi(limit)
+		if err == nil {
+			rateLimit.Limit = i
+		}
+
+		// remaining
+		remaining := resp.Header.Get("x-ratelimit-remaining")
+		i, err = strconv.Atoi(remaining)
+		if err == nil {
+			rateLimit.Remaining = i
+		}
+	}
 }

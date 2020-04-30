@@ -9,9 +9,14 @@ import (
 )
 
 func main() {
-	aftership := aftership.NewAfterShip(conf.AfterShipConf{
-		AppKey: "YOUR_API_KEY",
+	aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
 	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Get couriers
 	result, err := aftership.Courier.GetCouriers()
@@ -20,6 +25,9 @@ func main() {
 	} else {
 		fmt.Println(result)
 	}
+
+	// Rate Limit
+	fmt.Println(aftership.RateLimit)
 
 	// Get all couriers
 	result, err = aftership.Courier.GetAllCouriers()

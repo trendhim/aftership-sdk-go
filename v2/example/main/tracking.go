@@ -11,9 +11,14 @@ import (
 )
 
 func main() {
-	aftership := aftership.NewAfterShip(conf.AfterShipConf{
-		AppKey: "YOUR_API_KEY",
+	aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+		APIKey: "YOUR_API_KEY",
 	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Create a tracking
 	trackingNumber := strconv.FormatInt(time.Now().Unix(), 10)

@@ -56,6 +56,10 @@ func (impl *EndpointImpl) GetAllCouriers() (List, *error.AfterShipError) {
 // DetectCouriers returns a list of matched couriers based on tracking number format
 // and selected couriers or a list of couriers.
 func (impl *EndpointImpl) DetectCouriers(req DetectCourierRequest) (DetectList, *error.AfterShipError) {
+	if req.Tracking.TrackingNumber == "" {
+		return DetectList{}, error.MakeSdkError(error.ErrorTypeHandlerError, "HandlerError: Invalid TrackingNumber", "")
+	}
+
 	var envelope DetectEnvelope
 	err := impl.request.MakeRequest("POST", "/couriers/detect", req, &envelope)
 	if err != nil {

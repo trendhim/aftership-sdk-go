@@ -2,6 +2,7 @@ package tracking
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/aftership/aftership-sdk-go/v2/error"
@@ -143,28 +144,28 @@ func BuildTrackingURL(param SingleTrackingParam, path string, subPath string) (s
 		path = "trackings"
 	}
 
-	var url string
+	var trackingURL string
 	if param.ID != "" {
-		url = fmt.Sprintf("/%s/%s", path, param.ID)
+		trackingURL = fmt.Sprintf("/%s/%s", path, url.QueryEscape(param.ID))
 	} else if param.Slug != "" && param.TrackingNumber != "" {
-		url = fmt.Sprintf("/%s/%s/%s", path, param.Slug, param.TrackingNumber)
+		trackingURL = fmt.Sprintf("/%s/%s/%s", path, url.QueryEscape(param.Slug), url.QueryEscape(param.TrackingNumber))
 	} else {
 		return "", error.MakeSdkError(error.ErrorTypeHandlerError, "You must specify the id or slug and tracking number", param)
 	}
 
 	if subPath != "" {
-		url += fmt.Sprintf("/%s", subPath)
+		trackingURL += fmt.Sprintf("/%s", subPath)
 	}
 
 	if param.OptionalParams != nil {
-		url, err := BuildURLWithQueryString(url, param.OptionalParams)
+		url, err := BuildURLWithQueryString(trackingURL, param.OptionalParams)
 		if err != nil {
 			return "", err
 		}
 		return url, nil
 	}
 
-	return url, nil
+	return trackingURL, nil
 }
 
 // BuildURLWithQueryString returns the url with query string

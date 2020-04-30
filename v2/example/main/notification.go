@@ -10,9 +10,14 @@ import (
 )
 
 func main() {
-	aftership := aftership.NewAfterShip(conf.AfterShipConf{
-		AppKey: "d655b36a-d268-4eb3-a0d6-8939c79da93e",
+	aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+		APIKey: "d655b36a-d268-4eb3-a0d6-8939c79da93e",
 	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Get the notification
 	param := tracking.SingleTrackingParam{
