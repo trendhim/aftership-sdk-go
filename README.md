@@ -1,15 +1,13 @@
 
 # Aftership-SDK-GoLang 
 
-[![Build Status](https://travis-ci.org/AfterShip/aftership-sdk-go.svg?branch=v2)](https://travis-ci.org/qiniu/api.v7)
+[![Build Status](https://travis-ci.org/AfterShip/aftership-sdk-go.svg?branch=v2)](https://travis-ci.org/AfterShip/aftership-sdk-go)
 [![GoDoc](https://godoc.org/github.com/AfterShip/aftership-sdk-go?status.svg)](https://godoc.org/github.com/AfterShip/aftership-sdk-go)
 [![AfterShip SDKs channel](https://aftership-sdk-slackin.herokuapp.com/badge.svg)](https://aftership-sdk-slackin.herokuapp.com/)
 
 ## Introduction:
 
 [AfterShip](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. Aftership-SDK-GoLang is a SDK to develop Apps using Aftership API in go-lang. All endpoints including couriers, tracking, last checkpoint and notification are supported.
-
-Contact: <support@aftership.com>
 
 You will need to create an account at [AfterShip](https://aftership.com) and obtain an API key first to access Aftership APIs using aftership-go SDK.
 
@@ -597,6 +595,7 @@ If you get stuck, we're here to help. The following are the best ways to get ass
 
 - [Issue Tracker](https://github.com/AfterShip/aftership-sdk-go/issues) for questions, feature requests, bug reports and general discussion related to this package. Try searching before you create a new issue.
 - [Slack AfterShip SDKs](https://aftership-sdk-slackin.herokuapp.com/): a Slack community, you can find the maintainers and users of this package in #aftership-sdks.
+- [Email us](support@aftership.com): `support@aftership.com`
 
 ## Contributing
 
