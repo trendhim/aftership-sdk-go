@@ -11,7 +11,7 @@ import (
 
 func main() {
 	aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
-		APIKey: "d655b36a-d268-4eb3-a0d6-8939c79da93e",
+		APIKey: "YOUR_API_KEY",
 	})
 
 	if err != nil {
