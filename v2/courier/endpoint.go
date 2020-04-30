@@ -16,7 +16,7 @@ type Endpoint interface {
 
 	// DetectCouriers returns a list of matched couriers based on tracking number format
 	// and selected couriers or a list of couriers.
-	DetectCouriers(params DetectParam) (DetectList, *error.AfterShipError)
+	DetectCouriers(req DetectCourierRequest) (DetectList, *error.AfterShipError)
 }
 
 // EndpointImpl is the implementaion of courier endpoint
@@ -55,9 +55,9 @@ func (impl *EndpointImpl) GetAllCouriers() (List, *error.AfterShipError) {
 
 // DetectCouriers returns a list of matched couriers based on tracking number format
 // and selected couriers or a list of couriers.
-func (impl *EndpointImpl) DetectCouriers(params DetectParam) (DetectList, *error.AfterShipError) {
+func (impl *EndpointImpl) DetectCouriers(req DetectCourierRequest) (DetectList, *error.AfterShipError) {
 	var envelope DetectEnvelope
-	err := impl.request.MakeRequest("POST", "/couriers/detect", &params, &envelope)
+	err := impl.request.MakeRequest("POST", "/couriers/detect", req, &envelope)
 	if err != nil {
 		return DetectList{}, err
 	}

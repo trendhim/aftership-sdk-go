@@ -1,4 +1,4 @@
-github.com/aftership/aftership-sdk-nodejs v0.0.0-20200427124812-eb37c1819e0c h1:QvawJOF6WZiqaNsdOWKawVyiKv91OcZJfX4oK31L+pk=
+github.com/aftership/aftership-sdk-go v0.0.0-20161225020827-1af1356f2a08 h1:wNhg7tYJlf3wTP5dk1+SpwIYm+AjRG3MR5lk3NsT2Z4=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/golang/mock v1.4.3 h1:GV+pQPG/EUUbkh47niozDcADz6go/dUwhVzdUQHIVRw=

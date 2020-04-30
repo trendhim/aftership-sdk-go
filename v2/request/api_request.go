@@ -74,9 +74,10 @@ func (impl *APIRequestImpl) MakeRequest(method string, uri string, data interfac
 
 	err = json.Unmarshal(contents, &result)
 
-	if resp.StatusCode != http.StatusOK {
-		return error.MakeAPIError(result)
+	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
+		// The 2xx range indicate success
+		return nil
 	}
 
-	return nil
+	return error.MakeAPIError(result)
 }

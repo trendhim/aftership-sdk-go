@@ -82,3 +82,8 @@ type DetectParam struct {
 	// Use array to input a list of couriers for auto detect.
 	Slug []string `json:"slug,omitempty"`
 }
+
+// DetectCourierRequest is a model for detect courier API request
+type DetectCourierRequest struct {
+	Tracking DetectParam `json:"tracking"`
+}

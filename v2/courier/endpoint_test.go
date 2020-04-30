@@ -91,14 +91,16 @@ func TestDetectCouriers(t *testing.T) {
 		AppKey: "YOUR_API_KEY",
 	})
 	endpoint := NewEnpoint(req)
-	fmt.Println(endpoint.DetectCouriers(DetectParam{
-		"906587618687",
-		"DA15BU",
-		"20131231",
-		"1234567890",
-		"",
-		"",
-		[]string{"dhl", "ups", "fedex"},
+	fmt.Println(endpoint.DetectCouriers(DetectCourierRequest{
+		Tracking: DetectParam{
+			"906587618687",
+			"DA15BU",
+			"20131231",
+			"1234567890",
+			"",
+			"",
+			[]string{"dhl", "ups", "fedex"},
+		},
 	}))
 	assert.Equal(t, "", "")
 }
