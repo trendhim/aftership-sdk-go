@@ -1,17 +1,17 @@
 
 # Aftership-SDK-GoLang 
 
-[![Build Status](https://travis-ci.org/xiaojian-hong/aftership-sdk-go.svg?branch=v2)](https://travis-ci.org/qiniu/api.v7)
+[![Build Status](https://travis-ci.org/AfterShip/aftership-sdk-go.svg?branch=v2)](https://travis-ci.org/qiniu/api.v7)
 [![GoDoc](https://godoc.org/github.com/AfterShip/aftership-sdk-go?status.svg)](https://godoc.org/github.com/AfterShip/aftership-sdk-go)
 [![AfterShip SDKs channel](https://aftership-sdk-slackin.herokuapp.com/badge.svg)](https://aftership-sdk-slackin.herokuapp.com/)
 
 ## Introduction:
 
-[Aftership](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. Aftership-SDK-GoLang is a SDK to develop Apps using Aftership API in go-lang. All endpoints including couriers, tracking, last checkpoint and notification are supported.
+[AfterShip](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. Aftership-SDK-GoLang is a SDK to develop Apps using Aftership API in go-lang. All endpoints including couriers, tracking, last checkpoint and notification are supported.
 
 Contact: <support@aftership.com>
 
-You will need to create an account at [Aftership](https://aftership.com) and obtain an API key first to access Aftership APIs using aftership-go SDK.
+You will need to create an account at [AfterShip](https://aftership.com) and obtain an API key first to access Aftership APIs using aftership-go SDK.
 
 ## Installation
 
