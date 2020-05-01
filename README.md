@@ -2,6 +2,7 @@
 # Aftership-SDK-GoLang 
 
 [![Build Status](https://travis-ci.org/AfterShip/aftership-sdk-go.svg?branch=v2)](https://travis-ci.org/AfterShip/aftership-sdk-go)
+[![codecov.io](https://codecov.io/github/AfterShip/aftership-sdk-go/coverage.svg?branch=v2)](https://codecov.io/github/AfterShip/aftership-sdk-go?branch=v2)
 [![GoDoc](https://godoc.org/github.com/AfterShip/aftership-sdk-go?status.svg)](https://godoc.org/github.com/AfterShip/aftership-sdk-go)
 [![AfterShip SDKs channel](https://aftership-sdk-slackin.herokuapp.com/badge.svg)](https://aftership-sdk-slackin.herokuapp.com/)
 
@@ -34,13 +35,13 @@ import (
         "fmt"
 
         "github.com/aftership/aftership-sdk-go/v2"
-        "github.com/aftership/aftership-sdk-go/v2/conf"
+        "github.com/aftership/aftership-sdk-go/v2/common"
         "github.com/aftership/aftership-sdk-go/v2/courier"
 )
 
 func main() {
 
-        aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+        aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
                 APIKey: "YOUR_API_KEY",
         })
 
@@ -93,7 +94,7 @@ Create AfterShip SDK instance with config
 Example:
 
 ```go
-aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
     APIKey: "YOUR_API_KEY",
     Endpoint: "https://api.aftership.com/OLDER_VERSIONOUR_API_KEY",
     APIKey: "aftership-sdk-go",
@@ -113,12 +114,12 @@ Make request in a specific endpoint
 
 ```go
 // GET /trackings/:slug/:tracking_number
-param = tracking.SingleTrackingParam{
+param = common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
 }
 
-result, err = aftership.Tracking.GetTracking(param, tracking.GetTrackingParams{})
+result, err = aftership.Tracking.GetTracking(param, nil)
 if err != nil {
     fmt.Println(err)
     return
@@ -138,11 +139,11 @@ import (
     "fmt"
 
     "github.com/aftership/aftership-sdk-go/v2"
-    "github.com/aftership/aftership-sdk-go/v2/conf"
+    "github.com/aftership/aftership-sdk-go/v2/common"
 )
 
 func main() {
-    aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+    aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
         APIKey: "YOUR_API_KEY",
     })
 
@@ -208,12 +209,12 @@ Error return by the SDK instance, mostly invalid param type when calling `constr
 **Throw** by the SDK instance
 
 ```go
-    aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+    aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
         APIKey: "YOUR_API_KEY",
     })
 
     // Get notification
-    param := tracking.SingleTrackingParam{
+    param := common.SingleTrackingParam{
         Slug: "dhl",
     }
 
@@ -243,7 +244,7 @@ Error return by the `request` module
 **Catch** by promise
 
 ```go
-    aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+    aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
         APIKey: "YOUR_API_KEY",
     })
 
@@ -268,7 +269,7 @@ Error return by the Aftership API
 **Catch** by promise
 
 ```go
-    aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+    aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
         APIKey: "YOUR_API_KEY",
     })
 
@@ -379,12 +380,12 @@ fmt.Println(result)
 **DELETE** /trackings/:slug/:tracking_number
 
 ```go
-param := tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
    Slug:           "dhl",
    TrackingNumber: "1234567890",
 }
 
-result, err = aftership.Tracking.DeleteTracking(param)
+result, err := aftership.Tracking.DeleteTracking(param)
 if err != nil {
     fmt.Println(err)
     return
@@ -413,12 +414,12 @@ fmt.Println(result)
 **GET** /trackings/:slug/:tracking_number
 
 ```go
-param = tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
 }
 
-result, err = aftership.Tracking.GetTracking(param, tracking.GetTrackingParams{})
+result, err := aftership.Tracking.GetTracking(param, nil)
 if err != nil {
     fmt.Println(err)
     return
@@ -431,10 +432,10 @@ Tip: You can also add `OptionalParams` to `/:slug/:tracking_number`
 
 ```go
 // GET /trackings/:slug/:tracking_number?tracking_postal_code=:postal_code&tracking_ship_date=:ship_date
-param = tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
-    OptionalParams: &SingleTrackingOptionalParams{
+    OptionalParams: &common.SingleTrackingOptionalParams{
        TrackingPostalCode: "1234",
        TrackingShipDate: "20200420",
     },
@@ -445,11 +446,34 @@ param = tracking.SingleTrackingParam{
 
 ```go
 // GET /trackings/:id
-param = tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     ID: "1234567890",
 }
 
-result, err = aftership.Tracking.GetTracking(param, tracking.GetTrackingParams{})
+result, err := aftership.Tracking.GetTracking(param, nil)
+if err != nil {
+    fmt.Println(err)
+    return
+}
+
+fmt.Println(result)
+```
+
+**PUT** /trackings/:slug/:tracking_number
+
+```go
+param := common.SingleTrackingParam{
+    Slug:           "dhl",
+    TrackingNumber: "1588226550",
+}
+
+updateReq := tracking.UpdateTrackingRequest{
+    Tracking: tracking.UpdateTracking{
+        Title: "New Title",
+    },
+}
+
+result, err := aftership.Tracking.UpdateTracking(param, updateReq)
 if err != nil {
     fmt.Println(err)
     return
@@ -461,12 +485,12 @@ fmt.Println(result)
 **POST** /trackings/:slug/:tracking_number/retrack
 
 ```go
-param = tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
 }
 
-result, err = aftership.Tracking.ReTrack(param)
+result, err := aftership.Tracking.ReTrack(param)
 if err != nil {
     fmt.Println(err)
     return
@@ -480,9 +504,9 @@ fmt.Println(result)
 **GET** /last_checkpoint/:slug/:tracking_number
 
 ```go
-param := checkpoint.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "ups",
-  TrackingNumber: "1234567890",
+    TrackingNumber: "1234567890",
 }
 
 result, err := aftership.LastCheckpoint.GetLastCheckpoint(param, "", "")
@@ -499,7 +523,7 @@ fmt.Println(result)
 **GET** /notifications/:slug/:tracking_number
 
 ```go
-param := tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
 }
@@ -516,7 +540,7 @@ fmt.Println(result)
 **POST** /notifications/:slug/:tracking_number/add
 
 ```go
-param := tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
 }
@@ -528,7 +552,7 @@ data := notification.Data{
     },
 }
 
-result, err = aftership.Notification.AddNotification(param, data)
+result, err := aftership.Notification.AddNotification(param, data)
 if err != nil {
     fmt.Println(err)
     return
@@ -540,7 +564,7 @@ fmt.Println(result)
 **POST** /notifications/:slug/:tracking_number/remove
 
 ```go
-param := tracking.SingleTrackingParam{
+param := common.SingleTrackingParam{
     Slug:           "dhl",
     TrackingNumber: "1588226550",
 }
@@ -552,7 +576,7 @@ data := notification.Data{
     },
 }
 
-result, err = aftership.Notification.RemoveNotification(param, data)
+result, err := aftership.Notification.RemoveNotification(param, data)
 if err != nil {
     fmt.Println(err)
     return
@@ -576,7 +600,7 @@ if (meta.Code == 200) {
 }
 
 // new version (v2)
-aftership, err := aftership.NewAfterShip(&conf.AfterShipConf{
+aftership, err := aftership.NewAfterShip(&common.AfterShipConf{
     APIKey: "YOUR_API_KEY",
 })
 
