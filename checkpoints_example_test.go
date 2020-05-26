@@ -23,7 +23,7 @@ func CheckpointsEndpoint_getLastCheckpoint() {
 		TrackingNumber: "1234567890",
 	}
 
-	result, err := cli.LastCheckpoint.GetLastCheckpoint(context.Background(), param, aftership.GetCheckpointParams{})
+	result, err := cli.Checkpoint.GetLastCheckpoint(context.Background(), param, aftership.GetCheckpointParams{})
 
 	if err != nil {
 		fmt.Println(err)

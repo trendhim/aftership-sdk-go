@@ -12,22 +12,17 @@ type Notification struct {
 	SMSes  []string `json:"smses"`
 }
 
-// notificationWrapper is the notification wrapper.
-type notificationWrapper struct {
-	Notification Notification `json:"notification"`
-}
-
 // NotificationsEndpoint provides the interface for all notifications handling API calls
 type NotificationsEndpoint interface {
 	// AddNotification adds notifications to a single tracking.
-	AddNotification(ctx context.Context, id TrackingIdentifier, data Notification) (Notification, error)
+	AddNotification(ctx context.Context, identifier TrackingIdentifier, data Notification) (Notification, error)
 
 	// RemoveNotification removes notifications from a single tracking.
-	RemoveNotification(ctx context.Context, id TrackingIdentifier, data Notification) (Notification, error)
+	RemoveNotification(ctx context.Context, identifier TrackingIdentifier, data Notification) (Notification, error)
 
 	// GetNotification gets contact information for the users to notify when the tracking changes. Please note that only customer receivers will be returned.
 	// Any email, sms or webhook that belongs to the Store will not be returned.
-	GetNotification(ctx context.Context, id TrackingIdentifier) (Notification, error)
+	GetNotification(ctx context.Context, identifier TrackingIdentifier) (Notification, error)
 }
 
 // notificationEndpointImpl is the implementation of notification endpoint
@@ -42,9 +37,14 @@ func newNotificationEndpoint(req requestHelper) NotificationsEndpoint {
 	}
 }
 
+// notificationWrapper is the notification wrapper.
+type notificationWrapper struct {
+	Notification Notification `json:"notification"`
+}
+
 // AddNotification adds notifications to a single tracking.
-func (impl *notificationEndpointImpl) AddNotification(ctx context.Context, id TrackingIdentifier, notification Notification) (Notification, error) {
-	uriPath := fmt.Sprintf("/notifications%s/add", id.URIPath())
+func (impl *notificationEndpointImpl) AddNotification(ctx context.Context, identifier TrackingIdentifier, notification Notification) (Notification, error) {
+	uriPath := fmt.Sprintf("/notifications%s/add", identifier.URIPath())
 	var wrapper notificationWrapper
 	err := impl.request.makeRequest(ctx, http.MethodPost, uriPath, nil,
 		&notificationWrapper{Notification: notification}, &wrapper)
@@ -52,8 +52,8 @@ func (impl *notificationEndpointImpl) AddNotification(ctx context.Context, id Tr
 }
 
 // RemoveNotification removes notifications from a single tracking.
-func (impl *notificationEndpointImpl) RemoveNotification(ctx context.Context, id TrackingIdentifier, notification Notification) (Notification, error) {
-	uriPath := fmt.Sprintf("/notifications%s/remove", id.URIPath())
+func (impl *notificationEndpointImpl) RemoveNotification(ctx context.Context, identifier TrackingIdentifier, notification Notification) (Notification, error) {
+	uriPath := fmt.Sprintf("/notifications%s/remove", identifier.URIPath())
 	var wrapper notificationWrapper
 	err := impl.request.makeRequest(ctx, http.MethodPost, uriPath, nil,
 		&notificationWrapper{Notification: notification}, &wrapper)
@@ -63,8 +63,8 @@ func (impl *notificationEndpointImpl) RemoveNotification(ctx context.Context, id
 // GetNotification gets contact information for the users to notify when the tracking changes.
 // Please note that only customer receivers will be returned.
 // Any email, sms or webhook that belongs to the Store will not be returned.
-func (impl *notificationEndpointImpl) GetNotification(ctx context.Context, id TrackingIdentifier) (Notification, error) {
-	uriPath := fmt.Sprintf("/notifications%s", id.URIPath())
+func (impl *notificationEndpointImpl) GetNotification(ctx context.Context, identifier TrackingIdentifier) (Notification, error) {
+	uriPath := fmt.Sprintf("/notifications%s", identifier.URIPath())
 	var wrapper notificationWrapper
 	err := impl.request.makeRequest(ctx, http.MethodGet, uriPath, nil, nil, &wrapper)
 	return wrapper.Notification, err

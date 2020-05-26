@@ -19,11 +19,11 @@ type Config struct {
 
 // Client is the client for all AfterShip API calls
 type Client struct {
-	Config         Config                // The config of Client SDK
-	Courier        CouriersEndpoint      // The endpoint to get a list of supported couriers.
-	Tracking       TrackingsEndpoint     // The endpoint to create trackings, update trackings, and get tracking results.
-	LastCheckpoint CheckpointsEndpoint   // The endpoint to get tracking information of the last checkpoint of a tracking.
-	Notification   NotificationsEndpoint // The endpoint to get, add or remove contacts (sms or email) to be notified when the status of a tracking has changed.
+	Config       Config                // The config of Client SDK
+	Courier      CouriersEndpoint      // The endpoint to get a list of supported couriers.
+	Tracking     TrackingsEndpoint     // The endpoint to create trackings, update trackings, and get tracking results.
+	Checkpoint   CheckpointsEndpoint   // The endpoint to get tracking information of the last checkpoint of a tracking.
+	Notification NotificationsEndpoint // The endpoint to get, add or remove contacts (sms or email) to be notified when the status of a tracking has changed.
 }
 
 // NewClient returns the AfterShip client
@@ -42,10 +42,10 @@ func NewClient(cfg Config) (*Client, error) {
 
 	req := newRequestHelper(cfg)
 	return &Client{
-		Config:         cfg,
-		Courier:        newCouriersEndpoint(req),
-		Tracking:       newTrackingsEndpoint(req),
-		LastCheckpoint: NewCheckpointsEndpoint(req),
-		Notification:   newNotificationEndpoint(req),
+		Config:       cfg,
+		Courier:      newCouriersEndpoint(req),
+		Tracking:     newTrackingsEndpoint(req),
+		Checkpoint:   newCheckpointsEndpoint(req),
+		Notification: newNotificationEndpoint(req),
 	}, nil
 }

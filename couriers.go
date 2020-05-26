@@ -114,10 +114,10 @@ func (impl *couriersEndpointImpl) DetectCouriers(ctx context.Context, params Cou
 		return TrackingCouriers{}, ErrorTrackingNumberRequired
 	}
 
-	var detectList TrackingCouriers
+	var trackingCouriers TrackingCouriers
 	err := impl.request.makeRequest(ctx, "POST", "/couriers/detect", nil,
 		&detectCourierRequest{
-			Tracking: CourierDetectionParams{},
-		}, &detectList)
-	return detectList, err
+			Tracking: params,
+		}, &trackingCouriers)
+	return trackingCouriers, err
 }

@@ -30,25 +30,25 @@ type LastCheckpoint struct {
 // CheckpointsEndpoint provides the interface for all checkpoint API calls
 type CheckpointsEndpoint interface {
 	// GetLastCheckpoint returns the tracking information of the last checkpoint of a single tracking.
-	GetLastCheckpoint(ctx context.Context, id TrackingIdentifier, optionalParams GetCheckpointParams) (LastCheckpoint, error)
+	GetLastCheckpoint(ctx context.Context, identifier TrackingIdentifier, params GetCheckpointParams) (LastCheckpoint, error)
 }
 
-// CheckpointsEndpointImpl is the implementation of checkpoint endpoint
-type CheckpointsEndpointImpl struct {
-	request requestHelper
+// checkpointsEndpointImpl is the implementation of checkpoint endpoint
+type checkpointsEndpointImpl struct {
+	helper requestHelper
 }
 
-// NewCheckpointsEndpoint creates a instance of checkpoint endpoint
-func NewCheckpointsEndpoint(req requestHelper) CheckpointsEndpoint {
-	return &CheckpointsEndpointImpl{
-		request: req,
+// newCheckpointsEndpoint creates a instance of checkpoint endpoint
+func newCheckpointsEndpoint(helper requestHelper) CheckpointsEndpoint {
+	return &checkpointsEndpointImpl{
+		helper: helper,
 	}
 }
 
 // GetLastCheckpoint returns the tracking information of the last checkpoint of a single tracking.
-func (impl *CheckpointsEndpointImpl) GetLastCheckpoint(ctx context.Context, id TrackingIdentifier, optionalParams GetCheckpointParams) (LastCheckpoint, error) {
-	uriPath := fmt.Sprintf("/last_checkpoint%s", id.URIPath())
+func (impl *checkpointsEndpointImpl) GetLastCheckpoint(ctx context.Context, identifier TrackingIdentifier, params GetCheckpointParams) (LastCheckpoint, error) {
+	uriPath := fmt.Sprintf("/last_checkpoint%s", identifier.URIPath())
 	var lastCheckpoint LastCheckpoint
-	err := impl.request.makeRequest(ctx, http.MethodGet, uriPath, optionalParams, nil, &lastCheckpoint)
+	err := impl.helper.makeRequest(ctx, http.MethodGet, uriPath, params, nil, &lastCheckpoint)
 	return lastCheckpoint, err
 }

@@ -36,7 +36,7 @@ func TestGetLastCheckpoint(t *testing.T) {
 	req := newRequestHelper(Config{
 		APIKey: "YOUR_API_KEY",
 	})
-	endpoint := NewCheckpointsEndpoint(req)
+	endpoint := newCheckpointsEndpoint(req)
 	res, err := endpoint.GetLastCheckpoint(context.Background(), p, GetCheckpointParams{})
 	assert.Equal(t, exp, res)
 	assert.Nil(t, err)
@@ -75,7 +75,7 @@ func TestGetLastCheckpointWithOptionalParams(t *testing.T) {
 	req := newRequestHelper(Config{
 		APIKey: "YOUR_API_KEY",
 	})
-	endpoint := NewCheckpointsEndpoint(req)
+	endpoint := newCheckpointsEndpoint(req)
 	res, err := endpoint.GetLastCheckpoint(context.Background(), p, op)
 	assert.Equal(t, exp, res)
 	assert.Nil(t, err)
@@ -83,7 +83,7 @@ func TestGetLastCheckpointWithOptionalParams(t *testing.T) {
 
 func TestError(t *testing.T) {
 	req := newRequestHelper(Config{})
-	endpoint := NewCheckpointsEndpoint(req)
+	endpoint := newCheckpointsEndpoint(req)
 
 	// empty id, slug and tracking_number
 	p := SlugTrackingNumber{

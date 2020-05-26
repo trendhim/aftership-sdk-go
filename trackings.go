@@ -211,33 +211,33 @@ type TrackingsEndpoint interface {
 	CreateTracking(ctx context.Context, params CreateTrackingParams) (Tracking, error)
 
 	// DeleteTracking deletes a tracking.
-	DeleteTracking(ctx context.Context, id TrackingIdentifier) (Tracking, error)
+	DeleteTracking(ctx context.Context, identifier TrackingIdentifier) (Tracking, error)
 
 	// GetTrackings gets tracking results of multiple trackings.
 	GetTrackings(ctx context.Context, params GetTrackingsParams) (PagedTrackings, error)
 
 	// GetTracking gets tracking results of a single tracking.
-	GetTracking(ctx context.Context, id TrackingIdentifier, params GetTrackingParams) (Tracking, error)
+	GetTracking(ctx context.Context, identifier TrackingIdentifier, params GetTrackingParams) (Tracking, error)
 
 	// UpdateTracking updates a tracking.
-	UpdateTracking(ctx context.Context, id TrackingIdentifier, update UpdateTrackingParams) (Tracking, error)
+	UpdateTracking(ctx context.Context, identifier TrackingIdentifier, update UpdateTrackingParams) (Tracking, error)
 
 	// ReTrack an expired tracking once. Max 3 times per tracking.
-	ReTrack(ctx context.Context, id TrackingIdentifier) (Tracking, error)
+	ReTrack(ctx context.Context, identifier TrackingIdentifier) (Tracking, error)
 
 	// MarkAsCompleted marks a tracking as completed. The tracking won't auto update until retrack it.
-	MarkAsCompleted(ctx context.Context, id TrackingIdentifier, status CompletedStatus) (Tracking, error)
+	MarkAsCompleted(ctx context.Context, identifier TrackingIdentifier, status CompletedStatus) (Tracking, error)
 }
 
 // trackingsEndpointImpl is the implementation of tracking endpoint
 type trackingsEndpointImpl struct {
-	request requestHelper
+	helper requestHelper
 }
 
 // newTrackingsEndpoint creates a instance of tracking endpoint
-func newTrackingsEndpoint(req requestHelper) TrackingsEndpoint {
+func newTrackingsEndpoint(helper requestHelper) TrackingsEndpoint {
 	return &trackingsEndpointImpl{
-		request: req,
+		helper: helper,
 	}
 }
 
@@ -249,52 +249,53 @@ type createTrackingRequest struct {
 // CreateTracking creates a new tracking
 func (impl *trackingsEndpointImpl) CreateTracking(ctx context.Context, params CreateTrackingParams) (Tracking, error) {
 	var trackingWrapper trackingWrapper
-	err := impl.request.makeRequest(ctx, http.MethodPost, "/trackings", nil,
+	err := impl.helper.makeRequest(ctx, http.MethodPost, "/trackings", nil,
 		&createTrackingRequest{Tracking: params}, &trackingWrapper)
 	return trackingWrapper.Tracking, err
 }
 
 // DeleteTracking deletes a tracking.
-func (impl *trackingsEndpointImpl) DeleteTracking(ctx context.Context, id TrackingIdentifier) (Tracking, error) {
-	uriPath := fmt.Sprintf("/trackings%s", id.URIPath())
+func (impl *trackingsEndpointImpl) DeleteTracking(ctx context.Context, identifier TrackingIdentifier) (Tracking, error) {
+	uriPath := fmt.Sprintf("/trackings%s", identifier.URIPath())
 	var trackingWrapper trackingWrapper
-	err := impl.request.makeRequest(ctx, http.MethodDelete, uriPath, nil, nil, &trackingWrapper)
+	err := impl.helper.makeRequest(ctx, http.MethodDelete, uriPath, nil, nil, &trackingWrapper)
 	return trackingWrapper.Tracking, err
 }
 
 // GetTrackings gets tracking results of multiple trackings.
 func (impl *trackingsEndpointImpl) GetTrackings(ctx context.Context, params GetTrackingsParams) (PagedTrackings, error) {
 	var pagedTrackings PagedTrackings
-	err := impl.request.makeRequest(ctx, http.MethodGet, "/trackings", params, nil, &pagedTrackings)
+	err := impl.helper.makeRequest(ctx, http.MethodGet, "/trackings", params, nil, &pagedTrackings)
 	return pagedTrackings, err
 }
 
 // GetTracking gets tracking results of a single tracking.
-func (impl *trackingsEndpointImpl) GetTracking(ctx context.Context, id TrackingIdentifier, optionalParams GetTrackingParams) (Tracking, error) {
-	uriPath := fmt.Sprintf("/trackings%s", id.URIPath())
+func (impl *trackingsEndpointImpl) GetTracking(ctx context.Context, identifier TrackingIdentifier, params GetTrackingParams) (Tracking, error) {
+	uriPath := fmt.Sprintf("/trackings%s", identifier.URIPath())
 	var trackingWrapper trackingWrapper
-	err := impl.request.makeRequest(ctx, http.MethodGet, uriPath, optionalParams, nil, &trackingWrapper)
+	err := impl.helper.makeRequest(ctx, http.MethodGet, uriPath, params, nil, &trackingWrapper)
 	return trackingWrapper.Tracking, err
 }
 
-// UpdateTrackingRequest is a model for update tracking API request
-type UpdateTrackingRequest struct {
+// updateTrackingRequest is a model for update tracking API request
+type updateTrackingRequest struct {
 	Tracking UpdateTrackingParams `json:"tracking"`
 }
 
 // UpdateTrackingParams updates a tracking.
-func (impl *trackingsEndpointImpl) UpdateTracking(ctx context.Context, id TrackingIdentifier, update UpdateTrackingParams) (Tracking, error) {
-	uriPath := fmt.Sprintf("/trackings%s", id.URIPath())
+func (impl *trackingsEndpointImpl) UpdateTracking(ctx context.Context, identifier TrackingIdentifier, params UpdateTrackingParams) (Tracking, error) {
+	uriPath := fmt.Sprintf("/trackings%s", identifier.URIPath())
 	var trackingWrapper trackingWrapper
-	err := impl.request.makeRequest(ctx, http.MethodPut, uriPath, nil, update, &trackingWrapper)
+	err := impl.helper.makeRequest(ctx, http.MethodPut, uriPath, nil,
+		&updateTrackingRequest{params}, &trackingWrapper)
 	return trackingWrapper.Tracking, err
 }
 
 // ReTrack an expired tracking once. Max. 3 times per tracking.
-func (impl *trackingsEndpointImpl) ReTrack(ctx context.Context, id TrackingIdentifier) (Tracking, error) {
-	uriPath := fmt.Sprintf("/trackings%s/retrack", id.URIPath())
+func (impl *trackingsEndpointImpl) ReTrack(ctx context.Context, identifier TrackingIdentifier) (Tracking, error) {
+	uriPath := fmt.Sprintf("/trackings%s/retrack", identifier.URIPath())
 	var trackingWrapper trackingWrapper
-	err := impl.request.makeRequest(ctx, http.MethodPost, uriPath, nil, nil, &trackingWrapper)
+	err := impl.helper.makeRequest(ctx, http.MethodPost, uriPath, nil, nil, &trackingWrapper)
 	return trackingWrapper.Tracking, err
 }
 
@@ -304,10 +305,10 @@ type markAsCompletedRequest struct {
 }
 
 // MarkAsCompleted marks a tracking as completed. The tracking won't auto update until retrack it.
-func (impl *trackingsEndpointImpl) MarkAsCompleted(ctx context.Context, id TrackingIdentifier, status CompletedStatus) (Tracking, error) {
-	uriPath := fmt.Sprintf("/trackings%s/mark-as-completed", id.URIPath())
+func (impl *trackingsEndpointImpl) MarkAsCompleted(ctx context.Context, identifier TrackingIdentifier, status CompletedStatus) (Tracking, error) {
+	uriPath := fmt.Sprintf("/trackings%s/mark-as-completed", identifier.URIPath())
 	var trackingWrapper trackingWrapper
-	err := impl.request.makeRequest(ctx, http.MethodPost, uriPath,
+	err := impl.helper.makeRequest(ctx, http.MethodPost, uriPath,
 		nil, &markAsCompletedRequest{Reason: string(status)}, &trackingWrapper)
 	return trackingWrapper.Tracking, err
 }
