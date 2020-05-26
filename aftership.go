@@ -1,52 +1,51 @@
 package aftership
 
 import (
-	"github.com/aftership/aftership-sdk-go/v2/common"
-	"github.com/aftership/aftership-sdk-go/v2/endpoint/checkpoint"
-	"github.com/aftership/aftership-sdk-go/v2/endpoint/courier"
-	"github.com/aftership/aftership-sdk-go/v2/endpoint/notification"
-	"github.com/aftership/aftership-sdk-go/v2/endpoint/tracking"
-	"github.com/aftership/aftership-sdk-go/v2/error"
-	"github.com/aftership/aftership-sdk-go/v2/request"
-	"github.com/aftership/aftership-sdk-go/v2/response"
+	"errors"
+	"net/http"
 )
 
-// AfterShip is the client for all AfterShip API calls
-type AfterShip struct {
-	Config         *common.AfterShipConf // The config of AfterShip SDK
-	Courier        courier.Endpoint      // The endpoint to get a list of supported couriers.
-	Tracking       tracking.Endpoint     // The endpoint to create trackings, update trackings, and get tracking results.
-	LastCheckpoint checkpoint.Endpoint   // The endpoint to get tracking information of the last checkpoint of a tracking.
-	Notification   notification.Endpoint // The endpoint to get, add or remove contacts (sms or email) to be notified when the status of a tracking has changed.
-	RateLimit      *response.RateLimit   // Gets the Rate Limit after API calls
+// Config is the config of AfterShip SDK client
+type Config struct {
+	// APIKey.
+	APIKey string
+	// BaseURL is the base URL of AfterShip API. Defaults to 'https://api.aftership.com/v4'
+	BaseURL string
+	// UserAgentPrefix is the prefix of User-Agent in headers. Defaults to 'aftership-sdk-go'
+	UserAgentPrefix string
+	// The HTTP client to use when sending requests. Defaults to `http.DefaultClient`.
+	HTTPClient *http.Client
+}
+
+// Client is the client for all AfterShip API calls
+type Client struct {
+	Config         Config                // The config of Client SDK
+	Courier        CouriersEndpoint      // The endpoint to get a list of supported couriers.
+	Tracking       TrackingsEndpoint     // The endpoint to create trackings, update trackings, and get tracking results.
+	LastCheckpoint CheckpointsEndpoint   // The endpoint to get tracking information of the last checkpoint of a tracking.
+	Notification   NotificationsEndpoint // The endpoint to get, add or remove contacts (sms or email) to be notified when the status of a tracking has changed.
 }
 
 // NewClient returns the AfterShip client
-func NewClient(cfg *common.AfterShipConf) (*AfterShip, *error.AfterShipError) {
-	if cfg == nil {
-		return nil, error.NewSdkError(error.ErrorTypeConstructorError, "ConstructorError: config is nil", "")
-	}
-
+func NewClient(cfg Config) (*Client, error) {
 	if cfg.APIKey == "" {
-		return nil, error.NewSdkError(error.ErrorTypeConstructorError, "ConstructorError: Invalid API key", "")
+		return nil, errors.New("api key is required")
 	}
 
-	if cfg.Endpoint == "" {
-		cfg.Endpoint = "https://api.aftership.com/v4"
+	if cfg.BaseURL == "" {
+		cfg.BaseURL = "https://api.aftership.com/v4"
 	}
 
-	if cfg.UserAagentPrefix == "" {
-		cfg.UserAagentPrefix = "aftership-sdk-go"
+	if cfg.UserAgentPrefix == "" {
+		cfg.UserAgentPrefix = "aftership-sdk-go"
 	}
 
-	rateLimit := &response.RateLimit{}
-	req := request.NewRequest(cfg, rateLimit)
-	return &AfterShip{
+	req := newRequestHelper(cfg)
+	return &Client{
 		Config:         cfg,
-		Courier:        courier.NewEndpoint(req),
-		Tracking:       tracking.NewEndpoint(req),
-		LastCheckpoint: checkpoint.NewEndpoint(req),
-		Notification:   notification.NewEndpoint(req),
-		RateLimit:      rateLimit,
+		Courier:        newCouriersEndpoint(req),
+		Tracking:       newTrackingsEndpoint(req),
+		LastCheckpoint: NewCheckpointsEndpoint(req),
+		Notification:   newNotificationEndpoint(req),
 	}, nil
 }
