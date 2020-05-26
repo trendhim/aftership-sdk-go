@@ -4,11 +4,10 @@ import (
 	"fmt"
 
 	"github.com/aftership/aftership-sdk-go/v2"
-	"github.com/aftership/aftership-sdk-go/v2/common"
 )
 
 func ExampleNewClient() {
-	client, err := aftership.NewClient(&common.AfterShipConf{
+	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
 
@@ -17,5 +16,5 @@ func ExampleNewClient() {
 		return
 	}
 
-	fmt.Println(client)
+	fmt.Println(cli)
 }

@@ -1,4 +1,4 @@
-package response
+package aftership
 
 // RateLimit is the X-RateLimit value in API response headers
 type RateLimit struct {

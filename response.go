@@ -1,8 +1,9 @@
-package response
+package aftership
 
-// AftershipResponse is the message envelope for the AfterShip API response
-type AftershipResponse interface {
-	GetMeta() Meta
+// Response is the message envelope for the AfterShip API response
+type Response struct {
+	Meta Meta        `json:"meta"`
+	Data interface{} `json:"data"`
 }
 
 // Meta is used to communicate extra information about the response to the developer.
