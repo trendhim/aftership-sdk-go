@@ -7,7 +7,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func NotificationsEndpoint_GetNotification() {
+func GetNotification() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -23,7 +23,7 @@ func NotificationsEndpoint_GetNotification() {
 		TrackingNumber: "1588226550",
 	}
 
-	result, err := cli.Notification.GetNotification(context.Background(), param)
+	result, err := cli.GetNotification(context.Background(), param)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -32,7 +32,7 @@ func NotificationsEndpoint_GetNotification() {
 	fmt.Println(result)
 }
 
-func NotificationsEndpoint_AddNotification() {
+func AddNotification() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -53,7 +53,7 @@ func NotificationsEndpoint_AddNotification() {
 		SMSes:  []string{"+85291239123", "+85261236123", "Invalid Mobile Phone Number"},
 	}
 
-	result, err := cli.Notification.AddNotification(context.Background(), param, data)
+	result, err := cli.AddNotification(context.Background(), param, data)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -62,7 +62,7 @@ func NotificationsEndpoint_AddNotification() {
 	fmt.Println(result)
 }
 
-func NotificationsEndpoint_RemoveNotification() {
+func RemoveNotification() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -83,7 +83,7 @@ func NotificationsEndpoint_RemoveNotification() {
 		SMSes:  []string{"+85261236123"},
 	}
 
-	result, err := cli.Notification.RemoveNotification(context.Background(), param, data)
+	result, err := cli.RemoveNotification(context.Background(), param, data)
 	if err != nil {
 		fmt.Println(err)
 		return

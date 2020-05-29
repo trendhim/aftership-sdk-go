@@ -1,18 +1,45 @@
 package aftership
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	// mux is the HTTP request multiplexer used with the test server.
+	mux *http.ServeMux
+
+	// client is the API client being tested
+	client *Client
+
+	// server is a test HTTP server used to provide mock API responses
+	server *httptest.Server
+)
+
+func setup() {
+	// test server
+	mux = http.NewServeMux()
+	server = httptest.NewServer(mux)
+
+	// Cloudflare client configured to use test server
+	client, _ = NewClient(Config{
+		APIKey:  "YOUR_API_KEY",
+		BaseURL: server.URL,
+	})
+}
+
+func teardown() {
+	server.Close()
+}
+
 func TestInvalidAPIKey(t *testing.T) {
 	// API Key is not specified
 	_, err := NewClient(Config{})
 	assert.NotNil(t, err)
-
-	expectedMsg := "api key is required"
-	assert.Equal(t, expectedMsg, err.Error())
+	assert.Equal(t, errEmptyAPIKey, err.Error())
 }
 
 func TestDefaultConfig(t *testing.T) {

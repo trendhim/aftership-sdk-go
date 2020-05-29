@@ -60,45 +60,17 @@ type CourierDetectionParams struct {
 	Slug []string `json:"slug,omitempty"`
 }
 
-var ErrorTrackingNumberRequired = errors.New("tracking number is required")
-
-// CouriersEndpoint provides the interface for all courier API calls
-type CouriersEndpoint interface {
-
-	// GetCouriers returns a list of couriers activated at your AfterShip account.
-	GetCouriers(ctx context.Context) (CourierList, error)
-
-	// GetAllCouriers returns a list of all couriers.
-	GetAllCouriers(ctx context.Context) (CourierList, error)
-
-	// DetectCouriers returns a list of matched couriers based on tracking number format
-	// and selected couriers or a list of couriers.
-	DetectCouriers(ctx context.Context, params CourierDetectionParams) (TrackingCouriers, error)
-}
-
-// couriersEndpointImpl is the implementation of courier endpoint
-type couriersEndpointImpl struct {
-	request requestHelper
-}
-
-// newCouriersEndpoint creates a instance of courier endpoint
-func newCouriersEndpoint(req requestHelper) CouriersEndpoint {
-	return &couriersEndpointImpl{
-		request: req,
-	}
-}
-
 // GetCouriers returns a list of couriers activated at your AfterShip account.
-func (impl *couriersEndpointImpl) GetCouriers(ctx context.Context) (CourierList, error) {
+func (client *Client) GetCouriers(ctx context.Context) (CourierList, error) {
 	var courierList CourierList
-	err := impl.request.makeRequest(ctx, "GET", "/couriers", nil, nil, &courierList)
+	err := client.makeRequest(ctx, "GET", "/couriers", nil, nil, &courierList)
 	return courierList, err
 }
 
 // GetAllCouriers returns a list of all couriers.
-func (impl *couriersEndpointImpl) GetAllCouriers(ctx context.Context) (CourierList, error) {
+func (client *Client) GetAllCouriers(ctx context.Context) (CourierList, error) {
 	var courierList CourierList
-	err := impl.request.makeRequest(ctx, "GET", "/couriers/all", nil, nil, &courierList)
+	err := client.makeRequest(ctx, "GET", "/couriers/all", nil, nil, &courierList)
 	return courierList, err
 }
 
@@ -109,13 +81,13 @@ type detectCourierRequest struct {
 
 // DetectCouriers returns a list of matched couriers based on tracking number format
 // and selected couriers or a list of couriers.
-func (impl *couriersEndpointImpl) DetectCouriers(ctx context.Context, params CourierDetectionParams) (TrackingCouriers, error) {
+func (client *Client) DetectCouriers(ctx context.Context, params CourierDetectionParams) (TrackingCouriers, error) {
 	if params.TrackingNumber == "" {
-		return TrackingCouriers{}, ErrorTrackingNumberRequired
+		return TrackingCouriers{}, errors.New(errMissingTrackingNumber)
 	}
 
 	var trackingCouriers TrackingCouriers
-	err := impl.request.makeRequest(ctx, "POST", "/couriers/detect", nil,
+	err := client.makeRequest(ctx, "POST", "/couriers/detect", nil,
 		&detectCourierRequest{
 			Tracking: params,
 		}, &trackingCouriers)

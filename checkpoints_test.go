@@ -3,48 +3,88 @@ package aftership
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"testing"
+	"time"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetLastCheckpoint(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+	setup()
+	defer teardown()
 
 	p := SlugTrackingNumber{
 		Slug:           "xq-express",
 		TrackingNumber: "LS404494276CN",
 	}
+
+	uri := fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber)
+	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "GET", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"id": "5b74f4958776db0e00b6f5ed",
+					"tracking_number": "111111111111",
+					"slug": "fedex",
+					"tag": "Delivered",
+					"subtag": "Delivered_001",
+					"subtag_message": "Delivered",
+					"checkpoint": {
+							"slug": "fedex",
+							"created_at": "2018-08-16T03:50:47+00:00",
+							"checkpoint_time": "2018-08-01T13:19:47-04:00",
+							"city": "Deal",
+							"coordinates": [],
+							"country_iso3": null,
+							"country_name": null,
+							"message": "Delivered - Left at front door. Signature Service not requested.",
+							"state": "NJ",
+							"tag": "Delivered",
+							"subtag": "Delivered_001",
+							"subtag_message": "Delivered",
+							"zip": null,
+							"raw_tag": "FPX_L_RPIF"
+					}
+			}
+	}`))
+	})
+
+	createdAt, _ := time.Parse(time.RFC3339, "2018-08-16T03:50:47+00:00")
 	exp := LastCheckpoint{
 		ID:             "5b74f4958776db0e00b6f5ed",
 		TrackingNumber: "111111111111",
+		Slug:           "fedex",
+		Tag:            "Delivered",
+		Subtag:         "Delivered_001",
+		SubtagMessage:  "Delivered",
 		Checkpoint: Checkpoint{
-			Slug: "slug",
+			Slug:           "fedex",
+			CreatedAt:      &createdAt,
+			CheckpointTime: "2018-08-01T13:19:47-04:00",
+			City:           "Deal",
+			Coordinates:    []string{},
+			Message:        "Delivered - Left at front door. Signature Service not requested.",
+			State:          "NJ",
+			Tag:            "Delivered",
+			Subtag:         "Delivered_001",
+			SubtagMessage:  "Delivered",
+			RawTag:         "FPX_L_RPIF",
 		},
 	}
-	mockHTTP("GET", fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber), 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: exp,
-	}, nil)
 
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCheckpointsEndpoint(req)
-	res, err := endpoint.GetLastCheckpoint(context.Background(), p, GetCheckpointParams{})
+	res, err := client.GetLastCheckpoint(context.Background(), p, GetCheckpointParams{})
 	assert.Equal(t, exp, res)
 	assert.Nil(t, err)
 }
 
 func TestGetLastCheckpointWithOptionalParams(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+	setup()
+	defer teardown()
 
 	p := SlugTrackingNumber{
 		Slug:           "xq-express",
@@ -56,34 +96,48 @@ func TestGetLastCheckpointWithOptionalParams(t *testing.T) {
 		Lang:   "en",
 	}
 
+	uri := fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber)
+	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "GET", r.Method)
+		w.Header().Set("content-type", "application/json")
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"id": "5b74f4958776db0e00b6f5ed",
+					"tracking_number": "111111111111",
+					"slug": "fedex",
+					"tag": "Delivered",
+					"subtag": "Delivered_001",
+					"subtag_message": "Delivered",
+					"checkpoint": {
+							"slug": "fedex"
+					}
+			}
+	}`))
+	})
+
 	exp := LastCheckpoint{
 		ID:             "5b74f4958776db0e00b6f5ed",
 		TrackingNumber: "111111111111",
+		Slug:           "fedex",
+		Tag:            "Delivered",
+		Subtag:         "Delivered_001",
+		SubtagMessage:  "Delivered",
 		Checkpoint: Checkpoint{
-			Slug: "slug",
+			Slug: "fedex",
 		},
 	}
-	mockHTTP("GET", fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber), 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: exp,
-	}, nil)
 
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCheckpointsEndpoint(req)
-	res, err := endpoint.GetLastCheckpoint(context.Background(), p, op)
+	res, err := client.GetLastCheckpoint(context.Background(), p, op)
 	assert.Equal(t, exp, res)
 	assert.Nil(t, err)
 }
 
 func TestError(t *testing.T) {
-	req := newRequestHelper(Config{})
-	endpoint := newCheckpointsEndpoint(req)
+	setup()
+	defer teardown()
 
 	// empty id, slug and tracking_number
 	p := SlugTrackingNumber{
@@ -91,34 +145,6 @@ func TestError(t *testing.T) {
 		TrackingNumber: "",
 	}
 
-	_, err := endpoint.GetLastCheckpoint(context.Background(), p, GetCheckpointParams{})
+	_, err := client.GetLastCheckpoint(context.Background(), p, GetCheckpointParams{})
 	assert.NotNil(t, err)
-	// assert.Equal(t, "HandlerError", err.Type)
-
-	// Response with error
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	p = SlugTrackingNumber{
-		Slug:           "xq-express",
-		TrackingNumber: "LS404494276CN",
-	}
-
-	mockHTTP("GET", fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber), 401, Response{
-		Meta: Meta{
-			Code:    401,
-			Message: "Invalid API key.",
-			Type:    "Unauthorized",
-		},
-		Data: LastCheckpoint{},
-	}, nil)
-
-	_, err = endpoint.GetLastCheckpoint(context.Background(), p, GetCheckpointParams{})
-	assert.NotNil(t, err)
-	assert.Equal(t, &APIError{
-		Code:    401,
-		Type:    "Unauthorized",
-		Message: "Invalid API key.",
-		Path:    "/last_checkpoint/xq-express/LS404494276CN",
-	}, err)
 }

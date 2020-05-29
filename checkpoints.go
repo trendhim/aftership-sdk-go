@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 // GetCheckpointParams is the additional parameters in checkpoint query
@@ -22,33 +24,22 @@ type GetCheckpointParams struct {
 type LastCheckpoint struct {
 	ID             string     `json:"id,omitempty"`
 	Slug           string     `json:"slug,omitempty"`
-	TrackingNumber string     `json:"tracking_number"`
-	Tag            string     `json:"tag"`
+	TrackingNumber string     `json:"tracking_number,omitempty"`
+	Tag            string     `json:"tag,omitempty"`
+	Subtag         string     `json:"subtag,omitempty"`
+	SubtagMessage  string     `json:"subtag_message,omitempty"`
 	Checkpoint     Checkpoint `json:"checkpoint"`
 }
 
-// CheckpointsEndpoint provides the interface for all checkpoint API calls
-type CheckpointsEndpoint interface {
-	// GetLastCheckpoint returns the tracking information of the last checkpoint of a single tracking.
-	GetLastCheckpoint(ctx context.Context, identifier TrackingIdentifier, params GetCheckpointParams) (LastCheckpoint, error)
-}
-
-// checkpointsEndpointImpl is the implementation of checkpoint endpoint
-type checkpointsEndpointImpl struct {
-	helper requestHelper
-}
-
-// newCheckpointsEndpoint creates a instance of checkpoint endpoint
-func newCheckpointsEndpoint(helper requestHelper) CheckpointsEndpoint {
-	return &checkpointsEndpointImpl{
-		helper: helper,
-	}
-}
-
 // GetLastCheckpoint returns the tracking information of the last checkpoint of a single tracking.
-func (impl *checkpointsEndpointImpl) GetLastCheckpoint(ctx context.Context, identifier TrackingIdentifier, params GetCheckpointParams) (LastCheckpoint, error) {
-	uriPath := fmt.Sprintf("/last_checkpoint%s", identifier.URIPath())
+func (client *Client) GetLastCheckpoint(ctx context.Context, identifier TrackingIdentifier, params GetCheckpointParams) (LastCheckpoint, error) {
+	uriPath, err := identifier.URIPath()
+	if err != nil {
+		return LastCheckpoint{}, errors.Wrap(err, "error getting last checkpoint")
+	}
+
+	uriPath = fmt.Sprintf("/last_checkpoint%s", uriPath)
 	var lastCheckpoint LastCheckpoint
-	err := impl.helper.makeRequest(ctx, http.MethodGet, uriPath, params, nil, &lastCheckpoint)
+	err = client.makeRequest(ctx, http.MethodGet, uriPath, params, nil, &lastCheckpoint)
 	return lastCheckpoint, err
 }

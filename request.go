@@ -9,92 +9,67 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/google/go-querystring/query"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
-// requestHelper is the API request helper interface
-type requestHelper interface {
-	// makeRequest makes a AfterShip API calls
-	makeRequest(ctx context.Context, method string, uri string, queryParams interface{}, inputData interface{}, resultData interface{}) error
-	getRateLimit() RateLimit
-}
-
-// requestHelperImpl is the implementation of API Request
-type requestHelperImpl struct {
-	Client          *http.Client
-	RateLimit       *RateLimit
-	APIKey          string
-	BaseURL         string
-	UserAgentPrefix string
-}
-
-// newRequestHelper returns the instance of API Request helper
-func newRequestHelper(cfg Config) requestHelper {
-	rh := &requestHelperImpl{
-		APIKey:          cfg.APIKey,
-		BaseURL:         cfg.BaseURL,
-		UserAgentPrefix: cfg.UserAgentPrefix,
-		RateLimit:       &RateLimit{},
-	}
-	if cfg.HTTPClient == nil {
-		rh.Client = &http.Client{}
-	} else {
-		rh.Client = cfg.HTTPClient
-	}
-
-	return rh
-}
-
 // makeRequest makes a AfterShip API calls
-func (impl *requestHelperImpl) makeRequest(ctx context.Context, method string, path string,
+func (client *Client) makeRequest(ctx context.Context, method string, path string,
 	queryParams interface{}, inputData interface{}, resultData interface{}) error {
 
+	// Check if rate limit is reached
+	if client.rateLimit != nil && client.rateLimit.isReached() {
+		return fmt.Errorf(errReachRateLimt, time.Unix(client.rateLimit.Reset, 0))
+	}
+
+	// Read input date
 	var body io.Reader
 	if inputData != nil {
 		jsonData, err := json.Marshal(inputData)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "error marshalling params to JSON")
 		}
 
 		body = bytes.NewBuffer(jsonData)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, method, impl.BaseURL+path, body)
+	req, err := http.NewRequestWithContext(ctx, method, client.Config.BaseURL+path, body)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "HTTP request creation failed")
 	}
 
 	// Add headers
-	req.Header.Add("aftership-api-key", impl.APIKey)
+	req.Header.Add("aftership-api-key", client.Config.APIKey)
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("request-id", uuid.New().String())
-	req.Header.Add("User-Agent", fmt.Sprintf("%s/%s", impl.UserAgentPrefix, VERSION))
+	req.Header.Add("User-Agent", fmt.Sprintf("%s/%s", client.Config.UserAgentPrefix, VERSION))
 	req.Header.Add("aftership-agent", fmt.Sprintf("go-sdk-%s", VERSION))
 
 	if queryParams != nil {
 		queryStringObj, err := query.Values(queryParams)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "error parsing query params")
 		}
 		req.URL.RawQuery = queryStringObj.Encode()
 	}
 
 	// Send request
-	resp, err := impl.Client.Do(req)
+	resp, err := client.httpClient.Do(req)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "HTTP request failed")
 	}
 
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "could not read response body")
 	}
 
 	// Rate Limit
-	setRateLimit(impl.RateLimit, resp)
+	setRateLimit(client.rateLimit, resp)
 
 	result := &Response{
 		Meta: Meta{},
@@ -103,7 +78,7 @@ func (impl *requestHelperImpl) makeRequest(ctx context.Context, method string, p
 	// Unmarshal response object
 	err = json.Unmarshal(contents, result)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling the JSON response")
 	}
 
 	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
@@ -112,10 +87,11 @@ func (impl *requestHelperImpl) makeRequest(ctx context.Context, method string, p
 	}
 
 	return &APIError{
-		Type:    result.Meta.Type,
-		Code:    result.Meta.Code,
-		Message: result.Meta.Message,
-		Path:    path,
+		Type:      result.Meta.Type,
+		Code:      result.Meta.Code,
+		Message:   result.Meta.Message,
+		Path:      path,
+		RateLimit: client.rateLimit,
 	}
 }
 
@@ -142,8 +118,4 @@ func setRateLimit(rateLimit *RateLimit, resp *http.Response) {
 			}
 		}
 	}
-}
-
-func (impl *requestHelperImpl) getRateLimit() RateLimit {
-	return *impl.RateLimit
 }
