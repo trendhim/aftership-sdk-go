@@ -199,6 +199,39 @@ func TestDeleteTracking(t *testing.T) {
 	assert.Equal(t, exp, res)
 }
 
+func TestDeleteTrackingByID(t *testing.T) {
+	setup()
+	defer teardown()
+
+	var id TrackingID = "5b7658cec7c33c0e007de3c5"
+
+	uri := fmt.Sprintf("/trackings/%s", id)
+	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, "DELETE", r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"tracking": {
+							"id": "5b7658cec7c33c0e007de3c5",
+							"tracking_number": "772857780801111",
+							"slug": "fedex"
+					}
+			}
+	}`))
+	})
+
+	exp := Tracking{
+		ID:             "5b7658cec7c33c0e007de3c5",
+		TrackingNumber: "772857780801111",
+		Slug:           "fedex",
+	}
+
+	res, _ := client.DeleteTracking(context.Background(), id)
+	assert.Equal(t, exp, res)
+}
+
 func TestDeleteTrackingError(t *testing.T) {
 	// empty slug or tracking_number
 	p := SlugTrackingNumber{
@@ -673,6 +706,12 @@ func TestGetTrackingError(t *testing.T) {
 	}
 
 	_, err := client.GetTracking(context.Background(), p, GetTrackingParams{})
+	assert.NotNil(t, err)
+
+	// empty tracking id
+	var id TrackingID = ""
+
+	_, err = client.GetTracking(context.Background(), id, GetTrackingParams{})
 	assert.NotNil(t, err)
 }
 
