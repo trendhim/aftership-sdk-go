@@ -21,7 +21,7 @@ func TestGetLastCheckpoint(t *testing.T) {
 
 	uri := fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Header().Set("content-type", "application/json")
 		w.Write([]byte(`{
 			"meta": {
@@ -98,7 +98,7 @@ func TestGetLastCheckpointWithOptionalParams(t *testing.T) {
 
 	uri := fmt.Sprintf("/last_checkpoint/%s/%s", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Header().Set("content-type", "application/json")
 		w.Write([]byte(`{
 			"meta": {

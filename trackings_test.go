@@ -15,7 +15,7 @@ func TestCreateTracking(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/trackings", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 201
@@ -167,7 +167,7 @@ func TestDeleteTracking(t *testing.T) {
 
 	uri := fmt.Sprintf("/trackings/%s/%s", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "DELETE", r.Method)
+		assert.Equal(t, http.MethodDelete, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -207,7 +207,7 @@ func TestDeleteTrackingByID(t *testing.T) {
 
 	uri := fmt.Sprintf("/trackings/%s", id)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "DELETE", r.Method)
+		assert.Equal(t, http.MethodDelete, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -253,7 +253,7 @@ func TestGetTrackings(t *testing.T) {
 	}
 
 	mux.HandleFunc("/trackings", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -547,7 +547,7 @@ func TestGetTracking(t *testing.T) {
 
 	uri := fmt.Sprintf("/trackings/%s/%s", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Write([]byte(`{
 		"meta": {
 			"code": 200
@@ -726,7 +726,7 @@ func TestUpdateTracking(t *testing.T) {
 
 	uri := fmt.Sprintf("/trackings/%s/%s", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "PUT", r.Method)
+		assert.Equal(t, http.MethodPut, r.Method)
 		w.Write([]byte(`{
 				"meta": {
 						"code": 200
@@ -908,7 +908,7 @@ func TestReTrack(t *testing.T) {
 
 	uri := fmt.Sprintf("/trackings/%s/%s/retrack", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -957,7 +957,7 @@ func TestMarkAsCompleted(t *testing.T) {
 
 	uri := fmt.Sprintf("/trackings/%s/%s/mark-as-completed", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200

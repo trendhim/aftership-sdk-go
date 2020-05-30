@@ -20,7 +20,7 @@ func TestGetNotification(t *testing.T) {
 
 	uri := fmt.Sprintf("/notifications/%s/%s", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -66,7 +66,7 @@ func TestAddNotification(t *testing.T) {
 
 	uri := fmt.Sprintf("/notifications/%s/%s/add", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -117,7 +117,7 @@ func TestRemoveNotification(t *testing.T) {
 
 	uri := fmt.Sprintf("/notifications/%s/%s/remove", p.Slug, p.TrackingNumber)
 	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200

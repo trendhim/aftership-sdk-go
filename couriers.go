@@ -3,6 +3,7 @@ package aftership
 import (
 	"context"
 	"errors"
+	"net/http"
 )
 
 // Courier is the model describing an AfterShip courier
@@ -63,14 +64,14 @@ type CourierDetectionParams struct {
 // GetCouriers returns a list of couriers activated at your AfterShip account.
 func (client *Client) GetCouriers(ctx context.Context) (CourierList, error) {
 	var courierList CourierList
-	err := client.makeRequest(ctx, "GET", "/couriers", nil, nil, &courierList)
+	err := client.makeRequest(ctx, http.MethodGet, "/couriers", nil, nil, &courierList)
 	return courierList, err
 }
 
 // GetAllCouriers returns a list of all couriers.
 func (client *Client) GetAllCouriers(ctx context.Context) (CourierList, error) {
 	var courierList CourierList
-	err := client.makeRequest(ctx, "GET", "/couriers/all", nil, nil, &courierList)
+	err := client.makeRequest(ctx, http.MethodGet, "/couriers/all", nil, nil, &courierList)
 	return courierList, err
 }
 
@@ -87,7 +88,7 @@ func (client *Client) DetectCouriers(ctx context.Context, params CourierDetectio
 	}
 
 	var trackingCouriers TrackingCouriers
-	err := client.makeRequest(ctx, "POST", "/couriers/detect", nil,
+	err := client.makeRequest(ctx, http.MethodPost, "/couriers/detect", nil,
 		&detectCourierRequest{
 			Tracking: params,
 		}, &trackingCouriers)

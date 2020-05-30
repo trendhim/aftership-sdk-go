@@ -13,7 +13,7 @@ func TestGetCouriers(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/couriers", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -80,7 +80,7 @@ func TestGetAllCouriers(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/couriers/all", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "GET", r.Method)
+		assert.Equal(t, http.MethodGet, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200
@@ -171,7 +171,7 @@ func TestDetectCouriers(t *testing.T) {
 	defer teardown()
 
 	mux.HandleFunc("/couriers/detect", func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "POST", r.Method)
+		assert.Equal(t, http.MethodPost, r.Method)
 		w.Write([]byte(`{
 			"meta": {
 					"code": 200

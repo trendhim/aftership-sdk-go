@@ -86,13 +86,23 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 		return nil
 	}
 
-	return &APIError{
-		Type:      result.Meta.Type,
-		Code:      result.Meta.Code,
-		Message:   result.Meta.Message,
-		Path:      path,
-		RateLimit: client.rateLimit,
+	apiError := APIError{
+		Type:    result.Meta.Type,
+		Code:    result.Meta.Code,
+		Message: result.Meta.Message,
+		Path:    path,
 	}
+
+	// Too many requests error
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return &TooManyRequestsError{
+			APIError:  apiError,
+			RateLimit: client.rateLimit,
+		}
+	}
+
+	// API error
+	return &apiError
 }
 
 func setRateLimit(rateLimit *RateLimit, resp *http.Response) {

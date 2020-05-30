@@ -50,3 +50,8 @@ func NewClient(cfg Config) (*Client, error) {
 
 	return client, nil
 }
+
+// GetRateLimit returns the X-RateLimit value in API response headers
+func (client *Client) GetRateLimit() RateLimit {
+	return *client.rateLimit
+}

@@ -1,6 +1,7 @@
 package aftership
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -69,4 +70,37 @@ func TestSpecifiedConfig(t *testing.T) {
 	assert.Equal(t, apiKey, client.Config.APIKey)
 	assert.Equal(t, endpoint, client.Config.BaseURL)
 	assert.Equal(t, agent, client.Config.UserAgentPrefix)
+}
+
+func TestGetRateLimit(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method)
+		w.Header().Set("x-ratelimit-reset", "1458463600")
+		w.Header().Set("x-ratelimit-limit", "10")
+		w.Header().Set("x-ratelimit-remaining", "9")
+		w.WriteHeader(http.StatusTooManyRequests)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 429,
+					"type": "TooManyRequests",
+					"message": "You have exceeded the API call rate limit. Default limit is 10 requests per second."
+			},
+			"data": {}
+		}`))
+	})
+
+	exp := RateLimit{
+		Reset:     int64(1458463600),
+		Limit:     10,
+		Remaining: 9,
+	}
+
+	var result mockData
+	err := client.makeRequest(context.Background(), http.MethodGet, "/test", nil, nil, &result)
+
+	assert.NotNil(t, err)
+	assert.Equal(t, exp, client.GetRateLimit())
 }
