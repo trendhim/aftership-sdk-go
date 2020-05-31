@@ -169,7 +169,7 @@ func UpdateTracking() {
 	fmt.Println(result)
 }
 
-func ReTrack() {
+func RetrackTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -185,7 +185,7 @@ func ReTrack() {
 		TrackingNumber: "1588226550",
 	}
 
-	result, err := cli.ReTrack(context.Background(), param)
+	result, err := cli.RetrackTracking(context.Background(), param)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -193,7 +193,7 @@ func ReTrack() {
 	}
 }
 
-func MarkAsCompleted() {
+func MarkTrackingAsCompleted() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -208,7 +208,7 @@ func MarkAsCompleted() {
 		TrackingNumber: "1587721393824",
 	}
 
-	result, err := cli.MarkAsCompleted(context.Background(), param, aftership.CompletedStatusDelivered)
+	result, err := cli.MarkTrackingAsCompleted(context.Background(), param, aftership.CompletedStatusDelivered)
 	if err != nil {
 		fmt.Println(err)
 	} else {

@@ -897,7 +897,7 @@ func TestUpdateTrackingError(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestReTrack(t *testing.T) {
+func TestRetrackTracking(t *testing.T) {
 	setup()
 	defer teardown()
 
@@ -931,22 +931,22 @@ func TestReTrack(t *testing.T) {
 		TrackingNumber: "RA223547577RU",
 	}
 
-	res, _ := client.ReTrack(context.Background(), p)
+	res, _ := client.RetrackTracking(context.Background(), p)
 	assert.Equal(t, exp, res)
 }
 
-func TestReTrackError(t *testing.T) {
+func TestRetrackTrackingError(t *testing.T) {
 	// empty slug or tracking_number
 	p := SlugTrackingNumber{
 		Slug:           "",
 		TrackingNumber: "",
 	}
 
-	_, err := client.ReTrack(context.Background(), p)
+	_, err := client.RetrackTracking(context.Background(), p)
 	assert.NotNil(t, err)
 }
 
-func TestMarkAsCompleted(t *testing.T) {
+func TestMarkTrackingAsCompleted(t *testing.T) {
 	setup()
 	defer teardown()
 
@@ -1103,16 +1103,16 @@ func TestMarkAsCompleted(t *testing.T) {
 		FirstAttemptedAt:          "2018-07-25T10:10:00+09:00",
 	}
 
-	res, _ := client.MarkAsCompleted(context.Background(), p, CompletedStatusLost)
+	res, _ := client.MarkTrackingAsCompleted(context.Background(), p, CompletedStatusLost)
 	assert.Equal(t, exp, res)
 }
 
-func TestMarkAsCompletedError(t *testing.T) {
+func TestMarkTrackingAsCompletedError(t *testing.T) {
 	p := SlugTrackingNumber{
 		Slug:           "",
 		TrackingNumber: "",
 	}
 
-	_, err := client.MarkAsCompleted(context.Background(), p, CompletedStatusLost)
+	_, err := client.MarkTrackingAsCompleted(context.Background(), p, CompletedStatusLost)
 	assert.NotNil(t, err)
 }

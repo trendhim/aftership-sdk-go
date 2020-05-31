@@ -292,8 +292,8 @@ func (client *Client) UpdateTracking(ctx context.Context, identifier TrackingIde
 	return trackingWrapper.Tracking, err
 }
 
-// ReTrack an expired tracking once. Max. 3 times per tracking.
-func (client *Client) ReTrack(ctx context.Context, identifier TrackingIdentifier) (Tracking, error) {
+// RetrackTracking retracks an expired tracking. Max 3 times per tracking.
+func (client *Client) RetrackTracking(ctx context.Context, identifier TrackingIdentifier) (Tracking, error) {
 	uriPath, err := identifier.URIPath()
 	if err != nil {
 		return Tracking{}, errors.Wrap(err, "error retracking")
@@ -310,8 +310,8 @@ type markAsCompletedRequest struct {
 	Reason string `json:"reason"` // One of "DELIVERED", "LOST" or "RETURNED_TO_SENDER".
 }
 
-// MarkAsCompleted marks a tracking as completed. The tracking won't auto update until retrack it.
-func (client *Client) MarkAsCompleted(ctx context.Context, identifier TrackingIdentifier, status CompletedStatus) (Tracking, error) {
+// MarkTrackingAsCompleted marks a tracking as completed. The tracking won't auto update until retrack it.
+func (client *Client) MarkTrackingAsCompleted(ctx context.Context, identifier TrackingIdentifier, status CompletedStatus) (Tracking, error) {
 	uriPath, err := identifier.URIPath()
 	if err != nil {
 		return Tracking{}, errors.Wrap(err, "error marking tracking as completed")
