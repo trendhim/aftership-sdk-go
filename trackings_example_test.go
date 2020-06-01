@@ -208,7 +208,7 @@ func MarkTrackingAsCompleted() {
 		TrackingNumber: "1587721393824",
 	}
 
-	result, err := cli.MarkTrackingAsCompleted(context.Background(), param, aftership.CompletedStatusDelivered)
+	result, err := cli.MarkTrackingAsCompleted(context.Background(), param, aftership.TrackingCompletedStatusDelivered)
 	if err != nil {
 		fmt.Println(err)
 	} else {

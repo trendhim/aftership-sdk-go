@@ -58,11 +58,11 @@ func DetectCouriers() {
 	}
 
 	// Detect courier
-	req := aftership.CourierDetectionParams{
+	params := aftership.CourierDetectionParams{
 		TrackingNumber: "906587618687",
 	}
 
-	list, err := cli.DetectCouriers(context.Background(), req)
+	list, err := cli.DetectCouriers(context.Background(), params)
 	if err != nil {
 		fmt.Println(err)
 		return

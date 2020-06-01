@@ -1103,7 +1103,7 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 		FirstAttemptedAt:          "2018-07-25T10:10:00+09:00",
 	}
 
-	res, _ := client.MarkTrackingAsCompleted(context.Background(), p, CompletedStatusLost)
+	res, _ := client.MarkTrackingAsCompleted(context.Background(), p, TrackingCompletedStatusLost)
 	assert.Equal(t, exp, res)
 }
 
@@ -1113,6 +1113,6 @@ func TestMarkTrackingAsCompletedError(t *testing.T) {
 		TrackingNumber: "",
 	}
 
-	_, err := client.MarkTrackingAsCompleted(context.Background(), p, CompletedStatusLost)
+	_, err := client.MarkTrackingAsCompleted(context.Background(), p, TrackingCompletedStatusLost)
 	assert.NotNil(t, err)
 }
