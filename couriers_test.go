@@ -2,210 +2,236 @@ package aftership
 
 import (
 	"context"
+	"net/http"
 	"testing"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetCouriers(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/couriers", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"total": 2,
+					"couriers": [
+							{
+									"slug": "dhl",
+									"name": "DHL",
+									"phone": "+1 800 225 5345",
+									"other_name": "DHL Express",
+									"web_url": "http://www.dhl.com/",
+									"required_fields": [],
+									"optional_fields": []
+							},
+							{
+									"slug": "deutsch-post",
+									"name": "Deutsche Post Mail",
+									"phone": "+49 (0) 180 2 000221",
+									"other_name": "dpdhl",
+									"web_url": "http://www.deutschepost.de/",
+									"required_fields": [
+											"tracking_ship_date"
+									],
+									"optional_fields": []
+							}
+					]
+			}
+	}`))
+	})
 
 	exp := CourierList{
-		Total: 1,
+		Total: 2,
 		Couriers: []Courier{
 			{
-				Slug: "ups",
-				Name: "UPS",
+				Slug:           "dhl",
+				Name:           "DHL",
+				Phone:          "+1 800 225 5345",
+				OtherName:      "DHL Express",
+				WebURL:         "http://www.dhl.com/",
+				RequiredFields: []string{},
+				OptionalFields: []string{},
+			},
+			{
+				Slug:           "deutsch-post",
+				Name:           "Deutsche Post Mail",
+				Phone:          "+49 (0) 180 2 000221",
+				OtherName:      "dpdhl",
+				WebURL:         "http://www.deutschepost.de/",
+				RequiredFields: []string{"tracking_ship_date"},
+				OptionalFields: []string{},
 			},
 		},
 	}
 
-	mockHTTP("GET", "/couriers", 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: exp,
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCouriersEndpoint(req)
-	res, err := endpoint.GetCouriers(context.Background())
+	res, err := client.GetCouriers(context.Background())
 	assert.Equal(t, exp, res)
 	assert.Nil(t, err)
 }
 
-func TestGetCouriersError(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	mockHTTP("GET", "/couriers", 429, Response{
-		Meta: Meta{
-			Code:    429,
-			Message: "You have exceeded the API call rate limit. Default limit is 10 requests per second.",
-			Type:    "TooManyRequests",
-		},
-		Data: CourierList{},
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCouriersEndpoint(req)
-	_, err := endpoint.GetCouriers(context.Background())
-	assert.NotNil(t, err)
-	assert.Equal(t, &APIError{
-		Code:    429,
-		Message: "You have exceeded the API call rate limit. Default limit is 10 requests per second.",
-		Type:    "TooManyRequests",
-		Path:    "/couriers",
-	}, err)
-}
-
 func TestGetAllCouriers(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/couriers/all", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"total": 3,
+					"couriers": [
+							{
+									"slug": "india-post-int",
+									"name": "India Post International",
+									"phone": "+91 1800 11 2011",
+									"other_name": "भारतीय डाक, Speed Post & eMO, EMS, IPS Web",
+									"web_url": "http://www.indiapost.gov.in/",
+									"required_fields": [],
+									"optional_fields": []
+							},
+							{
+									"slug": "italy-sda",
+									"name": "Italy SDA",
+									"phone": "+39 199 113366",
+									"other_name": "SDA Express Courier",
+									"web_url": "http://www.sda.it/",
+									"required_fields": [],
+									"optional_fields": []
+							},
+							{
+									"slug": "bpost",
+									"name": "Belgium Post",
+									"phone": "+32 2 276 22 74",
+									"other_name": "bpost, Belgian Post",
+									"web_url": "http://www.bpost.be/",
+									"required_fields": [],
+									"optional_fields": []
+							}
+					]
+			}
+	}`))
+	})
 
 	exp := CourierList{
-		Total: 1,
+		Total: 3,
 		Couriers: []Courier{
 			{
-				Slug: "ups",
-				Name: "ups",
+				Slug:           "india-post-int",
+				Name:           "India Post International",
+				Phone:          "+91 1800 11 2011",
+				OtherName:      "भारतीय डाक, Speed Post & eMO, EMS, IPS Web",
+				WebURL:         "http://www.indiapost.gov.in/",
+				RequiredFields: []string{},
+				OptionalFields: []string{},
 			},
 			{
-				Slug: "fedex",
-				Name: "FeDex",
+				Slug:           "italy-sda",
+				Name:           "Italy SDA",
+				Phone:          "+39 199 113366",
+				OtherName:      "SDA Express Courier",
+				WebURL:         "http://www.sda.it/",
+				RequiredFields: []string{},
+				OptionalFields: []string{},
+			},
+			{
+				Slug:           "bpost",
+				Name:           "Belgium Post",
+				Phone:          "+32 2 276 22 74",
+				OtherName:      "bpost, Belgian Post",
+				WebURL:         "http://www.bpost.be/",
+				RequiredFields: []string{},
+				OptionalFields: []string{},
 			},
 		},
 	}
 
-	mockHTTP("GET", "/couriers/all", 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: exp,
-	}, map[string]string{
-		"X-RateLimit-Reset":     "1458463600",
-		"X-RateLimit-Limit":     "",
-		"X-RateLimit-Remaining": "",
-	})
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCouriersEndpoint(req)
-	res, _ := endpoint.GetAllCouriers(context.Background())
+	res, err := client.GetAllCouriers(context.Background())
 	assert.Equal(t, exp, res)
+	assert.Nil(t, err)
 }
 
-func TestGetAllCouriersError(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+func TestInvalidDetectCouriers(t *testing.T) {
+	_, err := client.DetectCouriers(context.Background(), CourierDetectionParams{})
 
-	mockHTTP("GET", "/couriers/all", 429, Response{
-		Meta: Meta{
-			Code:    429,
-			Message: "You have exceeded the API call rate limit. Default limit is 10 requests per second.",
-			Type:    "TooManyRequests",
-		},
-		Data: CourierList{},
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCouriersEndpoint(req)
-	_, err := endpoint.GetAllCouriers(context.Background())
 	assert.NotNil(t, err)
-	assert.Equal(t, &APIError{
-		Code:    429,
-		Message: "You have exceeded the API call rate limit. Default limit is 10 requests per second.",
-		Type:    "TooManyRequests",
-		Path:    "/couriers/all",
-	}, err)
+	assert.Equal(t, errMissingTrackingNumber, err.Error())
 }
 
 func TestDetectCouriers(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/couriers/detect", func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"total": 2,
+					"couriers": [
+							{
+									"slug": "fedex",
+									"name": "FedEx",
+									"phone": "+1 800 247 4747",
+									"other_name": "Federal Express",
+									"web_url": "http://www.fedex.com/",
+									"required_fields": [],
+									"optional_fields": []
+							},
+							{
+									"slug": "dx",
+									"name": "DX",
+									"phone": "+44 0844 826 1178",
+									"other_name": "DX Freight",
+									"web_url": "https://www.thedx.co.uk/",
+									"required_fields": [
+											"tracking_postal_code"
+									],
+									"optional_fields": []
+							}
+					]
+			}
+	}`))
+	})
 
 	exp := TrackingCouriers{
 		Total: 2,
 		Couriers: []Courier{
 			{
-				Slug: "ups",
-				Name: "ups",
+				Slug:           "fedex",
+				Name:           "FedEx",
+				Phone:          "+1 800 247 4747",
+				OtherName:      "Federal Express",
+				WebURL:         "http://www.fedex.com/",
+				RequiredFields: []string{},
+				OptionalFields: []string{},
+			},
+			{
+				Slug:           "dx",
+				Name:           "DX",
+				Phone:          "+44 0844 826 1178",
+				OtherName:      "DX Freight",
+				WebURL:         "https://www.thedx.co.uk/",
+				RequiredFields: []string{"tracking_postal_code"},
+				OptionalFields: []string{},
 			},
 		},
 	}
 
-	mockHTTP("POST", "/couriers/detect", 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: exp,
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCouriersEndpoint(req)
-	result, _ := endpoint.DetectCouriers(context.Background(), CourierDetectionParams{
-		"906587618687",
-		"DA15BU",
-		"20131231",
-		"1234567890",
-		"",
-		"",
-		[]string{"dhl", "ups", "fedex"},
-	})
-	assert.Equal(t, exp, result)
-}
-
-func TestInvalidDetectCouriers(t *testing.T) {
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newCouriersEndpoint(req)
-	_, err := endpoint.DetectCouriers(context.Background(), CourierDetectionParams{})
-
-	assert.NotNil(t, err)
-	assert.Equal(t, ErrorTrackingNumberRequired, err)
-}
-
-func TestDetectCouriersError(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	mockHTTP("POST", "/couriers/detect", 401, Response{
-		Meta: Meta{
-			Code:    402,
-			Message: "Invalid API key.",
-			Type:    "Unauthorized",
-		},
-		Data: CourierList{},
-	}, nil)
-
-	req := newRequestHelper(Config{})
-	endpoint := newCouriersEndpoint(req)
-	_, err := endpoint.DetectCouriers(context.Background(), CourierDetectionParams{
+	res, err := client.DetectCouriers(context.Background(), CourierDetectionParams{
 		TrackingNumber: "906587618687",
 	})
-	assert.NotNil(t, err)
-	assert.Equal(t, &APIError{
-		Code:    402,
-		Message: "Invalid API key.",
-		Type:    "Unauthorized",
-		Path:    "/couriers/detect",
-	}, err)
+
+	assert.Equal(t, exp, res)
+	assert.Nil(t, err)
 }

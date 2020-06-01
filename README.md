@@ -528,7 +528,7 @@ param := tracking.SingleTrackingParam{
     TrackingNumber: "1588226550",
 }
 
-result, err := client.Tracking.ReTrack(context.Background(), param)
+result, err := client.Tracking.RetrackTracking(context.Background(), param)
 if err != nil {
     fmt.Println(err)
     return
@@ -546,11 +546,11 @@ param := tracking.SingleTrackingParam{
     TrackingNumber: "1588226550",
 }
 
-reason := tracking.MarkAsCompletedRequest{
+reason := tracking.MarkTrackingAsCompletedRequest{
     Reason: "DELIVERED",
 }
 
-result, err := client.Tracking.MarkAsCompleted(context.Background(), param, reason)
+result, err := client.Tracking.MarkTrackingAsCompleted(context.Background(), param, reason)
 if err != nil {
     fmt.Println(err)
     return

@@ -3,224 +3,156 @@ package aftership
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"testing"
 
-	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAddNotification(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+func TestGetNotification(t *testing.T) {
+	setup()
+	defer teardown()
 
 	p := SlugTrackingNumber{
 		Slug:           "xq-express",
 		TrackingNumber: "LS404494276CN",
 	}
 
-	exp := notificationWrapper{
-		Notification{
-			[]string{"vimukthi@aftership.net"},
-			[]string{"+85254469627"},
-		},
-	}
-
-	mockHTTP("POST", fmt.Sprintf("/notifications/%s/%s/add", p.Slug, p.TrackingNumber), 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: exp,
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
+	uri := fmt.Sprintf("/notifications/%s/%s", p.Slug, p.TrackingNumber)
+	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodGet, r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"notification": {
+							"emails": ["user1@gmail.com","user2@gmail.com"],
+							"smses": ["+85291239123", "+85261236123"]
+					}
+			}
+	}`))
 	})
-	endpoint := newNotificationEndpoint(req)
-	res, _ := endpoint.AddNotification(context.Background(), p, exp.Notification)
-	assert.Equal(t, exp.Notification, res)
-}
-
-func TestAddNotificationError(t *testing.T) {
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newNotificationEndpoint(req)
-
-	// empty id, slug and tracking_number
-	p := SlugTrackingNumber{
-		Slug:           "",
-		TrackingNumber: "",
-	}
-
-	_, err := endpoint.AddNotification(context.Background(), p, Notification{})
-	assert.NotNil(t, err)
-	//assert.Equal(t, "HandlerError", err.Type)
-
-	// Response with error
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	p = SlugTrackingNumber{
-		Slug:           "xq-express",
-		TrackingNumber: "LS404494276CN",
-	}
-
-	mockHTTP("POST", fmt.Sprintf("/notifications/%s/%s/add", p.Slug, p.TrackingNumber), 401, Response{
-		Meta: Meta{
-			Code:    401,
-			Message: "Invalid API key.",
-			Type:    "Unauthorized",
-		},
-		Data: notificationWrapper{},
-	}, nil)
-
-	_, err = endpoint.AddNotification(context.Background(), p, Notification{})
-	assert.NotNil(t, err)
-	// assert.Equal(t, "Unauthorized", err.Type)
-}
-
-func TestRemoveNotification(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	p := SlugTrackingNumber{
-		Slug:           "xq-express",
-		TrackingNumber: "LS404494276CN",
-	}
 
 	exp := Notification{
-		[]string{"vimukthi@aftership.net"},
-		[]string{"+85254469627"},
+		[]string{"user1@gmail.com", "user2@gmail.com"},
+		[]string{"+85291239123", "+85261236123"},
 	}
 
-	mockHTTP("POST", fmt.Sprintf("/notifications/%s/%s/remove", p.Slug, p.TrackingNumber), 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: notificationWrapper{
-			Notification: exp,
-		},
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newNotificationEndpoint(req)
-	res, _ := endpoint.RemoveNotification(context.Background(), p, exp)
+	res, err := client.GetNotification(context.Background(), p)
 	assert.Equal(t, exp, res)
-}
-
-func TestRemoveNotificationError(t *testing.T) {
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newNotificationEndpoint(req)
-
-	// empty id, slug and tracking_number
-	p := SlugTrackingNumber{
-		Slug:           "",
-		TrackingNumber: "",
-	}
-
-	_, err := endpoint.RemoveNotification(context.Background(), p, Notification{})
-	assert.NotNil(t, err)
-	// assert.Equal(t, "HandlerError", err.Type)
-
-	// Response with error
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	p = SlugTrackingNumber{
-		Slug:           "xq-express",
-		TrackingNumber: "LS404494276CN",
-	}
-
-	mockHTTP("POST", fmt.Sprintf("/notifications/%s/%s/remove", p.Slug, p.TrackingNumber), 401, Response{
-		Meta: Meta{
-			Code:    401,
-			Message: "Invalid API key.",
-			Type:    "Unauthorized",
-		},
-		Data: notificationWrapper{},
-	}, nil)
-
-	_, err = endpoint.RemoveNotification(context.Background(), p, Notification{})
-	assert.NotNil(t, err)
-	// assert.Equal(t, "Unauthorized", err.Type)
-}
-
-func TestGetNotificationSetting(t *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	p := SlugTrackingNumber{
-		Slug:           "xq-express",
-		TrackingNumber: "LS404494276CN",
-	}
-
-	exp := Notification{
-		[]string{"vimukthi@aftership.net"},
-		[]string{"+85254469627"},
-	}
-
-	mockHTTP("GET", fmt.Sprintf("/notifications/%s/%s", p.Slug, p.TrackingNumber), 200, Response{
-		Meta: Meta{
-			Code:    200,
-			Message: "",
-			Type:    "",
-		},
-		Data: notificationWrapper{
-			Notification: exp,
-		},
-	}, nil)
-
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newNotificationEndpoint(req)
-	res, _ := endpoint.GetNotification(context.Background(), p)
-	assert.Equal(t, exp, res)
+	assert.Nil(t, err)
 }
 
 func TestGetNotificationError(t *testing.T) {
-	req := newRequestHelper(Config{
-		APIKey: "YOUR_API_KEY",
-	})
-	endpoint := newNotificationEndpoint(req)
-
-	// empty id, slug and tracking_number
+	// empty slug and tracking_number
 	p := SlugTrackingNumber{
 		Slug:           "",
 		TrackingNumber: "",
 	}
 
-	_, err := endpoint.GetNotification(context.Background(), p)
+	_, err := client.GetNotification(context.Background(), p)
 	assert.NotNil(t, err)
-	// assert.Equal(t, "HandlerError", err.Type)
+}
 
-	// Response with error
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+func TestAddNotification(t *testing.T) {
+	setup()
+	defer teardown()
 
-	p = SlugTrackingNumber{
+	p := SlugTrackingNumber{
 		Slug:           "xq-express",
 		TrackingNumber: "LS404494276CN",
 	}
 
-	mockHTTP("GET", fmt.Sprintf("/notifications/%s/%s", p.Slug, p.TrackingNumber), 401, Response{
-		Meta: Meta{
-			Code:    401,
-			Message: "Invalid API key.",
-			Type:    "Unauthorized",
-		},
-		Data: notificationWrapper{},
-	}, nil)
+	uri := fmt.Sprintf("/notifications/%s/%s/add", p.Slug, p.TrackingNumber)
+	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"notification": {
+							"emails": ["user1@gmail.com","user2@gmail.com"],
+							"smses": ["+85291239123", "+85261236123"]
+					}
+			}
+	}`))
+	})
 
-	_, err = endpoint.GetNotification(context.Background(), p)
+	req := Notification{
+		[]string{"user1@gmail.com", "user2@gmail.com", "invalid EMail @ Gmail. com"},
+		[]string{"+85291239123", "+85261236123", "Invalid Mobile Phone Number"},
+	}
+
+	exp := Notification{
+		[]string{"user1@gmail.com", "user2@gmail.com"},
+		[]string{"+85291239123", "+85261236123"},
+	}
+
+	res, err := client.AddNotification(context.Background(), p, req)
+	assert.Equal(t, exp, res)
+	assert.Nil(t, err)
+}
+
+func TestAddNotificationError(t *testing.T) {
+	// empty slug and tracking_number
+	p := SlugTrackingNumber{
+		Slug:           "",
+		TrackingNumber: "",
+	}
+
+	_, err := client.AddNotification(context.Background(), p, Notification{})
 	assert.NotNil(t, err)
-	// assert.Equal(t, "Unauthorized", err.Type)
+}
+
+func TestRemoveNotification(t *testing.T) {
+	setup()
+	defer teardown()
+
+	p := SlugTrackingNumber{
+		Slug:           "xq-express",
+		TrackingNumber: "LS404494276CN",
+	}
+
+	uri := fmt.Sprintf("/notifications/%s/%s/remove", p.Slug, p.TrackingNumber)
+	mux.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		assert.Equal(t, http.MethodPost, r.Method)
+		w.Write([]byte(`{
+			"meta": {
+					"code": 200
+			},
+			"data": {
+					"notification": {
+							"emails": [],
+							"smses": ["+85261236888"]
+					}
+			}
+	}`))
+	})
+
+	req := Notification{
+		[]string{"user1@gmail.com", "user2@gmail.com", "invalid EMail @ Gmail. com"},
+		[]string{"+85291239123", "Invalid Mobile Phone Number"},
+	}
+
+	exp := Notification{
+		[]string{},
+		[]string{"+85261236888"},
+	}
+
+	res, err := client.RemoveNotification(context.Background(), p, req)
+	assert.Equal(t, exp, res)
+	assert.Nil(t, err)
+}
+
+func TestRemoveNotificationError(t *testing.T) {
+	// empty slug or tracking_number
+	p := SlugTrackingNumber{
+		Slug:           "",
+		TrackingNumber: "",
+	}
+
+	_, err := client.RemoveNotification(context.Background(), p, Notification{})
+	assert.NotNil(t, err)
 }

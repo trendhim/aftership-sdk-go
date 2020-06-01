@@ -7,7 +7,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func CheckpointsEndpoint_getLastCheckpoint() {
+func GetLastCheckpoint() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -23,7 +23,7 @@ func CheckpointsEndpoint_getLastCheckpoint() {
 		TrackingNumber: "1234567890",
 	}
 
-	result, err := cli.Checkpoint.GetLastCheckpoint(context.Background(), param, aftership.GetCheckpointParams{})
+	result, err := cli.GetLastCheckpoint(context.Background(), param, aftership.GetCheckpointParams{})
 
 	if err != nil {
 		fmt.Println(err)

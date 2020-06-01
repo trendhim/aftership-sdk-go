@@ -7,7 +7,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func CouriersEndpoint_GetCouriers() {
+func GetCouriers() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -18,7 +18,7 @@ func CouriersEndpoint_GetCouriers() {
 	}
 
 	// Get couriers
-	result, err := cli.Courier.GetCouriers(context.Background())
+	result, err := cli.GetCouriers(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -27,7 +27,7 @@ func CouriersEndpoint_GetCouriers() {
 	fmt.Println(result)
 }
 
-func CouriersEndpoint_GetAllCouriers() {
+func GetAllCouriers() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -38,7 +38,7 @@ func CouriersEndpoint_GetAllCouriers() {
 	}
 
 	// Get all couriers
-	result, err := cli.Courier.GetAllCouriers(context.Background())
+	result, err := cli.GetAllCouriers(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -47,7 +47,7 @@ func CouriersEndpoint_GetAllCouriers() {
 	fmt.Println(result)
 }
 
-func CouriersEndpoint_DetectCouriers() {
+func DetectCouriers() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -62,7 +62,7 @@ func CouriersEndpoint_DetectCouriers() {
 		TrackingNumber: "906587618687",
 	}
 
-	list, err := cli.Courier.DetectCouriers(context.Background(), req)
+	list, err := cli.DetectCouriers(context.Background(), req)
 	if err != nil {
 		fmt.Println(err)
 		return

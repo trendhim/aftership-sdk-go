@@ -9,7 +9,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func TrackingsEndpoint_CreateTracking() {
+func CreateTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -45,7 +45,7 @@ func TrackingsEndpoint_CreateTracking() {
 		PickupNote:                "Reach out to our staffs when you arrive our stores for shipment pickup",
 	}
 
-	result, err := cli.Tracking.CreateTracking(context.Background(), newTracking)
+	result, err := cli.CreateTracking(context.Background(), newTracking)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -54,7 +54,7 @@ func TrackingsEndpoint_CreateTracking() {
 	fmt.Println(result)
 }
 
-func TrackingsEndpoint_DeleteTracking() {
+func DeleteTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -70,7 +70,7 @@ func TrackingsEndpoint_DeleteTracking() {
 		TrackingNumber: "1234567890",
 	}
 
-	result, err := cli.Tracking.DeleteTracking(context.Background(), param)
+	result, err := cli.DeleteTracking(context.Background(), param)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -79,7 +79,7 @@ func TrackingsEndpoint_DeleteTracking() {
 	fmt.Println(result)
 }
 
-func TrackingsEndpoint_GetTrackings() {
+func GetTrackings() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -95,7 +95,7 @@ func TrackingsEndpoint_GetTrackings() {
 		Limit: 10,
 	}
 
-	multiResults, err := cli.Tracking.GetTrackings(context.Background(), multiParams)
+	multiResults, err := cli.GetTrackings(context.Background(), multiParams)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -104,7 +104,7 @@ func TrackingsEndpoint_GetTrackings() {
 	fmt.Println(multiResults)
 }
 
-func TrackingsEndpoint_GetTracking() {
+func GetTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -120,7 +120,7 @@ func TrackingsEndpoint_GetTracking() {
 		TrackingNumber: "1588226550",
 	}
 
-	result, err := cli.Tracking.GetTracking(context.Background(), param, aftership.GetTrackingParams{})
+	result, err := cli.GetTracking(context.Background(), param, aftership.GetTrackingParams{})
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -130,7 +130,7 @@ func TrackingsEndpoint_GetTracking() {
 	// Get tracking results of a single tracking by id.
 	paramID := aftership.TrackingID("rymq9l34ztbvvk9md2ync00r")
 
-	result, err = cli.Tracking.GetTracking(context.Background(), paramID, aftership.GetTrackingParams{
+	result, err = cli.GetTracking(context.Background(), paramID, aftership.GetTrackingParams{
 		Fields: "tracking_postal_code,title,order_id",
 	})
 	if err != nil {
@@ -140,7 +140,7 @@ func TrackingsEndpoint_GetTracking() {
 	}
 }
 
-func TrackingsEndpoint_UpdateTracking() {
+func UpdateTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -160,7 +160,7 @@ func TrackingsEndpoint_UpdateTracking() {
 		Title: "New Title",
 	}
 
-	result, err := cli.Tracking.UpdateTracking(context.Background(), param, updateReq)
+	result, err := cli.UpdateTracking(context.Background(), param, updateReq)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -169,7 +169,7 @@ func TrackingsEndpoint_UpdateTracking() {
 	fmt.Println(result)
 }
 
-func TrackingsEndpoint_ReTrack() {
+func RetrackTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -185,7 +185,7 @@ func TrackingsEndpoint_ReTrack() {
 		TrackingNumber: "1588226550",
 	}
 
-	result, err := cli.Tracking.ReTrack(context.Background(), param)
+	result, err := cli.RetrackTracking(context.Background(), param)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -193,7 +193,7 @@ func TrackingsEndpoint_ReTrack() {
 	}
 }
 
-func TrackingsEndpoint_MarkAsCompleted() {
+func MarkTrackingAsCompleted() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -208,7 +208,7 @@ func TrackingsEndpoint_MarkAsCompleted() {
 		TrackingNumber: "1587721393824",
 	}
 
-	result, err := cli.Tracking.MarkAsCompleted(context.Background(), param, aftership.CompletedStatusDelivered)
+	result, err := cli.MarkTrackingAsCompleted(context.Background(), param, aftership.CompletedStatusDelivered)
 	if err != nil {
 		fmt.Println(err)
 	} else {
