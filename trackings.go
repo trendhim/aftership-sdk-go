@@ -211,17 +211,17 @@ type SingleTrackingOptionalParams struct {
 	TrackingState              string `url:"tracking_state,omitempty" json:"tracking_state,omitempty"`                             // Located state of the shipment for a specific courier. Required by some couriers, such asstar-track-courier
 }
 
-// CompletedStatus is status to make the tracking as completed
-type CompletedStatus string
+// TrackingCompletedStatus is status to make the tracking as completed
+type TrackingCompletedStatus string
 
-// CompletedStatusDelivered is reason DELIVERED to make the tracking as completed
-const CompletedStatusDelivered CompletedStatus = "DELIVERED"
+// TrackingCompletedStatusDelivered is reason DELIVERED to make the tracking as completed
+const TrackingCompletedStatusDelivered TrackingCompletedStatus = "DELIVERED"
 
-// CompletedStatusLost is reason LOST to make the tracking as completed
-const CompletedStatusLost CompletedStatus = "LOST"
+// TrackingCompletedStatusLost is reason LOST to make the tracking as completed
+const TrackingCompletedStatusLost TrackingCompletedStatus = "LOST"
 
-// CompletedStatusReturnedToSender is reason RETURNED_TO_SENDER to make the tracking as completed
-const CompletedStatusReturnedToSender CompletedStatus = "RETURNED_TO_SENDER"
+// TrackingCompletedStatusReturnedToSender is reason RETURNED_TO_SENDER to make the tracking as completed
+const TrackingCompletedStatusReturnedToSender TrackingCompletedStatus = "RETURNED_TO_SENDER"
 
 // createTrackingRequest is a model for create tracking API request
 type createTrackingRequest struct {
@@ -311,7 +311,7 @@ type markAsCompletedRequest struct {
 }
 
 // MarkTrackingAsCompleted marks a tracking as completed. The tracking won't auto update until retrack it.
-func (client *Client) MarkTrackingAsCompleted(ctx context.Context, identifier TrackingIdentifier, status CompletedStatus) (Tracking, error) {
+func (client *Client) MarkTrackingAsCompleted(ctx context.Context, identifier TrackingIdentifier, status TrackingCompletedStatus) (Tracking, error) {
 	uriPath, err := identifier.URIPath()
 	if err != nil {
 		return Tracking{}, errors.Wrap(err, "error marking tracking as completed")
