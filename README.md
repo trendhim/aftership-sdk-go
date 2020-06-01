@@ -1,12 +1,12 @@
 
-# aftership-sdk-go 
+# aftership-sdk-go
 
 [![Build Status](https://travis-ci.org/AfterShip/aftership-sdk-go.svg?branch=v2)](https://travis-ci.org/AfterShip/aftership-sdk-go)
 [![codecov.io](https://codecov.io/github/AfterShip/aftership-sdk-go/coverage.svg?branch=v2)](https://codecov.io/github/AfterShip/aftership-sdk-go?branch=v2)
 [![GoDoc](https://godoc.org/github.com/AfterShip/aftership-sdk-go?status.svg)](https://godoc.org/github.com/AfterShip/aftership-sdk-go)
 [![AfterShip SDKs channel](https://aftership-sdk-slackin.herokuapp.com/badge.svg)](https://aftership-sdk-slackin.herokuapp.com/)
 
-## Introduction:
+## Introduction
 
 [AfterShip](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. aftership-sdk-go is a SDK to develop Apps using [AfterShip API v4](https://docs.aftership.com/api/4) in golang. All endpoints including couriers, tracking, last checkpoint and notification are supported.
 
@@ -113,7 +113,6 @@ import (
     "fmt"
 
     "github.com/aftership/aftership-sdk-go/v2"
-    "github.com/aftership/aftership-sdk-go/v2/common"
 )
 
 func main() {
