@@ -9,7 +9,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func CreateTracking() {
+func ExampleClient_CreateTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -54,7 +54,7 @@ func CreateTracking() {
 	fmt.Println(result)
 }
 
-func DeleteTracking() {
+func ExampleClient_DeleteTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -79,7 +79,7 @@ func DeleteTracking() {
 	fmt.Println(result)
 }
 
-func GetTrackings() {
+func ExampleClient_GetTrackings() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -104,7 +104,7 @@ func GetTrackings() {
 	fmt.Println(multiResults)
 }
 
-func GetTracking() {
+func ExampleClient_GetTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -140,7 +140,7 @@ func GetTracking() {
 	}
 }
 
-func UpdateTracking() {
+func ExampleClient_UpdateTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -169,7 +169,7 @@ func UpdateTracking() {
 	fmt.Println(result)
 }
 
-func RetrackTracking() {
+func ExampleClient_RetrackTracking() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -193,7 +193,7 @@ func RetrackTracking() {
 	}
 }
 
-func MarkTrackingAsCompleted() {
+func ExampleClient_MarkTrackingAsCompleted() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})

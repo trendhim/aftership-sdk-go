@@ -7,7 +7,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func GetLastCheckpoint() {
+func ExampleClient_GetLastCheckpoint() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})

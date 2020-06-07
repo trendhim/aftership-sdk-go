@@ -7,7 +7,7 @@ import (
 	"github.com/aftership/aftership-sdk-go/v2"
 )
 
-func GetNotification() {
+func ExampleClient_GetNotification() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -32,7 +32,7 @@ func GetNotification() {
 	fmt.Println(result)
 }
 
-func AddNotification() {
+func ExampleClient_AddNotification() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
@@ -62,7 +62,7 @@ func AddNotification() {
 	fmt.Println(result)
 }
 
-func RemoveNotification() {
+func ExampleClient_RemoveNotification() {
 	cli, err := aftership.NewClient(aftership.Config{
 		APIKey: "YOUR_API_KEY",
 	})
