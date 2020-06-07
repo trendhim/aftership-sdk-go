@@ -9,6 +9,6 @@ type RateLimit struct {
 	Remaining int   `json:"remaining"` // The number of requests left for the 1 second window.
 }
 
-func (rateLimit *RateLimit) isReached() bool {
+func (rateLimit *RateLimit) isExceeded() bool {
 	return rateLimit.Remaining == 0 && rateLimit.Reset >= time.Now().Unix()
 }

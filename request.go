@@ -20,9 +20,9 @@ import (
 func (client *Client) makeRequest(ctx context.Context, method string, path string,
 	queryParams interface{}, inputData interface{}, resultData interface{}) error {
 
-	// Check if rate limit is reached
-	if client.rateLimit != nil && client.rateLimit.isReached() {
-		return fmt.Errorf(errReachRateLimt, time.Unix(client.rateLimit.Reset, 0))
+	// Check if rate limit is exceeded
+	if client.rateLimit != nil && client.rateLimit.isExceeded() {
+		return fmt.Errorf(errExceedRateLimt, time.Unix(client.rateLimit.Reset, 0))
 	}
 
 	// Read input date
