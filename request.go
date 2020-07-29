@@ -25,7 +25,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 		return fmt.Errorf(errExceedRateLimt, time.Unix(client.rateLimit.Reset, 0))
 	}
 
-	// Read input date
+	// Read input data
 	var body io.Reader
 	if inputData != nil {
 		jsonData, err := json.Marshal(inputData)

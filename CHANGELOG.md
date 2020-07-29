@@ -2,7 +2,7 @@
 
 ## Change log
 
-### 2.0.0-alpha (2020-04-30)
+### 2.0.0 (2020-07-29)
 - New features
 	- Support latest features in v4 API
 	- Use `go mod` to organize the Go modules
