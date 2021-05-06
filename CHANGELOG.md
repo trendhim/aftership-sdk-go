@@ -2,6 +2,10 @@
 
 ## Change log
 
+### 2.0.1 (2021-05-06)
+- Bug Fix
+	- https://github.com/AfterShip/aftership-sdk-go/pull/32 `ShipmentWeights` changed to float64
+
 ### 2.0.0 (2020-07-29)
 - New features
 	- Support latest features in v4 API
