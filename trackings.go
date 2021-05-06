@@ -98,7 +98,7 @@ type Tracking struct {
 	UniqueToken                   string            `json:"unique_token,omitempty"`                     // The token to generate the direct tracking link: https://yourusername.aftership.com/unique_token or https://www.aftership.com/unique_token
 	ShipmentPackageCount          int               `json:"shipment_package_count,omitempty"`           // Number of packages under the tracking (if any).
 	ShipmentType                  string            `json:"shipment_type,omitempty"`                    // Shipment type provided by carrier (if any).
-	ShipmentWeight                int               `json:"shipment_weight,omitempty"`                  // Shipment weight provided by carrier (if any)
+	ShipmentWeight                float64           `json:"shipment_weight,omitempty"`                  // Shipment weight provided by carrier (if any)
 	ShipmentWeightUnit            string            `json:"shipment_weight_unit,omitempty"`             // Weight unit provided by carrier, either in kg or lb (if any)
 	LastUpdatedAt                 *time.Time        `json:"last_updated_at,omitempty"`                  // Date and time the tracking was last updated
 	ShipmentPickupDate            string            `json:"shipment_pickup_date,omitempty"`             // Date and time the tracking was picked up
