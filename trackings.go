@@ -13,7 +13,7 @@ import (
 // CreateTrackingParams provides parameters for new Tracking API request
 type CreateTrackingParams struct {
 	TrackingNumber             string            `json:"tracking_number"`                        // Tracking number of a shipment.
-	Slug                       []string          `json:"slug,omitempty"`                         // Unique code of each courier. If you do not specify a slug, AfterShip will automatically detect the courier based on the tracking number format and your selected couriers.
+	Slug                       string            `json:"slug,omitempty"`                         // Unique code of each courier. If you do not specify a slug, AfterShip will automatically detect the courier based on the tracking number format and your selected couriers.
 	TrackingPostalCode         string            `json:"tracking_postal_code,omitempty"`         // The postal code of receiver's address. Required by some couriers, such as deutsch-post
 	TrackingShipDate           string            `json:"tracking_ship_date,omitempty"`           // Shipping date in YYYYMMDD format. Required by some couriers, such as deutsch-post
 	TrackingAccountNumber      string            `json:"tracking_account_number,omitempty"`      // Account number of the shipper for a specific courier. Required by some couriers, such as dynamic-logistics

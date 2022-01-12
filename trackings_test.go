@@ -83,7 +83,7 @@ func TestCreateTracking(t *testing.T) {
 	})
 
 	params := CreateTrackingParams{
-		Slug:           []string{"dhl"},
+		Slug:           "dhl",
 		TrackingNumber: "123456789",
 		Title:          "Title Name",
 		SMSes: []string{

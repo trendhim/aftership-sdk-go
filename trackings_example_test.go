@@ -23,7 +23,7 @@ func ExampleClient_CreateTracking() {
 	trackingNumber := strconv.FormatInt(time.Now().Unix(), 10)
 	newTracking := aftership.CreateTrackingParams{
 		TrackingNumber: trackingNumber,
-		Slug:           []string{"dhl"},
+		Slug:           "dhl",
 		Title:          "Title Name",
 		SMSes: []string{
 			"+18555072509",
