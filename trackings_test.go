@@ -76,7 +76,8 @@ func TestCreateTracking(t *testing.T) {
 							"pickup_note": "Contact shop keepers when you arrive our stores for shipment pickup",
 							"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=1111111111111&cntry_code=us",
 							"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
-							"first_attempted_at": null
+							"first_attempted_at": null,
+                            "aftership_estimated_delivery_date": null
 					}
 			}
 	}`))
@@ -347,7 +348,13 @@ func TestGetTrackings(t *testing.T) {
 									"pickup_note": null,
 									"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=111111111111&cntry_code=us",
 									"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
-									"first_attempted_at": "2018-08-01T13:19:47-04:00"
+									"first_attempted_at": "2018-08-01T13:19:47-04:00",
+                                    "aftership_estimated_delivery_date": {
+                                         "estimated_delivery_date": "2018-08-01",   
+                                         "confidence_score": 0.8,   
+                                         "estimated_delivery_date_min": "2018-08-01",   
+                                         "estimated_delivery_date_max": "2018-08-05"   
+                                    }
 							},
 							{
 									"id": "5b0516676a810a1400eb5c1c",
@@ -415,7 +422,8 @@ func TestGetTrackings(t *testing.T) {
 									"pickup_note": null,
 									"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=2222222222222&cntry_code=us",
 									"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=2222222222222&requester=WT/trackdetails",
-									"first_attempted_at": null
+									"first_attempted_at": null,
+                                    "aftership_estimated_delivery_date": null
 							}
 					]
 			}
@@ -475,6 +483,12 @@ func TestGetTrackings(t *testing.T) {
 		CourierTrackingLink: "https://www.fedex.com/fedextrack/?tracknumbers=111111111111&cntry_code=us",
 		CourierRedirectLink: "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
 		FirstAttemptedAt:    "2018-08-01T13:19:47-04:00",
+		EstimatedDeliveryDate: EstimatedDeliveryDate{
+			EstimatedDeliveryDate:    "2018-08-01",
+			ConfidenceScore:          0.8,
+			EstimatedDeliveryDateMin: "2018-08-01",
+			EstimatedDeliveryDateMax: "2018-08-05",
+		},
 	}
 
 	t2CreatedAt, _ := time.Parse(time.RFC3339, "2018-05-23T07:21:11+00:00")
@@ -626,7 +640,8 @@ func TestGetTracking(t *testing.T) {
 						"pickup_note": null,
 						"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=111111111111&cntry_code=us",
 						"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
-						"first_attempted_at": "2018-07-25T10:10:00+09:00"
+						"first_attempted_at": "2018-07-25T10:10:00+09:00",
+                        "aftership_estimated_delivery_date": null
 				}
 		}
 	}`))
@@ -807,7 +822,8 @@ func TestUpdateTracking(t *testing.T) {
 								"pickup_note": "Contact shop keepers when you arrive our stores for shipment pickup",
 								"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=1111111111111&cntry_code=us",
 								"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=1111111111111&requester=WT/trackdetails",
-								"first_attempted_at": "2018-08-01T17:19:47"
+								"first_attempted_at": "2018-08-01T17:19:47",
+                                "aftership_estimated_delivery_date": null
 						}
 				}
 		}`))
@@ -1036,7 +1052,8 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 							"pickup_note": null,
 							"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=111111111111&cntry_code=us",
 							"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
-							"first_attempted_at": "2018-07-25T10:10:00+09:00"
+							"first_attempted_at": "2018-07-25T10:10:00+09:00",
+                            "aftership_estimated_delivery_date": null
 					}
 			}
 	}`))
