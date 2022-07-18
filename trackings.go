@@ -383,6 +383,25 @@ type Tracking struct {
 	 * Text field for order number
 	 */
 	OrderNumber string `json:"order_number,omitempty"`
+
+	/**
+	 * The latest estimated delivery date.
+	 * May come from the carrier, AfterShip AI, or based on your custom settings.
+	 * This can appear in 1 of 3 formats based on the data received.
+	 *  1. Date only: `YYYY-MM-DD`
+	 *  2. Date and time: `YYYY-MM-DDTHH:mm:ss`
+	 *  3. Date, time, and time zone: `YYYY-MM-DDTHH:mm:ssZ`
+	 */
+	LatestEstimatedDelivery LatestEstimatedDelivery `json:"latest_estimated_delivery,omitempty"`
+}
+
+// LatestEstimatedDelivery represents a latest_estimated_delivery returned by the Aftership API
+type LatestEstimatedDelivery struct {
+	Type        string `json:"type,omitempty"`         // The format of the EDD. Either a single date or a date range.
+	Source      string `json:"source,omitempty"`       // The source of the EDD. Either the carrier, AfterShip AI, or based on your custom EDD settings.
+	Datetime    string `json:"datetime,omitempty"`     // The latest EDD time.
+	DatetimeMin string `json:"datetime_min,omitempty"` // For a date range EDD format, the date and time for the lower end of the range.
+	DatetimeMax string `json:"datetime_max,omitempty"` // For a date range EDD format, the date and time for the upper end of the range.
 }
 
 // Checkpoint represents a checkpoint returned by the Aftership API

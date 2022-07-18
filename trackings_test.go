@@ -430,7 +430,14 @@ func TestGetTrackings(t *testing.T) {
 									"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=2222222222222&cntry_code=us",
 									"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=2222222222222&requester=WT/trackdetails",
 									"first_attempted_at": null,
-                                    "aftership_estimated_delivery_date": null
+                                    "aftership_estimated_delivery_date": null,
+									"latest_estimated_delivery": {
+										"type": "specific",
+									    "source": "Custom EDD",
+									    "datetime": "2022-07-06",
+									    "datetime_min": null,
+									    "datetime_max": null
+									}
 							}
 					]
 			}
@@ -540,6 +547,11 @@ func TestGetTrackings(t *testing.T) {
 		ReturnToSender:      false,
 		CourierTrackingLink: "https://www.fedex.com/fedextrack/?tracknumbers=2222222222222&cntry_code=us",
 		CourierRedirectLink: "https://www.fedex.com/track?loc=en_US&tracknum=2222222222222&requester=WT/trackdetails",
+		LatestEstimatedDelivery: LatestEstimatedDelivery{
+			Type:     "specific",
+			Source:   "Custom EDD",
+			Datetime: "2022-07-06",
+		},
 	}
 
 	exp := PagedTrackings{
