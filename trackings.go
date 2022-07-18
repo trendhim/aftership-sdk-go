@@ -39,6 +39,7 @@ type CreateTrackingParams struct {
 	DeliveryType               string            `json:"delivery_type,omitempty"`                // Shipment delivery type: pickup_at_store, pickup_at_courier, door_to_door
 	PickupLocation             string            `json:"pickup_location,omitempty"`              // Shipment pickup location for receiver
 	PickupNote                 string            `json:"pickup_note,omitempty"`                  // Shipment pickup note for receiver
+	ShipmentType               string            `json:"shipment_type,omitempty"`                // The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
 }
 
 // TrackingIdentifier is an identifier for a single tracking
@@ -437,6 +438,7 @@ type UpdateTrackingParams struct {
 	OrderNumber            string            `json:"order_number,omitempty"`
 	OrderDate              string            `json:"order_date,omitempty"`
 	CustomFields           map[string]string `json:"custom_fields,omitempty"`
+	ShipmentType           string            `json:"shipment_type,omitempty"` // The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
 }
 
 // GetTrackingsParams represents the set of params for get Trackings API

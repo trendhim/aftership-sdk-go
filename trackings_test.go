@@ -47,7 +47,7 @@ func TestCreateTracking(t *testing.T) {
 							"shipment_package_count": 0,
 							"shipment_pickup_date": null,
 							"shipment_delivery_date": null,
-							"shipment_type": null,
+							"shipment_type": "test_type",
 							"shipment_weight": null,
 							"shipment_weight_unit": null,
 							"signed_by": null,
@@ -142,6 +142,7 @@ func TestCreateTracking(t *testing.T) {
 		PickupNote:                "Contact shop keepers when you arrive our stores for shipment pickup",
 		CourierTrackingLink:       "https://www.fedex.com/fedextrack/?tracknumbers=1111111111111&cntry_code=us",
 		CourierRedirectLink:       "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
+		ShipmentType:              "test_type",
 	}
 
 	res, err := client.CreateTracking(context.Background(), params)
@@ -901,7 +902,8 @@ func TestUpdateTracking(t *testing.T) {
 	}
 
 	data := UpdateTrackingParams{
-		Title: "New Title",
+		Title:        "New Title",
+		ShipmentType: "FedEx Home Delivery",
 	}
 
 	res, _ := client.UpdateTracking(context.Background(), p, data)
