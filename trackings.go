@@ -425,10 +425,18 @@ type Checkpoint struct {
 
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
 type EstimatedDeliveryDate struct {
-	EstimatedDeliveryDate    string  `json:"estimated_delivery_date,omitempty"`     // The estimated arrival date of the shipment.
-	ConfidenceScore          float64 `json:"confidence_score,omitempty"`            // The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
-	EstimatedDeliveryDateMin string  `json:"estimated_delivery_date_min,omitempty"` // Earliest estimated delivery date of the shipment.
-	EstimatedDeliveryDateMax string  `json:"estimated_delivery_date_max,omitempty"` // Latest estimated delivery date of the shipment.
+	Slug                     string           `json:"slug,omitempty"`                        // AfterShip's unique code of courier.Please refer to https://track.aftership.com/couriers/download.
+	ServiceTypeName          string           `json:"service_type_name,omitempty"`           // Shipping and delivery options provided by the carrier.
+	OriginAddress            *Address         `json:"origin_address,omitempty"`              // The location from where the package is picked up by the carrier to be delivered to the final destination.
+	DestinationAddress       *Address         `json:"destination_address,omitempty"`         // The final destination of the customer where the delivery will be made.
+	Weight                   *Weight          `json:"weight,omitempty"`                      // AfterShip uses this object to calculate the total weight of the order.
+	PackageCount             int64            `json:"package_count,omitempty"`               // The number of packages.
+	PickupTime               string           `json:"pickup_time,omitempty"`                 // The local pickup time of the package.
+	EstimatedPickup          *EstimatedPickup `json:"estimated_pickup,omitempty"`            // Either `pickup_time` or `estimated_pickup` is required.
+	EstimatedDeliveryDate    string           `json:"estimated_delivery_date,omitempty"`     // The estimated arrival date of the shipment.
+	ConfidenceScore          float64          `json:"confidence_score,omitempty"`            // The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
+	EstimatedDeliveryDateMin string           `json:"estimated_delivery_date_min,omitempty"` // Earliest estimated delivery date of the shipment.
+	EstimatedDeliveryDateMax string           `json:"estimated_delivery_date_max,omitempty"` // Latest estimated delivery date of the shipment.
 }
 
 // GetTrackingParams is the additional parameters in single tracking query
