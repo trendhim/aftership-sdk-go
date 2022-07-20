@@ -43,6 +43,7 @@ func ExampleClient_CreateTracking() {
 		DeliveryType:              "pickup_at_store",
 		PickupLocation:            "Flagship Store",
 		PickupNote:                "Reach out to our staffs when you arrive our stores for shipment pickup",
+		ShipmentType:              "test_type",
 	}
 
 	result, err := cli.CreateTracking(context.Background(), newTracking)
@@ -157,7 +158,8 @@ func ExampleClient_UpdateTracking() {
 	}
 
 	updateReq := aftership.UpdateTrackingParams{
-		Title: "New Title",
+		Title:        "New Title",
+		ShipmentType: "test_type2",
 	}
 
 	result, err := cli.UpdateTracking(context.Background(), param, updateReq)

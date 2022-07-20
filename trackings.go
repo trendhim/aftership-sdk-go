@@ -39,6 +39,7 @@ type CreateTrackingParams struct {
 	DeliveryType               string            `json:"delivery_type,omitempty"`                // Shipment delivery type: pickup_at_store, pickup_at_courier, door_to_door
 	PickupLocation             string            `json:"pickup_location,omitempty"`              // Shipment pickup location for receiver
 	PickupNote                 string            `json:"pickup_note,omitempty"`                  // Shipment pickup note for receiver
+	ShipmentType               string            `json:"shipment_type,omitempty"`                // The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
 }
 
 // TrackingIdentifier is an identifier for a single tracking
@@ -382,6 +383,25 @@ type Tracking struct {
 	 * Text field for order number
 	 */
 	OrderNumber string `json:"order_number,omitempty"`
+
+	/**
+	 * The latest estimated delivery date.
+	 * May come from the carrier, AfterShip AI, or based on your custom settings.
+	 * This can appear in 1 of 3 formats based on the data received.
+	 *  1. Date only: `YYYY-MM-DD`
+	 *  2. Date and time: `YYYY-MM-DDTHH:mm:ss`
+	 *  3. Date, time, and time zone: `YYYY-MM-DDTHH:mm:ssZ`
+	 */
+	LatestEstimatedDelivery LatestEstimatedDelivery `json:"latest_estimated_delivery,omitempty"`
+}
+
+// LatestEstimatedDelivery represents a latest_estimated_delivery returned by the Aftership API
+type LatestEstimatedDelivery struct {
+	Type        string `json:"type,omitempty"`         // The format of the EDD. Either a single date or a date range.
+	Source      string `json:"source,omitempty"`       // The source of the EDD. Either the carrier, AfterShip AI, or based on your custom EDD settings.
+	Datetime    string `json:"datetime,omitempty"`     // The latest EDD time.
+	DatetimeMin string `json:"datetime_min,omitempty"` // For a date range EDD format, the date and time for the lower end of the range.
+	DatetimeMax string `json:"datetime_max,omitempty"` // For a date range EDD format, the date and time for the upper end of the range.
 }
 
 // Checkpoint represents a checkpoint returned by the Aftership API
@@ -405,10 +425,18 @@ type Checkpoint struct {
 
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
 type EstimatedDeliveryDate struct {
-	EstimatedDeliveryDate    string  `json:"estimated_delivery_date,omitempty"`     // The estimated arrival date of the shipment.
-	ConfidenceScore          float64 `json:"confidence_score,omitempty"`            // The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
-	EstimatedDeliveryDateMin string  `json:"estimated_delivery_date_min,omitempty"` // Earliest estimated delivery date of the shipment.
-	EstimatedDeliveryDateMax string  `json:"estimated_delivery_date_max,omitempty"` // Latest estimated delivery date of the shipment.
+	Slug                     string           `json:"slug,omitempty"`                        // AfterShip's unique code of courier.Please refer to https://track.aftership.com/couriers/download.
+	ServiceTypeName          string           `json:"service_type_name,omitempty"`           // Shipping and delivery options provided by the carrier.
+	OriginAddress            *Address         `json:"origin_address,omitempty"`              // The location from where the package is picked up by the carrier to be delivered to the final destination.
+	DestinationAddress       *Address         `json:"destination_address,omitempty"`         // The final destination of the customer where the delivery will be made.
+	Weight                   *Weight          `json:"weight,omitempty"`                      // AfterShip uses this object to calculate the total weight of the order.
+	PackageCount             int64            `json:"package_count,omitempty"`               // The number of packages.
+	PickupTime               string           `json:"pickup_time,omitempty"`                 // The local pickup time of the package.
+	EstimatedPickup          *EstimatedPickup `json:"estimated_pickup,omitempty"`            // Either `pickup_time` or `estimated_pickup` is required.
+	EstimatedDeliveryDate    string           `json:"estimated_delivery_date,omitempty"`     // The estimated arrival date of the shipment.
+	ConfidenceScore          float64          `json:"confidence_score,omitempty"`            // The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
+	EstimatedDeliveryDateMin string           `json:"estimated_delivery_date_min,omitempty"` // Earliest estimated delivery date of the shipment.
+	EstimatedDeliveryDateMax string           `json:"estimated_delivery_date_max,omitempty"` // Latest estimated delivery date of the shipment.
 }
 
 // GetTrackingParams is the additional parameters in single tracking query
@@ -437,6 +465,7 @@ type UpdateTrackingParams struct {
 	OrderNumber            string            `json:"order_number,omitempty"`
 	OrderDate              string            `json:"order_date,omitempty"`
 	CustomFields           map[string]string `json:"custom_fields,omitempty"`
+	ShipmentType           string            `json:"shipment_type,omitempty"` // The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
 }
 
 // GetTrackingsParams represents the set of params for get Trackings API

@@ -47,7 +47,7 @@ func TestCreateTracking(t *testing.T) {
 							"shipment_package_count": 0,
 							"shipment_pickup_date": null,
 							"shipment_delivery_date": null,
-							"shipment_type": null,
+							"shipment_type": "test_type",
 							"shipment_weight": null,
 							"shipment_weight_unit": null,
 							"signed_by": null,
@@ -142,6 +142,7 @@ func TestCreateTracking(t *testing.T) {
 		PickupNote:                "Contact shop keepers when you arrive our stores for shipment pickup",
 		CourierTrackingLink:       "https://www.fedex.com/fedextrack/?tracknumbers=1111111111111&cntry_code=us",
 		CourierRedirectLink:       "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
+		ShipmentType:              "test_type",
 	}
 
 	res, err := client.CreateTracking(context.Background(), params)
@@ -429,7 +430,14 @@ func TestGetTrackings(t *testing.T) {
 									"courier_tracking_link": "https://www.fedex.com/fedextrack/?tracknumbers=2222222222222&cntry_code=us",
 									"courier_redirect_link": "https://www.fedex.com/track?loc=en_US&tracknum=2222222222222&requester=WT/trackdetails",
 									"first_attempted_at": null,
-                                    "aftership_estimated_delivery_date": null
+                                    "aftership_estimated_delivery_date": null,
+									"latest_estimated_delivery": {
+										"type": "specific",
+									    "source": "Custom EDD",
+									    "datetime": "2022-07-06",
+									    "datetime_min": null,
+									    "datetime_max": null
+									}
 							}
 					]
 			}
@@ -539,6 +547,11 @@ func TestGetTrackings(t *testing.T) {
 		ReturnToSender:      false,
 		CourierTrackingLink: "https://www.fedex.com/fedextrack/?tracknumbers=2222222222222&cntry_code=us",
 		CourierRedirectLink: "https://www.fedex.com/track?loc=en_US&tracknum=2222222222222&requester=WT/trackdetails",
+		LatestEstimatedDelivery: LatestEstimatedDelivery{
+			Type:     "specific",
+			Source:   "Custom EDD",
+			Datetime: "2022-07-06",
+		},
 	}
 
 	exp := PagedTrackings{
@@ -901,7 +914,8 @@ func TestUpdateTracking(t *testing.T) {
 	}
 
 	data := UpdateTrackingParams{
-		Title: "New Title",
+		Title:        "New Title",
+		ShipmentType: "FedEx Home Delivery",
 	}
 
 	res, _ := client.UpdateTracking(context.Background(), p, data)
