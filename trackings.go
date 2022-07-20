@@ -12,34 +12,123 @@ import (
 
 // CreateTrackingParams provides parameters for new Tracking API request
 type CreateTrackingParams struct {
-	TrackingNumber             string            `json:"tracking_number"`                        // Tracking number of a shipment.
-	Slug                       string            `json:"slug,omitempty"`                         // Unique code of each courier. If you do not specify a slug, AfterShip will automatically detect the courier based on the tracking number format and your selected couriers.
-	TrackingPostalCode         string            `json:"tracking_postal_code,omitempty"`         // The postal code of receiver's address. Required by some couriers, such as deutsch-post
-	TrackingShipDate           string            `json:"tracking_ship_date,omitempty"`           // Shipping date in YYYYMMDD format. Required by some couriers, such as deutsch-post
-	TrackingAccountNumber      string            `json:"tracking_account_number,omitempty"`      // Account number of the shipper for a specific courier. Required by some couriers, such as dynamic-logistics
-	TrackingKey                string            `json:"tracking_key,omitempty"`                 // Key of the shipment for a specific courier. Required by some couriers, such as sic-teliway
-	TrackingOriginCountry      string            `json:"tracking_origin_country,omitempty"`      // Origin Country of the shipment for a specific courier. Required by some couriers, such as dhl
-	TrackingDestinationCountry string            `json:"tracking_destination_country,omitempty"` // Destination Country of the shipment for a specific courier. Required by some couriers, such as postnl-3s
-	TrackingState              string            `json:"tracking_state,omitempty"`               // Located state of the shipment for a specific courier. Required by some couriers, such as star-track-courier
-	Android                    []string          `json:"android,omitempty"`                      // Google cloud message registration IDs to receive the push notifications.
-	IOS                        []string          `json:"ios,omitempty"`                          // Apple iOS device IDs to receive the push notifications.
-	Emails                     []string          `json:"emails,omitempty"`                       // Email address(es) to receive email notifications.
-	SMSes                      []string          `json:"smses,omitempty"`                        // Phone number(s) to receive sms notifications. Enter+ and area code before phone number.
-	Title                      string            `json:"title,omitempty"`                        // Title of the tracking. Default value as tracking_number
-	CustomerName               string            `json:"customer_name,omitempty"`                // Customer name of the tracking.
-	OriginCountryISO3          string            `json:"origin_country_iso3,omitempty"`          // Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
-	DestinationCountryISO3     string            `json:"destination_country_iso3,omitempty"`     // Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
-	OrderID                    string            `json:"order_id,omitempty"`                     // Text field for order ID
-	OrderIDPath                string            `json:"order_id_path,omitempty"`                // Text field for order path
-	OrderNumber                string            `json:"order_number,omitempty"`                 // Text field for order number
-	OrderDate                  string            `json:"order_date,omitempty"`                   // Date and time of the order created
-	CustomFields               map[string]string `json:"custom_fields,omitempty"`                // Custom fields that accept a hash with string, boolean or number fields
-	Language                   string            `json:"language,omitempty"`                     // Enter ISO 639-1 Language Code to specify the store, customer or order language.
-	OrderPromisedDeliveryDate  string            `json:"order_promised_delivery_date,omitempty"` // Promised delivery date of an order inYYYY-MM-DD format.
-	DeliveryType               string            `json:"delivery_type,omitempty"`                // Shipment delivery type: pickup_at_store, pickup_at_courier, door_to_door
-	PickupLocation             string            `json:"pickup_location,omitempty"`              // Shipment pickup location for receiver
-	PickupNote                 string            `json:"pickup_note,omitempty"`                  // Shipment pickup note for receiver
-	ShipmentType               string            `json:"shipment_type,omitempty"`                // The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
+	/**
+	 * Tracking number of a shipment.
+	 */
+	TrackingNumber string `json:"tracking_number"`
+
+	/**
+	 * Unique code of each courier. If you do not specify a slug,
+	 * AfterShip will automatically detect the courier based on the tracking number format and your selected couriers.
+	 */
+	Slug string `json:"slug,omitempty"`
+
+	/**
+	 * Title of the tracking. Default value as tracking_number
+	 */
+	Title string `json:"title,omitempty"`
+
+	/**
+	 * Text field for order ID
+	 */
+	OrderID string `json:"order_id,omitempty"`
+
+	/**
+	 * Text field for order path
+	 */
+	OrderIDPath string `json:"order_id_path,omitempty"`
+
+	/**
+	 * Custom fields that accept a hash with string, boolean or number fields
+	 */
+	CustomFields map[string]string `json:"custom_fields,omitempty"`
+
+	/**
+	 * Enter ISO 639-1 Language Code to specify the store, customer or order language.
+	 */
+	Language string `json:"language,omitempty"`
+
+	/**
+	 * Promised delivery date of an order inYYYY-MM-DD format.
+	 */
+	OrderPromisedDeliveryDate string `json:"order_promised_delivery_date,omitempty"`
+
+	/**
+	 * Shipment delivery type: pickup_at_store, pickup_at_courier, door_to_door
+	 */
+	DeliveryType string `json:"delivery_type,omitempty"`
+
+	/**
+	 * Shipment pickup location for receiver
+	 */
+	PickupLocation string `json:"pickup_location,omitempty"`
+
+	/**
+	 * Shipment pickup note for receiver
+	 */
+	PickupNote string `json:"pickup_note,omitempty"`
+
+	AdditionalField
+
+	/**
+	 * Apple iOS device IDs to receive the push notifications.
+	 */
+	IOS []string `json:"ios,omitempty"`
+
+	/**
+	 * Google cloud message registration IDs to receive the push notifications.
+	 */
+	Android []string `json:"android,omitempty"`
+
+	/**
+	 * Email address(es) to receive email notifications.
+	 */
+	Emails []string `json:"emails,omitempty"`
+
+	/**
+	 * Phone number(s) to receive sms notifications. Enter+ and area code before phone number.
+	 */
+	SMSes []string `json:"smses,omitempty"`
+
+	/**
+	 * Customer name of the tracking.
+	 */
+	CustomerName string `json:"customer_name,omitempty"`
+
+	/**
+	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
+	 */
+	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
+
+	/**
+	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
+	 */
+	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
+
+	/**
+	 * Text field for the note
+	 */
+	Note string `json:"note,omitempty"`
+
+	/**
+	 * Slug group is a group of slugs which belong to same courier. For example, when you inpit "fedex-group" as slug_group, AfterShip will detect the tracking with "fedex-uk", "fedex-fims", and other slugs which belong to "fedex". It cannot be used with slug at the same time.
+	 */
+	SlugGroup string `json:"slug_group,omitempty"`
+
+	/**
+	 * Date and time of the order created
+	 */
+	OrderDate string `json:"order_date,omitempty"`
+
+	/**
+	 * Text field for order number
+	 */
+	OrderNumber string `json:"order_number,omitempty"`
+
+	/**
+	 * The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
+	 */
+	ShipmentType string `json:"shipment_type,omitempty"`
 }
 
 // TrackingIdentifier is an identifier for a single tracking
@@ -130,7 +219,8 @@ type Tracking struct {
 	DeliveryTime int `json:"delivery_time,omitempty"`
 
 	/**
-	 * Destination country of the tracking. ISO Alpha-3 (three letters). If you use postal service to send international shipments, AfterShip will automatically get tracking results from destination postal service based on destination country.
+	 * Destination country of the tracking. ISO Alpha-3 (three letters).
+	 * If you use postal service to send international shipments, AfterShip will automatically get tracking results from destination postal service based on destination country.
 	 */
 	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
 
@@ -324,40 +414,7 @@ type Tracking struct {
 	 */
 	CourierRedirectLink string `json:"courier_redirect_link,omitempty"`
 
-	/**
-	 * Account number of the shipper for a specific courier. Required by some couriers, such as dynamic-logistics
-	 */
-	TrackingAccountNumber string `json:"tracking_account_number,omitempty"`
-
-	/**
-	 * Origin Country of the shipment for a specific courier. Required by some couriers, such as dhl
-	 */
-	TrackingOriginCountry string `json:"tracking_origin_country,omitempty"`
-
-	/**
-	 * Destination Country of the shipment for a specific courier. Required by some couriers, such as postnl-3s
-	 */
-	TrackingDestinationCountry string `json:"tracking_destination_country,omitempty"`
-
-	/**
-	 * Key of the shipment for a specific courier. Required by some couriers, such as sic-teliway
-	 */
-	TrackingKey string `json:"tracking_key,omitempty"`
-
-	/**
-	 * The postal code of receiver's address. Required by some couriers, such as deutsch-post
-	 */
-	TrackingPostalCode string `json:"tracking_postal_code,omitempty"`
-
-	/**
-	 * Shipping date in YYYYMMDD format. Required by some couriers, such as deutsch-post
-	 */
-	TrackingShipDate string `json:"tracking_ship_date,omitempty"`
-
-	/**
-	 * Located state of the shipment for a specific courier. Required by some couriers, such as star-track-courier
-	 */
-	TrackingState string `json:"tracking_state,omitempty"`
+	AdditionalField
 
 	/**
 	 * Whether the tracking is delivered on time or not.
@@ -423,79 +480,127 @@ type Checkpoint struct {
 	RawTag         string     `json:"raw_tag,omitempty"`
 }
 
+type AdditionalField struct {
+	/**
+	 * Account number of the shipper for a specific courier. Required by some couriers, such as dynamic-logistics
+	 */
+	TrackingAccountNumber string `json:"tracking_account_number,omitempty"`
+
+	/**
+	 * Origin Country of the shipment for a specific courier. Required by some couriers, such as dhl
+	 */
+	TrackingOriginCountry string `json:"tracking_origin_country,omitempty"`
+
+	/**
+	 * Destination Country of the shipment for a specific courier. Required by some couriers, such as postnl-3s
+	 */
+	TrackingDestinationCountry string `json:"tracking_destination_country,omitempty"`
+
+	/**
+	 * Key of the shipment for a specific courier. Required by some couriers, such as sic-teliway
+	 */
+	TrackingKey string `json:"tracking_key,omitempty"`
+
+	/**
+	 * The postal code of receiver's address. Required by some couriers, such as deutsch-post
+	 */
+	TrackingPostalCode string `json:"tracking_postal_code,omitempty"`
+
+	/**
+	 * Shipping date in YYYYMMDD format. Required by some couriers, such as deutsch-post
+	 */
+	TrackingShipDate string `json:"tracking_ship_date,omitempty"`
+
+	/**
+	 * Located state of the shipment for a specific courier. Required by some couriers, such as star-track-courier
+	 */
+	TrackingState string `json:"tracking_state,omitempty"`
+}
+
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
 type EstimatedDeliveryDate struct {
-	Slug                     string           `json:"slug,omitempty"`                        // AfterShip's unique code of courier.Please refer to https://track.aftership.com/couriers/download.
-	ServiceTypeName          string           `json:"service_type_name,omitempty"`           // Shipping and delivery options provided by the carrier.
-	OriginAddress            *Address         `json:"origin_address,omitempty"`              // The location from where the package is picked up by the carrier to be delivered to the final destination.
-	DestinationAddress       *Address         `json:"destination_address,omitempty"`         // The final destination of the customer where the delivery will be made.
-	Weight                   *Weight          `json:"weight,omitempty"`                      // AfterShip uses this object to calculate the total weight of the order.
-	PackageCount             int64            `json:"package_count,omitempty"`               // The number of packages.
-	PickupTime               string           `json:"pickup_time,omitempty"`                 // The local pickup time of the package.
-	EstimatedPickup          *EstimatedPickup `json:"estimated_pickup,omitempty"`            // Either `pickup_time` or `estimated_pickup` is required.
-	EstimatedDeliveryDate    string           `json:"estimated_delivery_date,omitempty"`     // The estimated arrival date of the shipment.
-	ConfidenceScore          float64          `json:"confidence_score,omitempty"`            // The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
-	EstimatedDeliveryDateMin string           `json:"estimated_delivery_date_min,omitempty"` // Earliest estimated delivery date of the shipment.
-	EstimatedDeliveryDateMax string           `json:"estimated_delivery_date_max,omitempty"` // Latest estimated delivery date of the shipment.
+	/**
+	 * The estimated arrival date of the shipment.
+	 */
+	EstimatedDeliveryDate string `json:"estimated_delivery_date,omitempty"`
+
+	/**
+	 * The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
+	 */
+	ConfidenceScore float64 `json:"confidence_score,omitempty"`
+
+	/**
+	 * Earliest estimated delivery date of the shipment.
+	 */
+	EstimatedDeliveryDateMin string `json:"estimated_delivery_date_min,omitempty"`
+
+	/**
+	 * Latest estimated delivery date of the shipment.
+	 */
+	EstimatedDeliveryDateMax string `json:"estimated_delivery_date_max,omitempty"`
 }
 
 // GetTrackingParams is the additional parameters in single tracking query
 type GetTrackingParams struct {
-	// List of fields to include in the response.
-	// Use comma for multiple values. Fields to include:
-	// tracking_postal_code,tracking_ship_date,tracking_account_number,tracking_key,
-	// tracking_origin_country,tracking_destination_country,tracking_state,title,order_id,
-	// tag,checkpoints,checkpoint_time, message, country_name
-	// Defaults: none, Example: title,order_id
+	/** List of fields to include in the response.
+	 * Use comma for multiple values. Fields to include:
+	 * tracking_postal_code,tracking_ship_date,tracking_account_number,tracking_key,
+	 * tracking_origin_country,tracking_destination_country,tracking_state,title,order_id,
+	 * tag,checkpoints,checkpoint_time, message, country_name
+	 * Defaults: none, Example: title,order_id
+	 */
 	Fields string `url:"fields,omitempty" json:"fields,omitempty"`
 
-	// Support Chinese to English translation for china-ems  and  china-post  only (Example: en)
+	/**
+	 * Support Chinese to English translation for china-ems and china-post only (Example: en)
+	 */
 	Lang string `url:"lang,omitempty" json:"lang,omitempty"`
+
+	AdditionalField
 }
 
 // UpdateTrackingParams represents an update to Tracking details
 type UpdateTrackingParams struct {
-	Emails                 []string          `json:"emails,omitempty"`
-	SMSes                  []string          `json:"smses,omitempty"`
-	Title                  string            `json:"title,omitempty"`
-	CustomerName           string            `json:"customer_name,omitempty"`
-	DestinationCountryISO3 string            `json:"destination_country_iso3,omitempty"`
-	OrderID                string            `json:"order_id,omitempty"`
-	OrderIDPath            string            `json:"order_id_path,omitempty"`
-	OrderNumber            string            `json:"order_number,omitempty"`
-	OrderDate              string            `json:"order_date,omitempty"`
-	CustomFields           map[string]string `json:"custom_fields,omitempty"`
-	ShipmentType           string            `json:"shipment_type,omitempty"` // The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
+	SMSes                     []string          `json:"smses,omitempty"`
+	Emails                    []string          `json:"emails,omitempty"`
+	Title                     string            `json:"title,omitempty"`
+	CustomerName              string            `json:"customer_name,omitempty"`
+	OrderID                   string            `json:"order_id,omitempty"`
+	OrderIDPath               string            `json:"order_id_path,omitempty"`
+	CustomFields              map[string]string `json:"custom_fields,omitempty"`
+	Note                      string            `json:"note,omitempty"`
+	Language                  string            `json:"language,omitempty"`
+	OrderPromisedDeliveryDate string            `json:"order_promised_delivery_date,omitempty"`
+	DeliveryType              string            `json:"delivery_type,omitempty"`
+	PickupLocation            string            `json:"pickup_location,omitempty"`
+	PickupNote                string            `json:"pickup_note,omitempty"`
+	Slug                      string            `json:"slug,omitempty"`
+	AdditionalField
+	OrderNumber  string `json:"order_number,omitempty"`
+	OrderDate    string `json:"order_date,omitempty"`
+	ShipmentType string `json:"shipment_type,omitempty"`
 }
 
 // GetTrackingsParams represents the set of params for get Trackings API
 type GetTrackingsParams struct {
 	/**
-	 * Page to show. (Default: 1)
+	 * Destination country of trackings returned by courier.
+	 * Use ISO Alpha-3 (three letters).
+	 * Use comma for multiple values. (Example: USA,HKG)
 	 */
-	Page int `url:"page,omitempty" json:"page,omitempty"`
+	CourierDestinationCountryIso3 string `url:"courier_destination_country_iso3,omitempty" json:"courier_destination_country_iso3,omitempty"`
 
 	/**
-	 * Number of trackings each page contain. (Default: 100, Max: 200)
+	 * End date and time of trackings created.
+	 * (Defaults: now, Example: 2013-04-15T16:41:56+08:00)
 	 */
-	Limit int `url:"limit,omitempty" json:"limit,omitempty"`
+	CreatedAtMax string `url:"created_at_max,omitempty" json:"created_at_max,omitempty"`
 
 	/**
-	 * Search the content of the tracking record fields:
-	 * tracking_number,  title,  order_id,  customer_name,  custom_fields,  order_id,  emails,  smses
+	 * Start date and time of trackings created. AfterShip only stores data of 90 days.
+	 * (Defaults: 30 days ago, Example: 2013-03-15T16:41:56+08:00)
 	 */
-	Keyword string `url:"keyword,omitempty" json:"keyword,omitempty"`
-
-	/**
-	 * Tracking number of shipments. Use comma to separate multiple values
-	 * (Example: RA123456789US,LE123456789US)
-	 */
-	TrackingNumbers string `url:"tracking_numbers,omitempty" json:"tracking_numbers,omitempty"`
-
-	/**
-	 * Unique courier code Use comma for multiple values. (Example: dhl,ups,usps)
-	 */
-	Slug string `url:"slug,omitempty" json:"slug,omitempty"`
+	CreatedAtMin string `url:"created_at_min,omitempty" json:"created_at_min,omitempty"`
 
 	/**
 	 * Total delivery time in days.
@@ -506,43 +611,10 @@ type GetTrackingsParams struct {
 	DeliveryTime int `url:"delivery_time,omitempty" json:"delivery_time,omitempty"`
 
 	/**
-	 * Origin country of trackings. Use ISO Alpha-3 (three letters). Use comma for multiple values. (Example: USA,HKG)
-	 */
-	Origin string `url:"origin,omitempty" json:"origin,omitempty"`
-
-	/**
 	 * Destination country of trackings. Use ISO Alpha-3 (three letters).
 	 * Use comma for multiple values. (Example: USA,HKG)
 	 */
 	Destination string `url:"destination,omitempty" json:"destination,omitempty"`
-
-	/**
-	 * Current status of tracking.
-	 */
-	Tag string `url:"tag,omitempty" json:"tag,omitempty"`
-
-	/**
-	 * Start date and time of trackings created. AfterShip only stores data of 90 days.
-	 * (Defaults: 30 days ago, Example: 2013-03-15T16:41:56+08:00)
-	 */
-	CreatedAtMin string `url:"created_at_min,omitempty" json:"created_at_min,omitempty"`
-
-	/**
-	 * End date and time of trackings created.
-	 * (Defaults: now, Example: 2013-04-15T16:41:56+08:00)
-	 */
-	CreatedAtMax string `url:"created_at_max,omitempty" json:"created_at_max,omitempty"`
-
-	/**
-	 * Start date and time of trackings updated.
-	 * (Example: 2013-04-15T16:41:56+08:00)
-	 */
-	UpdatedAtMin string `url:"updated_at_min,omitempty" json:"updated_at_min,omitempty"`
-
-	/**
-	 * End date and time of trackings updated. (Example: 2013-04-15T16:41:56+08:00)
-	 */
-	UpdatedAtMax string `url:"updated_at_max,omitempty" json:"updated_at_max,omitempty"`
 
 	/**
 	 * List of fields to include in the response.
@@ -551,6 +623,12 @@ type GetTrackingsParams struct {
 	 * Defaults: none, Example: title,order_id
 	 */
 	Fields string `url:"fields,omitempty" json:"fields,omitempty"`
+
+	/**
+	 * Search the content of the tracking record fields:
+	 * tracking_number,  title,  order_id,  customer_name,  custom_fields,  order_id,  emails,  smses
+	 */
+	Keyword string `url:"keyword,omitempty" json:"keyword,omitempty"`
 
 	/**
 	 * Default: '' / Example: 'en'
@@ -565,17 +643,52 @@ type GetTrackingsParams struct {
 	LastUpdatedAt string `url:"last_updated_at,omitempty" json:"last_updated_at,omitempty"`
 
 	/**
+	 * Number of trackings each page contain. (Default: 100, Max: 200)
+	 */
+	Limit int `url:"limit,omitempty" json:"limit,omitempty"`
+
+	/**
+	 * Origin country of trackings. Use ISO Alpha-3 (three letters). Use comma for multiple values. (Example: USA,HKG)
+	 */
+	Origin string `url:"origin,omitempty" json:"origin,omitempty"`
+
+	/**
+	 * Page to show. (Default: 1)
+	 */
+	Page int `url:"page,omitempty" json:"page,omitempty"`
+
+	/**
 	 * Select return to sender, the value should be true or false,
 	 * with optional comma separated.
 	 */
 	ReturnToSender string `url:"return_to_sender,omitempty" json:"return_to_sender,omitempty"`
 
 	/**
-	 * Destination country of trackings returned by courier.
-	 * Use ISO Alpha-3 (three letters).
-	 * Use comma for multiple values. (Example: USA,HKG)
+	 * Unique courier code Use comma for multiple values. (Example: dhl,ups,usps)
 	 */
-	CourierDestinationCountryIso3 string `url:"courier_destination_country_iso3,omitempty" json:"courier_destination_country_iso3,omitempty"`
+	Slug string `url:"slug,omitempty" json:"slug,omitempty"`
+
+	/**
+	 * Current status of tracking.
+	 */
+	Tag string `url:"tag,omitempty" json:"tag,omitempty"`
+
+	/**
+	 * Tracking number of shipments. Use comma to separate multiple values
+	 * (Example: RA123456789US,LE123456789US)
+	 */
+	TrackingNumbers string `url:"tracking_numbers,omitempty" json:"tracking_numbers,omitempty"`
+
+	/**
+	 * End date and time of trackings updated. (Example: 2013-04-15T16:41:56+08:00)
+	 */
+	UpdatedAtMax string `url:"updated_at_max,omitempty" json:"updated_at_max,omitempty"`
+
+	/**
+	 * Start date and time of trackings updated.
+	 * (Example: 2013-04-15T16:41:56+08:00)
+	 */
+	UpdatedAtMin string `url:"updated_at_min,omitempty" json:"updated_at_min,omitempty"`
 }
 
 // PagedTrackings is a model for data part of the multiple trackings API responses
@@ -589,17 +702,6 @@ type PagedTrackings struct {
 // trackingWrapper is a model for data part of the single tracking API responses
 type trackingWrapper struct {
 	Tracking Tracking `json:"tracking"`
-}
-
-// SingleTrackingOptionalParams is the optional parameters in single tracking query
-type SingleTrackingOptionalParams struct {
-	TrackingPostalCode         string `url:"tracking_postal_code,omitempty" json:"tracking_postal_code,omitempty"`                 // The postal code of receiver's address. Required by some couriers, such asdeutsch-post
-	TrackingShipDate           string `url:"tracking_ship_date,omitempty" json:"tracking_ship_date,omitempty"`                     // Shipping date in YYYYMMDD format. Required by some couriers, such asdeutsch-post
-	TrackingDestinationCountry string `url:"tracking_destination_country,omitempty" json:"tracking_destination_country,omitempty"` // Destination Country of the shipment for a specific courier. Required by some couriers, such aspostnl-3s
-	TrackingAccountNumber      string `url:"tracking_account_number,omitempty" json:"tracking_account_number,omitempty"`           // Account number of the shipper for a specific courier. Required by some couriers, such asdynamic-logistics
-	TrackingKey                string `url:"tracking_key,omitempty" json:"tracking_key,omitempty"`                                 // Key of the shipment for a specific courier. Required by some couriers, such assic-teliway
-	TrackingOriginCountry      string `url:"tracking_origin_country,omitempty" json:"tracking_origin_country,omitempty"`           // Origin Country of the shipment for a specific courier. Required by some couriers, such asdhl
-	TrackingState              string `url:"tracking_state,omitempty" json:"tracking_state,omitempty"`                             // Located state of the shipment for a specific courier. Required by some couriers, such asstar-track-courier
 }
 
 // TrackingCompletedStatus is status to make the tracking as completed

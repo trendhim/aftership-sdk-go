@@ -26,39 +26,20 @@ type CourierList struct {
 	Couriers []Courier `json:"couriers"` // Array of Courier describes the couriers information.
 }
 
-// TrackingCouriers is the model describing an AfterShip couriers detect list
-type TrackingCouriers struct {
-	Total    int       `json:"total"`    // Total number of matched couriers
-	Tracking Tracking  `json:"tracking"` // Tracking describes the tracking information.
-	Couriers []Courier `json:"couriers"` // A list of matched couriers based on tracking number format.
-}
-
 // CourierDetectionParams contains fields required and optional fields for courier detection
 type CourierDetectionParams struct {
 
 	// TrackingNumber of a shipment. Mandatory field.
 	TrackingNumber string `json:"tracking_number"`
 
-	// TrackingPostalCode is the postal code of receiver's address.
-	// Required by some couriers, such as postnl
-	TrackingPostalCode string `json:"tracking_postal_code,omitempty"`
-
-	// TrackingShipDate in YYYYMMDD format. Required by some couriers, such as deutsch-post
-	TrackingShipDate string `json:"tracking_ship_date,omitempty"`
-
-	// TrackingAccountNumber of the shipper for a specific courier. Required by some couriers, such as dynamic-logistics
-	TrackingAccountNumber string `json:"tracking_account_number,omitempty"`
-
-	// TrackingKey of the shipment for a specific courier. Required by some couriers, such as sic-teliway
-	TrackingKey string `json:"tracking_key,omitempty"`
-
-	// TrackingDestinationCountry of the shipment for a specific courier. Required by some couriers, such as postnl-3s
-	TrackingDestinationCountry string `json:"tracking_destination_country,omitempty"`
-
 	// Slug If not specified, AfterShip will automatically detect the courier based on the tracking number format and
 	// your selected couriers.
 	// Use array to input a list of couriers for auto detect.
 	Slug []string `json:"slug,omitempty"`
+
+	AdditionalField
+
+	SlugGroup string `json:"slug_group,omitempty"`
 }
 
 // GetCouriers returns a list of couriers activated at your AfterShip account.
@@ -82,15 +63,15 @@ type detectCourierRequest struct {
 
 // DetectCouriers returns a list of matched couriers based on tracking number format
 // and selected couriers or a list of couriers.
-func (client *Client) DetectCouriers(ctx context.Context, params CourierDetectionParams) (TrackingCouriers, error) {
+func (client *Client) DetectCouriers(ctx context.Context, params CourierDetectionParams) (CourierList, error) {
 	if params.TrackingNumber == "" {
-		return TrackingCouriers{}, errors.New(errMissingTrackingNumber)
+		return CourierList{}, errors.New(errMissingTrackingNumber)
 	}
 
-	var trackingCouriers TrackingCouriers
+	var courierList CourierList
 	err := client.makeRequest(ctx, http.MethodPost, "/couriers/detect", nil,
 		&detectCourierRequest{
 			Tracking: params,
-		}, &trackingCouriers)
-	return trackingCouriers, err
+		}, &courierList)
+	return courierList, err
 }
