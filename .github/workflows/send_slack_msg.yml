@@ -23,7 +23,7 @@ jobs:
               "repo_name": "${{ github.event.repository.name }}"
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_SEND_MSG}}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_SEND_MSG }}
 
   issue_send_slack_msg:
     name: send slack message for issue
