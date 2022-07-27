@@ -519,24 +519,40 @@ type AdditionalField struct {
 
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
 type EstimatedDeliveryDate struct {
-	/**
-	 * The estimated arrival date of the shipment.
-	 */
+	// AfterShip's unique code of courier.Please refer to https://track.aftership.com/couriers/download.
+	Slug string `json:"slug,omitempty"`
+
+	// Shipping and delivery options provided by the carrier.
+	ServiceTypeName string `json:"service_type_name,omitempty"`
+
+	// The location from where the package is picked up by the carrier to be delivered to the final destination.
+	OriginAddress *Address `json:"origin_address,omitempty"`
+
+	// The final destination of the customer where the delivery will be made.
+	DestinationAddress *Address `json:"destination_address,omitempty"`
+
+	// AfterShip uses this object to calculate the total weight of the order.
+	Weight *Weight `json:"weight,omitempty"`
+
+	// The number of packages.
+	PackageCount int64 `json:"package_count,omitempty"`
+
+	// The local pickup time of the package.
+	PickupTime string `json:"pickup_time,omitempty"`
+
+	// Either `pickup_time` or `estimated_pickup` is required.
+	EstimatedPickup *EstimatedPickup `json:"estimated_pickup,omitempty"`
+
+	// The estimated arrival date of the shipment.
 	EstimatedDeliveryDate string `json:"estimated_delivery_date,omitempty"`
 
-	/**
-	 * The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
-	 */
+	// The reliability of the estimated delivery date based on the trend of the transit time for the similar delivery route and the carrier's delivery performance range from 0.0 to 1.0 (Beta feature).
 	ConfidenceScore float64 `json:"confidence_score,omitempty"`
 
-	/**
-	 * Earliest estimated delivery date of the shipment.
-	 */
+	// Earliest estimated delivery date of the shipment.
 	EstimatedDeliveryDateMin string `json:"estimated_delivery_date_min,omitempty"`
 
-	/**
-	 * Latest estimated delivery date of the shipment.
-	 */
+	// Latest estimated delivery date of the shipment.
 	EstimatedDeliveryDateMax string `json:"estimated_delivery_date_max,omitempty"`
 }
 
