@@ -7,6 +7,7 @@ import (
 // Error messages
 const (
 	errEmptyAPIKey                 = "invalid credentials: API Key must not be empty"
+	errEmptyAPISecret              = "invalid credentials: API Secret must not be empty"
 	errMissingTrackingNumber       = "tracking number is empty and must be provided"
 	errMissingTrackingID           = "tracking id is empty and must be provided"
 	errMissingSlugOrTrackingNumber = "slug or tracking number is empty, both of them must be provided"

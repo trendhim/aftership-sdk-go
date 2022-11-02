@@ -27,12 +27,14 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 
 	// Read input data
 	var body io.Reader
+	var bodyStr string
 	if inputData != nil {
 		jsonData, err := json.Marshal(inputData)
 		if err != nil {
 			return errors.Wrap(err, "error marshalling params to JSON")
 		}
 
+		bodyStr = string(jsonData)
 		body = bytes.NewBuffer(jsonData)
 	}
 
@@ -42,8 +44,8 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	}
 
 	// Add headers
-	req.Header.Add("aftership-api-key", client.Config.APIKey)
-	req.Header.Add("Content-Type", "application/json")
+	contentType := "application/json"
+	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("request-id", uuid.New().String())
 	req.Header.Add("User-Agent", fmt.Sprintf("%s/%s", client.Config.UserAgentPrefix, VERSION))
 	req.Header.Add("aftership-agent", fmt.Sprintf("go-sdk-%s", VERSION))
@@ -54,6 +56,32 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 			return errors.Wrap(err, "error parsing query params")
 		}
 		req.URL.RawQuery = queryStringObj.Encode()
+	}
+
+	authenticationType := client.Config.AuthenticationType
+	apiKey := client.Config.APIKey
+
+	// set signature
+	if authenticationType == AES {
+		req.Header.Add("as-api-key", apiKey)
+
+		asHeaders := make(map[string]string)
+		for key, value := range req.Header {
+			asHeaders[key] = value[0]
+		}
+
+		date := time.Now().UTC().Format(http.TimeFormat)
+		signatureHeader, signature, err := GetSignature(
+			authenticationType, []byte(client.Config.APISecret), asHeaders,
+			contentType, req.URL.RequestURI(), req.Method, date, bodyStr)
+		if err != nil {
+			return errors.Wrap(err, "Get Signature error")
+		}
+
+		req.Header.Add("date", date)
+		req.Header.Add(signatureHeader, signature)
+	} else {
+		req.Header.Add("aftership-api-key", apiKey)
 	}
 
 	// Send request

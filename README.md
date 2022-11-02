@@ -86,16 +86,27 @@ Create AfterShip SDK instance with config
 
 - `config` - object of request config
   - `APIKey` - **Required**, AfterShip API key
+  - `AuthenticationType` - `APIKey`  / `AES`
+  - `APISecret` - if AuthenticationType is AES, use aes api secret
   - `Endpoint` - *string*, AfterShip endpoint, default "https://api.aftership.com/v4"
   - `UserAagentPrefix` - *string*, prefix of User-Agent in headers, default "aftership-sdk-go"
 
 Example:
 
+AuthenticationType `APIKey`
 ```go
 client, err := aftership.NewClient(aftership.Config{
     APIKey: "YOUR_API_KEY",
     Endpoint: "https://api.aftership.com/OLDER_VERSIONOUR_API_KEY",
     UserAagentPrefix: "aftership-sdk-go",
+})
+```
+AuthenticationType `AES`
+```go
+client, err := aftership.NewClient(aftership.Config{
+APIKey:             "YOUR_API_KEY",
+AuthenticationType: aftership.AES, 
+APISecret:          "YOUR_API_SECRET",
 })
 ```
 
