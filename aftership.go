@@ -9,8 +9,18 @@ import (
 type Config struct {
 	// APIKey.
 	APIKey string
+
+	// Authentication Type
+	AuthenticationType AuthenticationType
+
+	// apiSecret
+	// if AuthenticationType is RSA, use rsa private key
+	// if AuthenticationType is AES, use aes api secret
+	APISecret string
+
 	// BaseURL is the base URL of AfterShip API. Defaults to 'https://api.aftership.com/v4'
 	BaseURL string
+
 	// UserAgentPrefix is the prefix of User-Agent in headers. Defaults to 'aftership-sdk-go'
 	UserAgentPrefix string
 }
@@ -29,6 +39,12 @@ type Client struct {
 func NewClient(cfg Config) (*Client, error) {
 	if cfg.APIKey == "" {
 		return nil, errors.New(errEmptyAPIKey)
+	}
+
+	if cfg.AuthenticationType == AES {
+		if cfg.APISecret == "" {
+			return nil, errors.New(errEmptyAPISecret)
+		}
 	}
 
 	if cfg.BaseURL == "" {
