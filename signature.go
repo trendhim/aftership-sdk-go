@@ -21,7 +21,6 @@ const (
 
 const (
 	HeaderAsSignatureHMAC = "as-signature-hmac-sha256"
-	HeaderAsSignatureRSA  = "as-signature-rsa-sha256"
 )
 
 func GetSignature(authenticationType AuthenticationType, secretKey []byte, asHeaders map[string]string, contentType, uri, method, date, body string) (string, string, error) {

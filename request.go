@@ -75,7 +75,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 			authenticationType, []byte(client.Config.APISecret), asHeaders,
 			contentType, req.URL.RequestURI(), req.Method, date, bodyStr)
 		if err != nil {
-			return errors.Wrap(err, "Get Signature error")
+			return errors.Wrap(err, "generate signature error")
 		}
 
 		req.Header.Add("date", date)

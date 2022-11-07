@@ -101,7 +101,7 @@ client, err := aftership.NewClient(aftership.Config{
     UserAagentPrefix: "aftership-sdk-go",
 })
 ```
-AuthenticationType `AES`
+AuthenticationType `AES` signature
 ```go
 client, err := aftership.NewClient(aftership.Config{
 APIKey:             "YOUR_API_KEY",
