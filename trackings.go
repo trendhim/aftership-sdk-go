@@ -129,6 +129,11 @@ type CreateTrackingParams struct {
 	 * The carrier’s shipment type. When you input this field, AfterShip will not get updates from the carrier.
 	 */
 	ShipmentType string `json:"shipment_type,omitempty"`
+
+	/**
+	 * Used to add tags to your shipments to help categorize and filter them easily.
+	 */
+	ShipmentTags []string `json:"shipment_tags,omitempty"`
 }
 
 // TrackingIdentifier is an identifier for a single tracking
@@ -450,6 +455,11 @@ type Tracking struct {
 	 *  3. Date, time, and time zone: `YYYY-MM-DDTHH:mm:ssZ`
 	 */
 	LatestEstimatedDelivery LatestEstimatedDelivery `json:"latest_estimated_delivery,omitempty"`
+
+	/**
+	 * Tags you added to your shipments to help categorize and filter them easily.
+	 */
+	ShipmentTags []string `json:"shipment_tags,omitempty"`
 }
 
 // LatestEstimatedDelivery represents a latest_estimated_delivery returned by the Aftership API
@@ -678,6 +688,12 @@ type GetTrackingsParams struct {
 	 * with optional comma separated.
 	 */
 	ReturnToSender string `url:"return_to_sender,omitempty" json:"return_to_sender,omitempty"`
+
+	/**
+	 * Tags you added to your shipments to help categorize and filter them easily.
+	 * Use a comma to separate multiple values (Example: a,b)
+	 */
+	ShipmentTags string `url:"shipment_tags,omitempty" json:"shipment_tags,omitempty"`
 
 	/**
 	 * Unique courier code Use comma for multiple values. (Example: dhl,ups,usps)

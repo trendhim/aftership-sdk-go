@@ -48,6 +48,7 @@ func TestCreateTracking(t *testing.T) {
 							"shipment_pickup_date": null,
 							"shipment_delivery_date": null,
 							"shipment_type": "test_type",
+							"shipment_tags": ["test_tag1", "test_tag2"],
 							"shipment_weight": null,
 							"shipment_weight_unit": null,
 							"signed_by": null,
@@ -108,6 +109,7 @@ func TestCreateTracking(t *testing.T) {
 		DeliveryType:              "pickup_at_store",
 		PickupLocation:            "Flagship Store",
 		PickupNote:                "Reach out to our staffs when you arrive our stores for shipment pickup",
+		ShipmentTags:              []string{"test_tag1", "test_tag2"},
 	}
 
 	createdAt, _ := time.Parse(time.RFC3339, "2018-08-17T06:25:32+00:00")
@@ -143,6 +145,7 @@ func TestCreateTracking(t *testing.T) {
 		CourierTrackingLink:       "https://www.fedex.com/fedextrack/?tracknumbers=1111111111111&cntry_code=us",
 		CourierRedirectLink:       "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
 		ShipmentType:              "test_type",
+		ShipmentTags:              []string{"test_tag1", "test_tag2"},
 	}
 
 	res, err := client.CreateTracking(context.Background(), params)
@@ -305,6 +308,7 @@ func TestGetTrackings(t *testing.T) {
 									"shipment_pickup_date": "2018-07-31T06:00:00",
 									"shipment_delivery_date": "2018-08-01T17:19:47",
 									"shipment_type": "FedEx Home Delivery",
+									"shipment_tags": ["test_tag1", "test_tag2"],
 									"shipment_weight": null,
 									"shipment_weight_unit": "kg",
 									"signed_by": "Signature not required",
@@ -390,6 +394,7 @@ func TestGetTrackings(t *testing.T) {
 									"shipment_pickup_date": null,
 									"shipment_delivery_date": null,
 									"shipment_type": null,
+									"shipment_tags": ["test_tag1", "test_tag2"],
 									"shipment_weight": null,
 									"shipment_weight_unit": null,
 									"signed_by": null,
@@ -503,6 +508,7 @@ func TestGetTrackings(t *testing.T) {
 			EstimatedDeliveryDateMin: "2018-08-01",
 			EstimatedDeliveryDateMax: "2018-08-05",
 		},
+		ShipmentTags: []string{"test_tag1", "test_tag2"},
 	}
 
 	t2CreatedAt, _ := time.Parse(time.RFC3339, "2018-05-23T07:21:11+00:00")
@@ -552,6 +558,7 @@ func TestGetTrackings(t *testing.T) {
 			Source:   "Custom EDD",
 			Datetime: "2022-07-06",
 		},
+		ShipmentTags: []string{"test_tag1", "test_tag2"},
 	}
 
 	exp := PagedTrackings{
@@ -613,6 +620,7 @@ func TestGetTracking(t *testing.T) {
 						"shipment_pickup_date": "2018-07-23T08:58:00",
 						"shipment_delivery_date": "2018-07-25T01:10:00",
 						"shipment_type": "FedEx International Economy",
+						"shipment_tags": ["test_tag1", "test_tag2"],
 						"shipment_weight": 4.1,
 						"shipment_weight_unit": "kg",
 						"signed_by": "..KOSUTOKO",
@@ -704,6 +712,7 @@ func TestGetTracking(t *testing.T) {
 		ShipmentPickupDate:            "2018-07-23T08:58:00",
 		ShipmentDeliveryDate:          "2018-07-25T01:10:00",
 		ShipmentType:                  "FedEx International Economy",
+		ShipmentTags:                  []string{"test_tag1", "test_tag2"},
 		ShipmentWeight:                4.1,
 		ShipmentWeightUnit:            "kg",
 		SignedBy:                      "..KOSUTOKO",
@@ -795,6 +804,7 @@ func TestUpdateTracking(t *testing.T) {
 								"shipment_pickup_date": "2018-07-31T06:00:00",
 								"shipment_delivery_date": "2018-08-01T17:19:47",
 								"shipment_type": "FedEx Home Delivery",
+								"shipment_tags": ["test_tag1", "test_tag2"],
 								"shipment_weight": null,
 								"shipment_weight_unit": "kg",
 								"signed_by": "Signature not required",
@@ -887,6 +897,7 @@ func TestUpdateTracking(t *testing.T) {
 		ShipmentPickupDate:   "2018-07-31T06:00:00",
 		ShipmentDeliveryDate: "2018-08-01T17:19:47",
 		ShipmentType:         "FedEx Home Delivery",
+		ShipmentTags:         []string{"test_tag1", "test_tag2"},
 		ShipmentWeightUnit:   "kg",
 		SignedBy:             "Signature not required",
 		SMSes:                []string{},
@@ -1030,6 +1041,7 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 							"shipment_pickup_date": "2018-07-23T08:58:00",
 							"shipment_delivery_date": "2018-07-25T01:10:00",
 							"shipment_type": "FedEx International Economy",
+							"shipment_tags": ["test_tag1", "test_tag2"],
 							"shipment_weight": 4,
 							"shipment_weight_unit": "kg",
 							"signed_by": "..KOSUTOKO",
@@ -1121,6 +1133,7 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 		ShipmentPickupDate:            "2018-07-23T08:58:00",
 		ShipmentDeliveryDate:          "2018-07-25T01:10:00",
 		ShipmentType:                  "FedEx International Economy",
+		ShipmentTags:                  []string{"test_tag1", "test_tag2"},
 		ShipmentWeight:                4,
 		ShipmentWeightUnit:            "kg",
 		SignedBy:                      "..KOSUTOKO",
