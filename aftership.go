@@ -23,6 +23,9 @@ type Config struct {
 
 	// UserAgentPrefix is the prefix of User-Agent in headers. Defaults to 'aftership-sdk-go'
 	UserAgentPrefix string
+
+	// HTTPClient is the HTTP client to use when making requests. Defaults to http.DefaultClient.
+	HTTPClient *http.Client
 }
 
 // Client is the client for all AfterShip API calls
@@ -56,12 +59,13 @@ func NewClient(cfg Config) (*Client, error) {
 	}
 
 	client := &Client{
-		Config:    cfg,
-		rateLimit: &RateLimit{},
+		Config:     cfg,
+		rateLimit:  &RateLimit{},
+		httpClient: http.DefaultClient,
 	}
 
-	if client.httpClient == nil {
-		client.httpClient = http.DefaultClient
+	if cfg.HTTPClient != nil {
+		client.httpClient = cfg.HTTPClient
 	}
 
 	return client, nil
