@@ -44,6 +44,7 @@ func ExampleClient_CreateTracking() {
 		PickupLocation:            "Flagship Store",
 		PickupNote:                "Reach out to our staffs when you arrive our stores for shipment pickup",
 		ShipmentType:              "test_type",
+		ShipmentTags:              []string{"test_tag1", "test_tag2"},
 	}
 
 	result, err := cli.CreateTracking(context.Background(), newTracking)
@@ -132,7 +133,7 @@ func ExampleClient_GetTracking() {
 	paramID := aftership.TrackingID("rymq9l34ztbvvk9md2ync00r")
 
 	result, err = cli.GetTracking(context.Background(), paramID, aftership.GetTrackingParams{
-		Fields: "tracking_postal_code,title,order_id",
+		Fields: "tracking_postal_code,title,order_id,shipment_tags",
 	})
 	if err != nil {
 		fmt.Println(err)
