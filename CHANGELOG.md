@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7] - 2022-11-17
+### Added
+- add shipment_tags field https://github.com/AfterShip/aftership-sdk-go/pull/61
+### Changed
+- Make HTTP client configurable https://github.com/AfterShip/aftership-sdk-go/pull/60
+
 ## [2.0.6] - 2022-11-07
 ### Added
 - Add AES signature https://github.com/AfterShip/aftership-sdk-go/pull/58
@@ -42,6 +48,7 @@ Compatibility
 - Use `go mod` to organize the Go modules
 - Error handling
 
+[2.0.7]: https://github.com/AfterShip/aftership-sdk-go/compare/2.0.6...2.0.7
 [2.0.6]: https://github.com/AfterShip/aftership-sdk-go/compare/2.0.5...2.0.6
 [2.0.5]: https://github.com/AfterShip/aftership-sdk-go/compare/2.0.4...2.0.5
 [2.0.4]: https://github.com/AfterShip/aftership-sdk-go/compare/v2.0.3...2.0.4
