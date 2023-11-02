@@ -221,7 +221,7 @@ type Tracking struct {
 	/**
 	 * Total delivery time in days.
 	 */
-	DeliveryTime int `json:"delivery_time,omitempty"`
+	TransitTime int `json:"transit_time,omitempty"`
 
 	/**
 	 * Destination country of the tracking. ISO Alpha-3 (three letters).
@@ -634,7 +634,7 @@ type GetTrackingsParams struct {
 	 * - Difference of 1st checkpoint time and current time for non-delivered shipments
 	 * Value as 0 for pending shipments or delivered shipment with only one checkpoint.
 	 */
-	DeliveryTime int `url:"delivery_time,omitempty" json:"delivery_time,omitempty"`
+	TransitTime int `url:"transit_time,omitempty" json:"transit_time,omitempty"`
 
 	/**
 	 * Destination country of trackings. Use ISO Alpha-3 (three letters).

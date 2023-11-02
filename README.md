@@ -16,13 +16,13 @@ aftership-sdk-go requires a Go version with [Modules](https://github.com/golang/
 
 ``` shell
 go mod init github.com/my/repo
-go get github.com/aftership/aftership-sdk-go/v2
+go get github.com/aftership/aftership-sdk-go/2023-10
 ```
 
 Import:
 
 ``` go
-import "github.com/aftership/aftership-sdk-go/v2"
+import "github.com/aftership/aftership-sdk-go/2023-10"
 ```
 
 ## Quick Start
@@ -34,7 +34,7 @@ import (
         "context"
         "fmt"
 
-        "github.com/aftership/aftership-sdk-go/v2"
+        "github.com/aftership/aftership-sdk-go/2023-10"
 )
 
 func main() {
@@ -121,7 +121,7 @@ import (
     "context"
     "fmt"
 
-    "github.com/aftership/aftership-sdk-go/v2"
+    "github.com/aftership/aftership-sdk-go/2023-10"
 )
 
 func main() {
