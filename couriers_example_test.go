@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aftership/aftership-sdk-go/2023-10"
+	"github.com/aftership/aftership-sdk-go/v3"
 )
 
 func ExampleClient_GetCouriers() {
