@@ -230,6 +230,21 @@ type Tracking struct {
 	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
 
 	/**
+	 * The state of the recipient’s address.
+	 */
+	DestinationState string `json:"destination_state,omitempty"`
+
+	/**
+	 * The city of the recipient’s address.
+	 */
+	DestinationCity string `json:"destination_city,omitempty"`
+
+	/**
+	 * The city of the recipient’s address.
+	 */
+	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
+
+	/**
 	 * Shipping address that the shipment is shipping to.
 	 */
 	DestinationRawLocation string `json:"destination_raw_location,omitempty"`
@@ -278,6 +293,26 @@ type Tracking struct {
 	 * Origin country of the tracking. ISO Alpha-3 (three letters).
 	 */
 	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
+
+	/**
+	 * The state of the sender’s address.
+	 */
+	OriginState string `json:"origin_state,omitempty"`
+
+	/**
+	 * The city of the sender’s address.
+	 */
+	OriginCity string `json:"origin_city,omitempty"`
+
+	/**
+	 * The postal code of the sender’s address.
+	 */
+	OriginPostalCode string `json:"origin_postal_code,omitempty"`
+
+	/**
+	 * The sender address that the shipment is shipping from.
+	 */
+	OriginRawLocation string `json:"origin_raw_location,omitempty"`
 
 	/**
 	 * Number of packages under the tracking (if any).
