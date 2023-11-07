@@ -512,7 +512,6 @@ type Checkpoint struct {
 	CreatedAt      *time.Time `json:"created_at,omitempty"`
 	CheckpointTime string     `json:"checkpoint_time,omitempty"`
 	City           string     `json:"city,omitempty"`
-	Coordinates    []string   `json:"coordinates,omitempty"`
 	CountryISO3    string     `json:"country_iso3,omitempty"`
 	CountryName    string     `json:"country_name,omitempty"`
 	Message        string     `json:"message,omitempty"`

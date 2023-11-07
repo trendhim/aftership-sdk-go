@@ -67,7 +67,6 @@ func TestGetLastCheckpoint(t *testing.T) {
 			CreatedAt:      &createdAt,
 			CheckpointTime: "2018-08-01T13:19:47-04:00",
 			City:           "Deal",
-			Coordinates:    []string{},
 			Message:        "Delivered - Left at front door. Signature Service not requested.",
 			State:          "NJ",
 			Tag:            "Delivered",

@@ -462,7 +462,6 @@ func TestGetTrackings(t *testing.T) {
 		Subtag:         "InfoReceived_001",
 		SubtagMessage:  "Info Received",
 		CheckpointTime: "2018-07-31T10:33:00-04:00",
-		Coordinates:    []string{},
 		RawTag:         "FPX_L_RPIF",
 	}
 
@@ -689,7 +688,6 @@ func TestGetTracking(t *testing.T) {
 		Subtag:         "InfoReceived_001",
 		SubtagMessage:  "Info Received",
 		CheckpointTime: "2018-07-23T01:21:39-05:00",
-		Coordinates:    []string{},
 		RawTag:         "FPX_L_RPIF",
 	}
 
@@ -875,7 +873,6 @@ func TestUpdateTracking(t *testing.T) {
 		Tag:            "InTransit",
 		Subtag:         "InTransit_002",
 		CheckpointTime: "2018-07-31T20:47:00",
-		Coordinates:    []string{},
 		State:          "NY",
 		RawTag:         "FPX_L_RPIF",
 	}
@@ -1110,7 +1107,6 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 		Subtag:         "InfoReceived_001",
 		SubtagMessage:  "Info Received",
 		CheckpointTime: "2018-07-23T01:21:39-05:00",
-		Coordinates:    []string{},
 		RawTag:         "FPX_L_RPIF",
 	}
 
