@@ -11,7 +11,7 @@ const (
 	errMissingTrackingNumber       = "tracking number is empty and must be provided"
 	errMissingTrackingID           = "tracking id is empty and must be provided"
 	errMissingSlugOrTrackingNumber = "slug or tracking number is empty, both of them must be provided"
-	errExceedRateLimt              = "rate limit is exceeded, please wait util %s"
+	errExceedRateLimit             = "rate limit is exceeded, please wait util %s"
 )
 
 // APIError is the error in AfterShip API calls

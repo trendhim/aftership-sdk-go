@@ -22,7 +22,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 
 	// Check if rate limit is exceeded
 	if client.rateLimit != nil && client.rateLimit.isExceeded() {
-		return fmt.Errorf(errExceedRateLimt, time.Unix(client.rateLimit.Reset, 0))
+		return fmt.Errorf(errExceedRateLimit, time.Unix(client.rateLimit.Reset, 0))
 	}
 
 	// Read input data

@@ -232,7 +232,7 @@ func TestBlockRequestWhenReachLimit(t *testing.T) {
 	assert.Equal(t, reset, client.rateLimit.Reset)
 
 	// Another request after exceeded limits
-	exp := fmt.Sprintf(errExceedRateLimt, time.Unix(reset, 0))
+	exp := fmt.Sprintf(errExceedRateLimit, time.Unix(reset, 0))
 	err := client.makeRequest(context.Background(), http.MethodGet, "/test", nil, nil, &result)
 	assert.NotNil(t, err)
 	assert.Equal(t, exp, err.Error())
