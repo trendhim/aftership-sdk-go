@@ -509,7 +509,7 @@ type Checkpoint struct {
 	CreatedAt      *time.Time `json:"created_at,omitempty"`
 	CheckpointTime string     `json:"checkpoint_time,omitempty"`
 	City           string     `json:"city,omitempty"`
-	Coordinates    []string   `json:"coordinates,omitempty"`
+	Coordinates    []float32  `json:"coordinates,omitempty"`
 	CountryISO3    string     `json:"country_iso3,omitempty"`
 	CountryName    string     `json:"country_name,omitempty"`
 	Message        string     `json:"message,omitempty"`
@@ -657,7 +657,7 @@ type UpdateTrackingParams struct {
 	ShipmentType           string `json:"shipment_type,omitempty"`
 	OriginState            string `json:"origin_state,omitempty"`
 	OriginCity             string `json:"origin_city,omitempty"`
-	OriginPostalCode       string `json:"origin_postal_code",omitempty`
+	OriginPostalCode       string `json:"origin_postal_code,omitempty"`
 	OriginRawLocation      string `json:"origin_raw_location,omitempty"`
 	DestinationRawLocation string `json:"destination_raw_location,omitempty"`
 }
