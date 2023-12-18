@@ -256,7 +256,7 @@ HTTP request failed: Get https://api.aftership.com/v4/couriers: dial tcp: lookup
 
 ### API Error
 
-Error return by the AfterShip API https://docs.aftership.com/api/4/errors
+Error return by the AfterShip API https://www.aftership.com/docs/tracking/quickstart/request-errors
 
 API Error struct of this SDK contain fields:
 
