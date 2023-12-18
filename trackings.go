@@ -54,6 +54,26 @@ type CreateTrackingParams struct {
 	OrderPromisedDeliveryDate string `json:"order_promised_delivery_date,omitempty"`
 
 	/**
+	 * The state of the sender’s address
+	 */
+	OriginState string `json:"origin_state,omitempty"`
+
+	/**
+	 * The city of the sender’s address.
+	 */
+	OriginCity string `json:"origin_city,omitempty"`
+
+	/**
+	 * The postal of the sender’s address.
+	 */
+	OriginPostalCode string `json:"origin_postal_code,omitempty"`
+
+	/**
+	 * The sender address that the shipment is shipping from.
+	 */
+	OriginRawLocation string `json:"origin_raw_location,omitempty"`
+
+	/**
 	 * Shipment delivery type: pickup_at_store, pickup_at_courier, door_to_door
 	 */
 	DeliveryType string `json:"delivery_type,omitempty"`
@@ -96,14 +116,9 @@ type CreateTrackingParams struct {
 	CustomerName string `json:"customer_name,omitempty"`
 
 	/**
-	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
+	 * The shipping address that the shipment is shipping to.
 	 */
-	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
-
-	/**
-	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
-	 */
-	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
+	DestinationRawLocation string `json:"destination_raw_location,omitempty"`
 
 	/**
 	 * Text field for the note
@@ -134,6 +149,16 @@ type CreateTrackingParams struct {
 	 * Used to add tags to your shipments to help categorize and filter them easily.
 	 */
 	ShipmentTags []string `json:"shipment_tags,omitempty"`
+
+	/**
+	 *  which carrier account you’ve used to handle a shipment
+	 */
+	CourierConnectionId string `json:"courier_connection_id,omitempty"`
+
+	/**
+	 * If a shipment has multiple carriers, you can use the next_couriers field to tell AfterShip who the second carrier is.
+	 */
+	NextCouriers []NextCourier `json:"next_couriers,omitempty"`
 }
 
 // TrackingIdentifier is an identifier for a single tracking
@@ -225,15 +250,7 @@ type Tracking struct {
 	 */
 	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
 
-	/**
-	 * The state of the recipient’s address.
-	 * (Example: New York)
-	 */
-	DestinationState string `json:"destination_state,omitempty"`
-
 	DestinationCity string `json:"destination_city,omitempty"`
-
-	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
 
 	/**
 	 * Shipping address that the shipment is shipping to.
@@ -540,6 +557,24 @@ type AdditionalField struct {
 	 * Located state of the shipment for a specific courier. Required by some couriers, such as star-track-courier
 	 */
 	TrackingState string `json:"tracking_state,omitempty"`
+
+	/**
+	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
+	 */
+	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
+
+	/**
+	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
+	 */
+	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
+
+	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
+
+	/**
+	 * The state of the recipient’s address.
+	 * (Example: New York)
+	 */
+	DestinationState string `json:"destination_state,omitempty"`
 }
 
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
@@ -617,9 +652,14 @@ type UpdateTrackingParams struct {
 	PickupNote                string            `json:"pickup_note,omitempty"`
 	Slug                      string            `json:"slug,omitempty"`
 	AdditionalField
-	OrderNumber  string `json:"order_number,omitempty"`
-	OrderDate    string `json:"order_date,omitempty"`
-	ShipmentType string `json:"shipment_type,omitempty"`
+	OrderNumber            string `json:"order_number,omitempty"`
+	OrderDate              string `json:"order_date,omitempty"`
+	ShipmentType           string `json:"shipment_type,omitempty"`
+	OriginState            string `json:"origin_state,omitempty"`
+	OriginCity             string `json:"origin_city,omitempty"`
+	OriginPostalCode       string `json:"origin_postal_code",omitempty`
+	OriginRawLocation      string `json:"origin_raw_location,omitempty"`
+	DestinationRawLocation string `json:"destination_raw_location,omitempty"`
 }
 
 // GetTrackingsParams represents the set of params for get Trackings API
