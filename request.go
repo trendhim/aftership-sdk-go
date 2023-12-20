@@ -81,7 +81,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 		req.Header.Add("date", date)
 		req.Header.Add(signatureHeader, signature)
 	} else {
-		req.Header.Add("aftership-api-key", apiKey)
+		req.Header.Add("as-api-key", apiKey)
 	}
 
 	// Send request
