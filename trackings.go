@@ -459,8 +459,14 @@ type Tracking struct {
 	 */
 	EstimatedDeliveryDate EstimatedDeliveryDate `json:"aftership_estimated_delivery_date,omitempty"`
 
+	/**
+	 * Estimated delivery time of the shipment based on your custom EDD settings.
+	 */
 	CustomEstimatedDeliveryDate EstimatedDelivery `json:"custom_estimated_delivery_date,omitempty"`
 
+	/**
+	 * The shipment’s original estimated delivery date.
+	 */
 	FirstEstimatedDelivery EstimatedDelivery `json:"first_estimated_delivery"`
 
 	/**
@@ -483,8 +489,14 @@ type Tracking struct {
 	 */
 	ShipmentTags []string `json:"shipment_tags,omitempty"`
 
+	/**
+	 * Which carrier account you’ve used to handle a shipment.
+	 */
 	CourierConnectionId string `json:"courier_connection_id"`
 
+	/**
+	 * If a shipment has multiple carriers, you can use the next_couriers field to tell AfterShip who the second carrier is.
+	 */
 	NextCouriers []NextCourier `json:"next_couriers"`
 }
 
@@ -568,6 +580,9 @@ type AdditionalField struct {
 	 */
 	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
 
+	/**
+	 * The postal of the recipient’s address.
+	 */
 	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
 
 	/**
