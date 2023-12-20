@@ -6,7 +6,7 @@
 
 ## Introduction
 
-[AfterShip](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. aftership-sdk-go is a SDK to develop Apps using [AfterShip API v4](https://docs.aftership.com/api/4) in golang. All endpoints including couriers, tracking, last checkpoint and notification are supported.
+[AfterShip](https://aftership.com) provides an API to Track & Notify of shipments from hundreds of couriers worldwide. aftership-sdk-go is a SDK to develop Apps using [AfterShip API 2023-10](https://www.aftership.com/docs/tracking/quickstart/api-quick-start) in golang. All endpoints including couriers, tracking, last checkpoint and notification are supported.
 
 You will need to create an account at [AfterShip](https://aftership.com) and obtain an API key first to access AfterShip APIs using aftership-go SDK.
 
@@ -88,7 +88,9 @@ Create AfterShip SDK instance with config
   - `APIKey` - **Required**, AfterShip API key
   - `AuthenticationType` - `APIKey`  / `AES`
   - `APISecret` - if AuthenticationType is AES, use aes api secret
-  - `Endpoint` - *string*, AfterShip endpoint, default "https://api.aftership.com/v4"
+  - `Endpoint` - *string*, AfterShip endpoint, default "https://api.aftership.com/tracking/2023-10
+
+"
   - `UserAagentPrefix` - *string*, prefix of User-Agent in headers, default "aftership-sdk-go"
 
 Example:
@@ -97,7 +99,6 @@ AuthenticationType `APIKey`
 ```go
 client, err := aftership.NewClient(aftership.Config{
     APIKey: "YOUR_API_KEY",
-    Endpoint: "https://api.aftership.com/OLDER_VERSIONOUR_API_KEY",
     UserAagentPrefix: "aftership-sdk-go",
 })
 ```
@@ -112,7 +113,7 @@ APISecret:          "YOUR_API_SECRET",
 
 ## Rate Limiter
 
-To understand AfterShip rate limit policy, please see `Limit` section in https://docs.aftership.com/api/4/overview
+To understand AfterShip rate limit policy, please see `Limit` section in https://www.aftership.com/docs/tracking/quickstart/rate-limit
 
 You can get the recent rate limit by `client.GetRateLimit()`. Initially all value are `0`.
 
@@ -602,31 +603,9 @@ fmt.Println(result)
 
 ## Migrations
 
-```go
-// old version
-var api apiV4.CourierHandler = &impl.AfterShipApiV4Impl{
-    "<your-api-key>",
-    nil,
-    nil,
-}
-res, meta := api.GetCouriers()
-if (meta.Code == 200) {
-    fmt.Print(res)
-}
-
-// new version (v3)
-client, err := aftership.NewClient(aftership.Config{
-    APIKey: "YOUR_API_KEY",
-})
-
-result, err := client.GetCouriers(context.Background())
-if err != nil {
-    fmt.Println(err)
-    return
-}
-
-fmt.Println(result)
-```
+- `Checkpoint.Coordinates` change type from `[]string` into `[]float32`
+- `Tracking` struct add fields
+- remove `android` field from `Tracking` struct
 
 ## Help
 
