@@ -71,20 +71,20 @@ func GetCanonicalizedHeaders(headers map[string]string) string {
 	if headers == nil {
 		return ""
 	}
-	keys := make([]string, 0)
-	newHeaders := make(map[string]string)
+	keys := make([]string, 0, len(headers))
+	newHeaders := make(map[string]string, len(headers))
 	for key, value := range headers {
-		if !strings.HasPrefix(strings.ToLower(key), "as-") {
+		newKey := strings.ToLower(key)
+		if !strings.HasPrefix(newKey, "as-") {
 			continue
 		}
-		newKey := strings.ToLower(key)
 		keys = append(keys, newKey)
 		newHeaders[newKey] = strings.TrimLeft(value, " ")
 	}
 
 	sort.Strings(keys)
 
-	result := make([]string, 0)
+	result := make([]string, 0, len(keys))
 	for _, key := range keys {
 		result = append(result, key+":"+newHeaders[key])
 	}
