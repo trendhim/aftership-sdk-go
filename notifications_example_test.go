@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aftership/aftership-sdk-go/v2"
+	"github.com/aftership/aftership-sdk-go/v3"
 )
 
 func ExampleClient_GetNotification() {

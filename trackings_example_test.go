@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/aftership/aftership-sdk-go/v2"
+	"github.com/aftership/aftership-sdk-go/v3"
 )
 
 func ExampleClient_CreateTracking() {
