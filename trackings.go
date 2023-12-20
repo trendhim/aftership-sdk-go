@@ -796,6 +796,9 @@ const TrackingCompletedStatusDelivered TrackingCompletedStatus = "DELIVERED"
 // TrackingCompletedStatusLost is reason LOST to make the tracking as completed
 const TrackingCompletedStatusLost TrackingCompletedStatus = "LOST"
 
+// TrackingCompletedStatusReturnedToSender is reason RETURNED_TO_SENDER to make the tracking as completed
+const TrackingCompletedStatusReturnedToSender TrackingCompletedStatus = "RETURNED_TO_SENDER"
+
 // createTrackingRequest is a model for create tracking API request
 type createTrackingRequest struct {
 	Tracking CreateTrackingParams `json:"tracking"`
