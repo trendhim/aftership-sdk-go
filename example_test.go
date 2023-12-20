@@ -3,7 +3,7 @@ package aftership_test
 import (
 	"fmt"
 
-	"github.com/aftership/aftership-sdk-go/v2"
+	"github.com/aftership/aftership-sdk-go/v3"
 )
 
 func ExampleNewClient() {
