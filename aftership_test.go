@@ -51,7 +51,7 @@ func TestDefaultConfig(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, "YOUR_API_KEY", client.Config.APIKey)
-	assert.Equal(t, "https://api.aftership.com/v4", client.Config.BaseURL)
+	assert.Equal(t, "https://api.aftership.com/tracking/2023-10", client.Config.BaseURL)
 	assert.Equal(t, "aftership-sdk-go", client.Config.UserAgentPrefix)
 }
 

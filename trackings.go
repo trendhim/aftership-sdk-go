@@ -54,6 +54,26 @@ type CreateTrackingParams struct {
 	OrderPromisedDeliveryDate string `json:"order_promised_delivery_date,omitempty"`
 
 	/**
+	 * The state of the sender’s address
+	 */
+	OriginState string `json:"origin_state,omitempty"`
+
+	/**
+	 * The city of the sender’s address.
+	 */
+	OriginCity string `json:"origin_city,omitempty"`
+
+	/**
+	 * The postal of the sender’s address.
+	 */
+	OriginPostalCode string `json:"origin_postal_code,omitempty"`
+
+	/**
+	 * The sender address that the shipment is shipping from.
+	 */
+	OriginRawLocation string `json:"origin_raw_location,omitempty"`
+
+	/**
 	 * Shipment delivery type: pickup_at_store, pickup_at_courier, door_to_door
 	 */
 	DeliveryType string `json:"delivery_type,omitempty"`
@@ -96,14 +116,9 @@ type CreateTrackingParams struct {
 	CustomerName string `json:"customer_name,omitempty"`
 
 	/**
-	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
+	 * The shipping address that the shipment is shipping to.
 	 */
-	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
-
-	/**
-	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
-	 */
-	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
+	DestinationRawLocation string `json:"destination_raw_location,omitempty"`
 
 	/**
 	 * Text field for the note
@@ -134,6 +149,16 @@ type CreateTrackingParams struct {
 	 * Used to add tags to your shipments to help categorize and filter them easily.
 	 */
 	ShipmentTags []string `json:"shipment_tags,omitempty"`
+
+	/**
+	 *  which carrier account you’ve used to handle a shipment
+	 */
+	CourierConnectionId string `json:"courier_connection_id,omitempty"`
+
+	/**
+	 * If a shipment has multiple carriers, you can use the next_couriers field to tell AfterShip who the second carrier is.
+	 */
+	NextCouriers []NextCourier `json:"next_couriers,omitempty"`
 }
 
 // TrackingIdentifier is an identifier for a single tracking
@@ -204,11 +229,6 @@ type Tracking struct {
 	Active bool `json:"active,omitempty"`
 
 	/**
-	 * Google cloud message registration IDs to receive the push notifications.
-	 */
-	Android []string `json:"android,omitempty"`
-
-	/**
 	 * Custom fields that accept a hash with string, boolean or number fields
 	 */
 	CustomFields map[string]string `json:"custom_fields,omitempty"`
@@ -216,18 +236,21 @@ type Tracking struct {
 	/**
 	 * Customer name of the tracking.
 	 */
-	CustomerName string `json:"custom_name,omitempty"`
+	CustomerName string `json:"customer_name,omitempty"`
 
 	/**
 	 * Total delivery time in days.
+	 * (Example: 1)
 	 */
-	DeliveryTime int `json:"delivery_time,omitempty"`
+	TransitTime int `url:"transit_time,omitempty" json:"transit_time,omitempty"`
 
 	/**
 	 * Destination country of the tracking. ISO Alpha-3 (three letters).
 	 * If you use postal service to send international shipments, AfterShip will automatically get tracking results from destination postal service based on destination country.
 	 */
 	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
+
+	DestinationCity string `json:"destination_city,omitempty"`
 
 	/**
 	 * Shipping address that the shipment is shipping to.
@@ -248,11 +271,6 @@ type Tracking struct {
 	 * Expected delivery date (nullable). Available format: YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+TIMEZONE
 	 */
 	ExpectedDelivery string `json:"expected_delivery,omitempty"`
-
-	/**
-	 * Apple iOS device IDs to receive the push notifications.
-	 */
-	IOS []string `json:"ios,omitempty"`
 
 	/**
 	 * Text field for the note.
@@ -442,6 +460,16 @@ type Tracking struct {
 	EstimatedDeliveryDate EstimatedDeliveryDate `json:"aftership_estimated_delivery_date,omitempty"`
 
 	/**
+	 * Estimated delivery time of the shipment based on your custom EDD settings.
+	 */
+	CustomEstimatedDeliveryDate EstimatedDelivery `json:"custom_estimated_delivery_date,omitempty"`
+
+	/**
+	 * The shipment’s original estimated delivery date.
+	 */
+	FirstEstimatedDelivery EstimatedDelivery `json:"first_estimated_delivery"`
+
+	/**
 	 * Text field for order number
 	 */
 	OrderNumber string `json:"order_number,omitempty"`
@@ -454,16 +482,32 @@ type Tracking struct {
 	 *  2. Date and time: `YYYY-MM-DDTHH:mm:ss`
 	 *  3. Date, time, and time zone: `YYYY-MM-DDTHH:mm:ssZ`
 	 */
-	LatestEstimatedDelivery LatestEstimatedDelivery `json:"latest_estimated_delivery,omitempty"`
+	LatestEstimatedDelivery EstimatedDelivery `json:"latest_estimated_delivery,omitempty"`
 
 	/**
 	 * Tags you added to your shipments to help categorize and filter them easily.
 	 */
 	ShipmentTags []string `json:"shipment_tags,omitempty"`
+
+	/**
+	 * Which carrier account you’ve used to handle a shipment.
+	 */
+	CourierConnectionId string `json:"courier_connection_id"`
+
+	/**
+	 * If a shipment has multiple carriers, you can use the next_couriers field to tell AfterShip who the second carrier is.
+	 */
+	NextCouriers []NextCourier `json:"next_couriers"`
 }
 
-// LatestEstimatedDelivery represents a latest_estimated_delivery returned by the Aftership API
-type LatestEstimatedDelivery struct {
+type NextCourier struct {
+	Slug           string `json:"slug"`
+	TrackingNumber string `json:"tracking_number"`
+	Source         string `json:"source"`
+}
+
+// EstimatedDelivery represents a latest_estimated_delivery returned by the Aftership API
+type EstimatedDelivery struct {
 	Type        string `json:"type,omitempty"`         // The format of the EDD. Either a single date or a date range.
 	Source      string `json:"source,omitempty"`       // The source of the EDD. Either the carrier, AfterShip AI, or based on your custom EDD settings.
 	Datetime    string `json:"datetime,omitempty"`     // The latest EDD time.
@@ -477,7 +521,7 @@ type Checkpoint struct {
 	CreatedAt      *time.Time `json:"created_at,omitempty"`
 	CheckpointTime string     `json:"checkpoint_time,omitempty"`
 	City           string     `json:"city,omitempty"`
-	Coordinates    []string   `json:"coordinates,omitempty"`
+	Coordinates    []float32  `json:"coordinates,omitempty"`
 	CountryISO3    string     `json:"country_iso3,omitempty"`
 	CountryName    string     `json:"country_name,omitempty"`
 	Message        string     `json:"message,omitempty"`
@@ -525,6 +569,27 @@ type AdditionalField struct {
 	 * Located state of the shipment for a specific courier. Required by some couriers, such as star-track-courier
 	 */
 	TrackingState string `json:"tracking_state,omitempty"`
+
+	/**
+	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
+	 */
+	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
+
+	/**
+	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
+	 */
+	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
+
+	/**
+	 * The postal of the recipient’s address.
+	 */
+	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
+
+	/**
+	 * The state of the recipient’s address.
+	 * (Example: New York)
+	 */
+	DestinationState string `json:"destination_state,omitempty"`
 }
 
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
@@ -602,9 +667,14 @@ type UpdateTrackingParams struct {
 	PickupNote                string            `json:"pickup_note,omitempty"`
 	Slug                      string            `json:"slug,omitempty"`
 	AdditionalField
-	OrderNumber  string `json:"order_number,omitempty"`
-	OrderDate    string `json:"order_date,omitempty"`
-	ShipmentType string `json:"shipment_type,omitempty"`
+	OrderNumber            string `json:"order_number,omitempty"`
+	OrderDate              string `json:"order_date,omitempty"`
+	ShipmentType           string `json:"shipment_type,omitempty"`
+	OriginState            string `json:"origin_state,omitempty"`
+	OriginCity             string `json:"origin_city,omitempty"`
+	OriginPostalCode       string `json:"origin_postal_code,omitempty"`
+	OriginRawLocation      string `json:"origin_raw_location,omitempty"`
+	DestinationRawLocation string `json:"destination_raw_location,omitempty"`
 }
 
 // GetTrackingsParams represents the set of params for get Trackings API
@@ -629,14 +699,6 @@ type GetTrackingsParams struct {
 	CreatedAtMin string `url:"created_at_min,omitempty" json:"created_at_min,omitempty"`
 
 	/**
-	 * Total delivery time in days.
-	 * - Difference of 1st checkpoint time and delivered time for delivered shipments
-	 * - Difference of 1st checkpoint time and current time for non-delivered shipments
-	 * Value as 0 for pending shipments or delivered shipment with only one checkpoint.
-	 */
-	DeliveryTime int `url:"delivery_time,omitempty" json:"delivery_time,omitempty"`
-
-	/**
 	 * Destination country of trackings. Use ISO Alpha-3 (three letters).
 	 * Use comma for multiple values. (Example: USA,HKG)
 	 */
@@ -655,18 +717,6 @@ type GetTrackingsParams struct {
 	 * tracking_number,  title,  order_id,  customer_name,  custom_fields,  order_id,  emails,  smses
 	 */
 	Keyword string `url:"keyword,omitempty" json:"keyword,omitempty"`
-
-	/**
-	 * Default: '' / Example: 'en'
-	 * Support Chinese to English translation for  china-ems  and  china-post  only
-	 */
-	Lang string `url:"lang,omitempty" json:"lang,omitempty"`
-
-	/**
-	 * Tracking last updated at
-	 * (Example: 2013-03-15T16:41:56+08:00)
-	 */
-	LastUpdatedAt string `url:"last_updated_at,omitempty" json:"last_updated_at,omitempty"`
 
 	/**
 	 * Number of trackings each page contain. (Default: 100, Max: 200)
@@ -712,6 +762,12 @@ type GetTrackingsParams struct {
 	TrackingNumbers string `url:"tracking_numbers,omitempty" json:"tracking_numbers,omitempty"`
 
 	/**
+	 * Total delivery time in days.
+	 * (Example: 1)
+	 */
+	TransitTime int `url:"transit_time,omitempty" json:"transit_time,omitempty"`
+
+	/**
 	 * End date and time of trackings updated. (Example: 2013-04-15T16:41:56+08:00)
 	 */
 	UpdatedAtMax string `url:"updated_at_max,omitempty" json:"updated_at_max,omitempty"`
@@ -725,10 +781,20 @@ type GetTrackingsParams struct {
 
 // PagedTrackings is a model for data part of the multiple trackings API responses
 type PagedTrackings struct {
-	Limit     int        `json:"limit"`     // Number of trackings each page contain. (Default: 100)
-	Count     int        `json:"count"`     // Total number of matched trackings, max. number is 10,000
-	Page      int        `json:"page"`      // Page to show. (Default: 1)
-	Trackings []Tracking `json:"trackings"` // Array of Hash describes the tracking information.
+	Limit                         int        `json:"limit"`   // Number of trackings each page contain. (Default: 100)
+	Count                         int        `json:"count"`   // Total number of matched trackings, max. number is 10,000
+	Page                          int        `json:"page"`    // Page to show. (Default: 1)
+	Keyword                       string     `json:"keyword"` // Search the content of the tracking record fields: tracking_number
+	Slug                          string     `json:"slug"`
+	Origin                        []string   `json:"origin"`
+	Destination                   []string   `json:"destination"`
+	Tag                           string     `json:"tag"`
+	CreatedAtMin                  *time.Time `json:"created_at_min"`
+	CreatedAtMax                  *time.Time `json:"created_at_max"`
+	LastUpdatedAt                 *time.Time `json:"last_updated_at"`
+	ReturnToSender                []bool     `json:"return_to_sender"`
+	CourierDestinationCountryIso3 []string   `json:"courier_destination_country_iso3"`
+	Trackings                     []Tracking `json:"trackings"` // Array of Hash describes the tracking information.
 }
 
 // trackingWrapper is a model for data part of the single tracking API responses

@@ -18,7 +18,7 @@ type Config struct {
 	// if AuthenticationType is AES, use aes api secret
 	APISecret string
 
-	// BaseURL is the base URL of AfterShip API. Defaults to 'https://api.aftership.com/v4'
+	// BaseURL is the base URL of AfterShip API. Defaults to 'https://api.aftership.com/tracking/2023-10'
 	BaseURL string
 
 	// UserAgentPrefix is the prefix of User-Agent in headers. Defaults to 'aftership-sdk-go'
@@ -51,7 +51,7 @@ func NewClient(cfg Config) (*Client, error) {
 	}
 
 	if cfg.BaseURL == "" {
-		cfg.BaseURL = "https://api.aftership.com/v4"
+		cfg.BaseURL = "https://api.aftership.com/tracking/2023-10"
 	}
 
 	if cfg.UserAgentPrefix == "" {
