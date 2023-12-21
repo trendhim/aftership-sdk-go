@@ -88,8 +88,6 @@ Create AfterShip SDK instance with config
   - `AuthenticationType` - `APIKey`  / `AES`
   - `APISecret` - if AuthenticationType is AES, use aes api secret
   - `Endpoint` - *string*, AfterShip endpoint, default 'https://api.aftership.com/tracking/2023-10'
-
-"
   - `UserAagentPrefix` - *string*, prefix of User-Agent in headers, default "aftership-sdk-go"
 
 Example:
