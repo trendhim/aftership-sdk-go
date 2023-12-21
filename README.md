@@ -67,27 +67,17 @@ make test
 ```
 
 ## Table of contents
-
-- [aftership-sdk-go](#aftership-sdk-go)
-  - [Introduction](#introduction)
-  - [Installation](#installation)
-  - [Quick Start](#quick-start)
-  - [Test](#test)
-  - [Table of contents](#table-of-contents)
-  - [NewClient(config)](#newclientconfig)
-  - [Rate Limiter](#rate-limiter)
-  - [Error Handling](#error-handling)
-    - [SDK Error](#sdk-error)
-    - [Request Error](#request-error)
-    - [API Error](#api-error)
-  - [Examples](#examples)
-    - [/couriers](#couriers)
-    - [/trackings](#trackings)
-    - [/last\_checkpoint](#last_checkpoint)
-    - [/notifications](#notifications)
-  - [Migrations](#migrations)
-  - [Help](#help)
-  - [Contributing](#contributing)
+- [NewClient(config)](#newaftershipconfig)
+- [Rate Limiter](#rate-limiter)
+- [Error Handling](#error-handling)
+- [Examples](#examples)
+  - [/couriers](#couriers)
+  - [/trackings](#trackings)
+  - [/last_checkpoint](#last_checkpoint)
+  - [/notifications](#notifications)
+- [Migrations](#migrations)
+- [Help](#help)
+- [Contributing](#contributing)
 
 ## NewClient(config)
 
