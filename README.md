@@ -67,7 +67,6 @@ make test
 ```
 
 ## Table of contents
-
 - [NewClient(config)](#newaftershipconfig)
 - [Rate Limiter](#rate-limiter)
 - [Error Handling](#error-handling)
@@ -88,9 +87,7 @@ Create AfterShip SDK instance with config
   - `APIKey` - **Required**, AfterShip API key
   - `AuthenticationType` - `APIKey`  / `AES`
   - `APISecret` - if AuthenticationType is AES, use aes api secret
-  - `Endpoint` - *string*, AfterShip endpoint, default "https://api.aftership.com/tracking/2023-10
-
-"
+  - `Endpoint` - *string*, AfterShip endpoint, default 'https://api.aftership.com/tracking/2023-10'
   - `UserAagentPrefix` - *string*, prefix of User-Agent in headers, default "aftership-sdk-go"
 
 Example:
@@ -105,9 +102,9 @@ client, err := aftership.NewClient(aftership.Config{
 AuthenticationType `AES` signature
 ```go
 client, err := aftership.NewClient(aftership.Config{
-APIKey:             "YOUR_API_KEY",
-AuthenticationType: aftership.AES, 
-APISecret:          "YOUR_API_SECRET",
+    APIKey:             "YOUR_API_KEY",
+    AuthenticationType: aftership.AES, 
+    APISecret:          "YOUR_API_SECRET",
 })
 ```
 
@@ -347,11 +344,11 @@ fmt.Println(result)
 > Create a tracking.
 
 ```go
-newTracking := aftership.NewTracking{
+newTracking := aftership.CreateTrackingParams{
     TrackingNumber: "1234567890",
-    Slug:           []string{"dhl"},
+    Slug:           "dhl",
     Title:          "Title Name",
-    Smses: []string{
+    SMSes: []string{
         "+18555072509",
         "+18555072501",
     },
