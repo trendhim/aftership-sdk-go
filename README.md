@@ -68,17 +68,26 @@ make test
 
 ## Table of contents
 
-- [NewClient(config)](#newaftershipconfig)
-- [Rate Limiter](#rate-limiter)
-- [Error Handling](#error-handling)
-- [Examples](#examples)
-  - [/couriers](#couriers)
-  - [/trackings](#trackings)
-  - [/last_checkpoint](#last_checkpoint)
-  - [/notifications](#notifications)
-- [Migrations](#migrations)
-- [Help](#help)
-- [Contributing](#contributing)
+- [aftership-sdk-go](#aftership-sdk-go)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+  - [Quick Start](#quick-start)
+  - [Test](#test)
+  - [Table of contents](#table-of-contents)
+  - [NewClient(config)](#newclientconfig)
+  - [Rate Limiter](#rate-limiter)
+  - [Error Handling](#error-handling)
+    - [SDK Error](#sdk-error)
+    - [Request Error](#request-error)
+    - [API Error](#api-error)
+  - [Examples](#examples)
+    - [/couriers](#couriers)
+    - [/trackings](#trackings)
+    - [/last\_checkpoint](#last_checkpoint)
+    - [/notifications](#notifications)
+  - [Migrations](#migrations)
+  - [Help](#help)
+  - [Contributing](#contributing)
 
 ## NewClient(config)
 
@@ -347,11 +356,11 @@ fmt.Println(result)
 > Create a tracking.
 
 ```go
-newTracking := aftership.NewTracking{
+newTracking := aftership.CreateTrackingParams{
     TrackingNumber: "1234567890",
-    Slug:           []string{"dhl"},
+    Slug:           "dhl",
     Title:          "Title Name",
-    Smses: []string{
+    SMSes: []string{
         "+18555072509",
         "+18555072501",
     },
