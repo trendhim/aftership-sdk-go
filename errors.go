@@ -17,7 +17,7 @@ const (
 
 // System error code
 const (
-	codeRateLimiting = iota + 1
+	codeRateLimiting = iota + 4900
 	codeJSONError
 	codeBadRequest
 	codeBadParam
