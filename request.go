@@ -13,7 +13,6 @@ import (
 
 	"github.com/google/go-querystring/query"
 	"github.com/google/uuid"
-	"github.com/pkg/errors"
 )
 
 // makeRequest makes a AfterShip API calls
@@ -22,7 +21,10 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 
 	// Check if rate limit is exceeded
 	if client.rateLimit != nil && client.rateLimit.isExceeded() {
-		return fmt.Errorf(errExceedRateLimit, time.Unix(client.rateLimit.Reset, 0))
+		return &APIError{
+			Code:    codeRateLimiting,
+			Message: fmt.Sprintf(errExceedRateLimit, time.Unix(client.rateLimit.Reset, 0)),
+		}
 	}
 
 	// Read input data
@@ -31,7 +33,10 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	if inputData != nil {
 		jsonData, err := json.Marshal(inputData)
 		if err != nil {
-			return errors.Wrap(err, "error marshalling params to JSON")
+			return &APIError{
+				Code:    codeJSONError,
+				Message: fmt.Sprintf(errMarshallingJSON, err),
+			}
 		}
 
 		bodyStr = string(jsonData)
@@ -40,31 +45,36 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 
 	req, err := http.NewRequestWithContext(ctx, method, client.Config.BaseURL+path, body)
 	if err != nil {
-		return errors.Wrap(err, "HTTP request creation failed")
+		return &APIError{
+			Code:    codeBadRequest,
+			Message: fmt.Sprintf("HTTP request creation failed. %s", err),
+		}
 	}
 
+	apiKey := client.Config.APIKey
 	// Add headers
 	contentType := "application/json"
 	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("request-id", uuid.New().String())
 	req.Header.Add("User-Agent", fmt.Sprintf("%s/%s", client.Config.UserAgentPrefix, VERSION))
 	req.Header.Add("aftership-agent", fmt.Sprintf("go-sdk-%s", VERSION))
+	req.Header.Add("as-api-key", apiKey)
 
 	if queryParams != nil {
 		queryStringObj, err := query.Values(queryParams)
 		if err != nil {
-			return errors.Wrap(err, "error parsing query params")
+			return &APIError{
+				Code:    codeBadParam,
+				Message: fmt.Sprintf("error parsing query params. %s", err),
+			}
 		}
 		req.URL.RawQuery = queryStringObj.Encode()
 	}
 
 	authenticationType := client.Config.AuthenticationType
-	apiKey := client.Config.APIKey
 
 	// set signature
 	if authenticationType == AES {
-		req.Header.Add("as-api-key", apiKey)
-
 		asHeaders := make(map[string]string)
 		for key, value := range req.Header {
 			asHeaders[key] = value[0]
@@ -75,25 +85,32 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 			authenticationType, []byte(client.Config.APISecret), asHeaders,
 			contentType, req.URL.RequestURI(), req.Method, date, bodyStr)
 		if err != nil {
-			return errors.Wrap(err, "generate signature error")
+			return &APIError{
+				Code:    codeSignatureError,
+				Message: fmt.Sprintf("generate signature error. %s", err),
+			}
 		}
 
 		req.Header.Add("date", date)
 		req.Header.Add(signatureHeader, signature)
-	} else {
-		req.Header.Add("as-api-key", apiKey)
 	}
 
 	// Send request
 	resp, err := client.httpClient.Do(req)
 	if err != nil {
-		return errors.Wrap(err, "HTTP request failed")
+		return &APIError{
+			Code:    codeRequestFailed,
+			Message: fmt.Sprintf("HTTP request failed. %s", err),
+		}
 	}
 
 	defer resp.Body.Close()
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.Wrap(err, "could not read response body")
+		return &APIError{
+			Code:    codeEmptyBody,
+			Message: fmt.Sprintf("could not read response body. %s", err),
+		}
 	}
 
 	// Rate Limit
@@ -106,7 +123,10 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	// Unmarshal response object
 	err = json.Unmarshal(contents, result)
 	if err != nil {
-		return errors.Wrap(err, "error unmarshalling the JSON response")
+		return &APIError{
+			Code:    codeJSONError,
+			Message: fmt.Sprintf("error unmarshalling the JSON response. %s", err),
+		}
 	}
 
 	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
