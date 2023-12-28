@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -23,7 +24,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	if client.rateLimit != nil && client.rateLimit.isExceeded() {
 		return &APIError{
 			Code:    codeRateLimiting,
-			Message: fmt.Sprintf(errExceedRateLimit, time.Unix(client.rateLimit.Reset, 0)),
+			Message: errExceedRateLimit,
 		}
 	}
 
@@ -35,7 +36,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 		if err != nil {
 			return &APIError{
 				Code:    codeJSONError,
-				Message: fmt.Sprintf(errMarshallingJSON, err),
+				Message: errMarshallingJSON,
 			}
 		}
 
@@ -47,7 +48,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	if err != nil {
 		return &APIError{
 			Code:    codeBadRequest,
-			Message: fmt.Sprintf("HTTP request creation failed. %s", err),
+			Message: "Bad request.",
 		}
 	}
 
@@ -65,7 +66,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 		if err != nil {
 			return &APIError{
 				Code:    codeBadParam,
-				Message: fmt.Sprintf("error parsing query params. %s", err),
+				Message: "Error when parsing query parameters.",
 			}
 		}
 		req.URL.RawQuery = queryStringObj.Encode()
@@ -87,7 +88,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 		if err != nil {
 			return &APIError{
 				Code:    codeSignatureError,
-				Message: fmt.Sprintf("generate signature error. %s", err),
+				Message: "Error when generating the request signature.",
 			}
 		}
 
@@ -98,9 +99,15 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	// Send request
 	resp, err := client.httpClient.Do(req)
 	if err != nil {
+		if os.IsTimeout(err) {
+			return &APIError{
+				Code:    codeRequestTimeout,
+				Message: "HTTP request timeout.",
+			}
+		}
 		return &APIError{
 			Code:    codeRequestFailed,
-			Message: fmt.Sprintf("HTTP request failed. %s", err),
+			Message: "HTTP request failed.",
 		}
 	}
 
@@ -109,7 +116,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	if err != nil {
 		return &APIError{
 			Code:    codeEmptyBody,
-			Message: fmt.Sprintf("could not read response body. %s", err),
+			Message: "Unable to parse the API response.",
 		}
 	}
 
@@ -125,7 +132,7 @@ func (client *Client) makeRequest(ctx context.Context, method string, path strin
 	if err != nil {
 		return &APIError{
 			Code:    codeJSONError,
-			Message: fmt.Sprintf("error unmarshalling the JSON response. %s", err),
+			Message: "Invalid JSON data.",
 		}
 	}
 

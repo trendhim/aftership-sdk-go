@@ -3,7 +3,6 @@ package aftership
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"testing"
@@ -234,7 +233,7 @@ func TestBlockRequestWhenReachLimit(t *testing.T) {
 	// Another request after exceeded limits
 	exp, _ := json.Marshal(APIError{
 		Code:    codeRateLimiting,
-		Message: fmt.Sprintf(errExceedRateLimit, time.Unix(reset, 0)),
+		Message: errExceedRateLimit,
 	})
 	err := client.makeRequest(context.Background(), http.MethodGet, "/test", nil, nil, &result)
 	assert.NotNil(t, err)

@@ -11,8 +11,8 @@ const (
 	errMissingTrackingNumber       = "tracking number is empty and must be provided"
 	errMissingTrackingID           = "tracking id is empty and must be provided"
 	errMissingSlugOrTrackingNumber = "slug or tracking number is empty, both of them must be provided"
-	errExceedRateLimit             = "rate limit is exceeded, please wait util %s"
-	errMarshallingJSON             = "error marshalling params to JSON. %s"
+	errExceedRateLimit             = "You have exceeded the API call rate limit. The default limit is 10 requests per second."
+	errMarshallingJSON             = "Invalid JSON data."
 )
 
 // System error code
@@ -24,6 +24,7 @@ const (
 	codeSignatureError
 	codeRequestFailed
 	codeEmptyBody
+	codeRequestTimeout
 )
 
 // APIError is the error in AfterShip API calls
