@@ -477,7 +477,6 @@ func TestGetTrackings(t *testing.T) {
 		TransitTime:          2,
 		Emails:               []string{},
 		IOS:                  []string{},
-		OriginCountryISO3:    "USA",
 		ShipmentPackageCount: 1,
 		ShipmentPickupDate:   "2018-07-31T06:00:00",
 		ShipmentDeliveryDate: "2018-08-01T17:19:47",
@@ -509,6 +508,8 @@ func TestGetTrackings(t *testing.T) {
 		},
 		ShipmentTags: []string{"test_tag1", "test_tag2"},
 	}
+
+	tracking1.OriginCountryISO3 = "USA"
 
 	t2CreatedAt, _ := time.Parse(time.RFC3339, "2018-05-23T07:21:11+00:00")
 	t2UpdatedAt, _ := time.Parse(time.RFC3339, "2018-06-22T07:21:57+00:00")
@@ -701,11 +702,9 @@ func TestGetTracking(t *testing.T) {
 		Active:                        false,
 		Android:                       []string{},
 		TransitTime:                   2,
-		DestinationCountryISO3:        "JPN",
 		CourierDestinationCountryISO3: "JPN",
 		Emails:                        []string{},
 		IOS:                           []string{},
-		OriginCountryISO3:             "CHN",
 		ShipmentPackageCount:          1,
 		ShipmentPickupDate:            "2018-07-23T08:58:00",
 		ShipmentDeliveryDate:          "2018-07-25T01:10:00",
@@ -735,6 +734,9 @@ func TestGetTracking(t *testing.T) {
 		CourierRedirectLink:       "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
 		FirstAttemptedAt:          "2018-07-25T10:10:00+09:00",
 	}
+
+	exp.DestinationCountryISO3 = "JPN"
+	exp.OriginCountryISO3 = "CHN"
 
 	res, err := client.GetTracking(context.Background(), p, GetTrackingParams{})
 	assert.Equal(t, exp, res)
@@ -889,7 +891,6 @@ func TestUpdateTracking(t *testing.T) {
 		TransitTime:          2,
 		Emails:               []string{},
 		IOS:                  []string{},
-		OriginCountryISO3:    "USA",
 		ShipmentPackageCount: 1,
 		ShipmentPickupDate:   "2018-07-31T06:00:00",
 		ShipmentDeliveryDate: "2018-08-01T17:19:47",
@@ -920,6 +921,7 @@ func TestUpdateTracking(t *testing.T) {
 		CourierRedirectLink:       "https://www.fedex.com/track?loc=en_US&tracknum=1111111111111&requester=WT/trackdetails",
 		FirstAttemptedAt:          "2018-08-01T17:19:47",
 	}
+	exp.OriginCountryISO3 = "USA"
 
 	data := UpdateTrackingParams{
 		Title:        "New Title",
@@ -1120,11 +1122,9 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 		Active:                        false,
 		Android:                       []string{},
 		TransitTime:                   2,
-		DestinationCountryISO3:        "JPN",
 		CourierDestinationCountryISO3: "JPN",
 		Emails:                        []string{},
 		IOS:                           []string{},
-		OriginCountryISO3:             "CHN",
 		ShipmentPackageCount:          1,
 		ShipmentPickupDate:            "2018-07-23T08:58:00",
 		ShipmentDeliveryDate:          "2018-07-25T01:10:00",
@@ -1154,6 +1154,9 @@ func TestMarkTrackingAsCompleted(t *testing.T) {
 		CourierRedirectLink:       "https://www.fedex.com/track?loc=en_US&tracknum=111111111111&requester=WT/trackdetails",
 		FirstAttemptedAt:          "2018-07-25T10:10:00+09:00",
 	}
+
+	exp.OriginCountryISO3 = "CHN"
+	exp.DestinationCountryISO3 = "JPN"
 
 	res, _ := client.MarkTrackingAsCompleted(context.Background(), p, TrackingCompletedStatusLost)
 	assert.Equal(t, exp, res)

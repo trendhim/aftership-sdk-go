@@ -96,16 +96,6 @@ type CreateTrackingParams struct {
 	CustomerName string `json:"customer_name,omitempty"`
 
 	/**
-	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
-	 */
-	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
-
-	/**
-	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
-	 */
-	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
-
-	/**
 	 * Text field for the note
 	 */
 	Note string `json:"note,omitempty"`
@@ -224,12 +214,6 @@ type Tracking struct {
 	TransitTime int `json:"transit_time,omitempty"`
 
 	/**
-	 * Destination country of the tracking. ISO Alpha-3 (three letters).
-	 * If you use postal service to send international shipments, AfterShip will automatically get tracking results from destination postal service based on destination country.
-	 */
-	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
-
-	/**
 	 * The state of the recipient’s address.
 	 */
 	DestinationState string `json:"destination_state,omitempty"`
@@ -238,11 +222,6 @@ type Tracking struct {
 	 * The city of the recipient’s address.
 	 */
 	DestinationCity string `json:"destination_city,omitempty"`
-
-	/**
-	 * The city of the recipient’s address.
-	 */
-	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
 
 	/**
 	 * Shipping address that the shipment is shipping to.
@@ -288,11 +267,6 @@ type Tracking struct {
 	 * Date and time of the order created
 	 */
 	OrderDate string `json:"order_date,omitempty"`
-
-	/**
-	 * Origin country of the tracking. ISO Alpha-3 (three letters).
-	 */
-	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
 
 	/**
 	 * The state of the sender’s address.
@@ -531,14 +505,14 @@ type AdditionalField struct {
 	TrackingAccountNumber string `json:"tracking_account_number,omitempty"`
 
 	/**
-	 * Origin Country of the shipment for a specific courier. Required by some couriers, such as dhl
+	 * Enter ISO Alpha-3 (three letters) to specify the origin of the shipment (e.g. USA for United States).
 	 */
-	TrackingOriginCountry string `json:"tracking_origin_country,omitempty"`
+	OriginCountryISO3 string `json:"origin_country_iso3,omitempty"`
 
 	/**
-	 * Destination Country of the shipment for a specific courier. Required by some couriers, such as postnl-3s
+	 * Enter ISO Alpha-3 (three letters) to specify the destination of the shipment (e.g. USA for United States). If you use postal service to send international shipments, AfterShip will automatically get tracking results at destination courier as well.
 	 */
-	TrackingDestinationCountry string `json:"tracking_destination_country,omitempty"`
+	DestinationCountryISO3 string `json:"destination_country_iso3,omitempty"`
 
 	/**
 	 * Key of the shipment for a specific courier. Required by some couriers, such as sic-teliway
@@ -548,7 +522,7 @@ type AdditionalField struct {
 	/**
 	 * The postal code of receiver's address. Required by some couriers, such as deutsch-post
 	 */
-	TrackingPostalCode string `json:"tracking_postal_code,omitempty"`
+	DestinationPostalCode string `json:"destination_postal_code,omitempty"`
 
 	/**
 	 * Shipping date in YYYYMMDD format. Required by some couriers, such as deutsch-post
@@ -558,7 +532,7 @@ type AdditionalField struct {
 	/**
 	 * Located state of the shipment for a specific courier. Required by some couriers, such as star-track-courier
 	 */
-	TrackingState string `json:"tracking_state,omitempty"`
+	DestinationState string `json:"destination_state,omitempty"`
 }
 
 // EstimatedDeliveryDate represents a aftership_estimated_delivery_date returned by the Aftership API
